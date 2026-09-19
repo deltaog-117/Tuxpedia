@@ -3,17 +3,65 @@
 @tailwind utilities;
 
 @layer base {
+    /*
+     * Design tokens as space-separated RGB channels so Tailwind opacity
+     * modifiers work. Dark values are toggled by the `dark` class on <html>.
+     */
+    :root {
+        --tux-bg: 250 250 251;
+        --tux-surface: 255 255 255;
+        --tux-border: 228 228 231;
+        --tux-text: 24 24 27;
+        --tux-muted: 113 113 122;
+        --tux-accent: 79 70 229;
+        --tux-solid: 79 70 229;
+        --tux-solid-hover: 67 56 202;
+        --tux-amber: 217 119 6;
+        --tux-green: 21 128 61;
+        --tux-orange: 180 83 9;
+        --tux-red: 185 28 28;
+        color-scheme: light;
+    }
+    :root.dark {
+        --tux-bg: 9 9 11;
+        --tux-surface: 24 24 27;
+        --tux-border: 39 39 42;
+        --tux-text: 244 244 245;
+        --tux-muted: 161 161 170;
+        --tux-accent: 129 140 248;
+        --tux-amber: 251 191 36;
+        --tux-green: 74 222 128;
+        --tux-orange: 251 146 60;
+        --tux-red: 248 113 113;
+        color-scheme: dark;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        html {
+            scroll-behavior: smooth;
+        }
+    }
+
     body {
         @apply bg-tux-bg text-tux-text font-sans antialiased;
+    }
+    ::selection {
+        background-color: rgb(var(--tux-solid) / 0.3);
+    }
+    [x-cloak] {
+        display: none !important;
     }
     h1, h2, h3, h4, h5, h6 {
         @apply font-bold tracking-tight;
     }
     a {
-        @apply text-tux-blue hover:underline;
+        @apply text-tux-accent hover:underline;
     }
     code {
-        @apply font-mono text-sm bg-gray-100 px-1.5 py-0.5 rounded;
+        @apply font-mono text-sm bg-tux-text/10 px-1.5 py-0.5 rounded;
     }
     #terminal-container {
         background-color: #1e1e1e !important;
@@ -26,25 +74,270 @@
 }
 
 @layer components {
+    /* Navigation */
+    .site-nav {
+        @apply sticky top-0 z-50 border-b border-tux-border bg-tux-surface/80 backdrop-blur-md;
+    }
+    .site-nav__brand {
+        @apply flex items-center gap-2 text-lg font-bold text-tux-text hover:no-underline;
+    }
+    .site-nav__link {
+        @apply rounded-md px-3 py-1.5 text-sm font-medium text-tux-muted transition-colors hover:bg-tux-text/5 hover:text-tux-text hover:no-underline;
+    }
+    .site-nav__link--active {
+        @apply bg-tux-text/5 text-tux-text;
+    }
+    .icon-button {
+        @apply inline-flex h-9 w-9 items-center justify-center rounded-md text-tux-muted transition-colors hover:bg-tux-text/5 hover:text-tux-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tux-accent;
+    }
+    .site-footer {
+        @apply mt-8 border-t border-tux-border bg-tux-surface;
+    }
+
+    /* Search */
+    .search {
+        @apply relative flex items-center;
+    }
+    .search__icon {
+        @apply pointer-events-none absolute left-3 h-4 w-4 text-tux-muted;
+    }
+    .search__input {
+        @apply w-full rounded-lg border border-tux-border bg-tux-surface py-2 pl-9 pr-9 text-sm text-tux-text transition placeholder:text-tux-muted focus:border-tux-accent focus:outline-none focus:ring-2 focus:ring-tux-accent/30;
+    }
+    .search__input::-webkit-search-cancel-button {
+        display: none;
+    }
+    .search__hint {
+        @apply pointer-events-none absolute right-2.5 rounded border border-tux-border px-1.5 font-mono text-xs text-tux-muted;
+    }
+
+    /* Hero */
+    .hero {
+        @apply relative overflow-hidden rounded-3xl border border-tux-border bg-tux-surface px-6 py-14 text-center sm:px-12 sm:py-20;
+        background-image: radial-gradient(60% 80% at 50% 0%, rgb(var(--tux-solid) / 0.16), transparent 70%);
+    }
+    .hero__eyebrow {
+        @apply mb-5 inline-flex items-center gap-2 rounded-full border border-tux-border bg-tux-bg px-3 py-1 text-xs font-medium text-tux-muted;
+    }
+    .hero__title {
+        @apply text-4xl font-bold tracking-tight sm:text-6xl;
+    }
+    .hero__title-accent {
+        @apply bg-gradient-to-r from-tux-accent to-tux-amber bg-clip-text text-transparent;
+    }
+    .hero__lead {
+        @apply mx-auto mt-5 max-w-2xl text-base text-tux-muted sm:text-lg;
+    }
+    .hero__search {
+        @apply mx-auto mt-8 max-w-xl text-left;
+    }
+    .hero__search .search__input {
+        @apply py-3 text-base;
+    }
+    .hero__actions {
+        @apply mt-6 flex flex-wrap items-center justify-center gap-3;
+    }
+
+    /* Layout helpers */
+    .page-header {
+        @apply mb-8 flex flex-wrap items-end justify-between gap-4;
+    }
+    .page-title {
+        @apply text-3xl font-bold tracking-tight sm:text-4xl;
+    }
+    .page-lead {
+        @apply mt-2 text-tux-muted;
+    }
+    .chip {
+        @apply inline-flex items-center gap-1 rounded-full border border-tux-border bg-tux-surface px-2.5 py-0.5 text-xs text-tux-muted;
+    }
+
+    /* Cards */
     .card {
-        @apply bg-tux-surface border border-tux-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200;
+        @apply rounded-2xl border border-tux-border bg-tux-surface shadow-sm transition duration-200;
+    }
+    .card--interactive {
+        @apply hover:-translate-y-0.5 hover:border-tux-accent/40 hover:shadow-lg;
+    }
+    .card__mark {
+        @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 text-lg font-bold text-white;
+    }
+
+    /* Buttons */
+    .btn {
+        @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-tux-accent focus-visible:ring-offset-2 focus-visible:ring-offset-tux-bg hover:no-underline;
     }
     .btn-primary {
-        @apply bg-tux-green text-white font-semibold py-2 px-4 rounded hover:bg-green-600 transition-colors;
+        @apply btn bg-tux-solid text-white shadow-sm hover:bg-tux-solid-hover;
     }
     .btn-secondary {
-        @apply bg-tux-blue text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition-colors;
+        @apply btn border border-tux-border bg-tux-surface text-tux-text hover:bg-tux-text/5;
+    }
+    .btn-ghost {
+        @apply btn text-tux-muted hover:bg-tux-text/5 hover:text-tux-text;
     }
     .btn-danger {
-        @apply bg-red-600 text-white font-semibold py-2 px-4 rounded hover:bg-red-700 transition-colors;
+        @apply btn bg-red-600 text-white hover:bg-red-700;
     }
+
+    /* Badges and alerts */
     .badge-new {
-        @apply bg-green-100 text-green-800 text-xs font-medium px-2 py-0.5 rounded-full;
+        @apply inline-flex items-center rounded-full bg-tux-green/15 px-2 py-0.5 text-xs font-medium text-tux-green;
     }
     .badge-updated {
-        @apply bg-orange-100 text-orange-800 text-xs font-medium px-2 py-0.5 rounded-full;
+        @apply inline-flex items-center rounded-full bg-tux-orange/15 px-2 py-0.5 text-xs font-medium text-tux-orange;
     }
+    .alert {
+        @apply mb-4 rounded-lg border px-4 py-3 text-sm;
+    }
+    .alert--success {
+        @apply border-tux-green/30 bg-tux-green/10 text-tux-green;
+    }
+    .alert--error {
+        @apply border-tux-red/30 bg-tux-red/10 text-tux-red;
+    }
+
+    /* Forms */
     .input-field {
-        @apply w-full border border-tux-border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-tux-blue focus:border-transparent;
+        @apply w-full rounded-lg border border-tux-border bg-tux-surface px-3 py-2 text-sm text-tux-text transition placeholder:text-tux-muted focus:border-tux-accent focus:outline-none focus:ring-2 focus:ring-tux-accent/30;
+    }
+    .input-field--invalid {
+        @apply border-tux-red;
+    }
+    .field-label {
+        @apply mb-1.5 block text-sm font-medium text-tux-text;
+    }
+    .field-error {
+        @apply mt-1 text-xs text-tux-red;
+    }
+
+    /* Data table */
+    .data-table__wrap {
+        @apply overflow-x-auto rounded-2xl border border-tux-border bg-tux-surface shadow-sm;
+    }
+    .data-table {
+        @apply min-w-full text-sm;
+    }
+    .data-table th {
+        @apply bg-tux-bg px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-tux-muted;
+    }
+    .data-table td {
+        @apply border-t border-tux-border px-4 py-3 align-top;
+    }
+    .data-table tbody tr {
+        @apply transition-colors hover:bg-tux-text/5;
+    }
+    .data-table__sortable {
+        @apply cursor-pointer select-none hover:text-tux-text;
+    }
+
+    /* Rendered markdown */
+    .article {
+        @apply text-base leading-7 text-tux-text;
+    }
+    .article > * + * {
+        @apply mt-5;
+    }
+    .article h1 {
+        @apply mt-10 scroll-mt-24 text-3xl font-bold;
+    }
+    .article h2 {
+        @apply mt-10 scroll-mt-24 border-b border-tux-border pb-2 text-2xl font-bold;
+    }
+    .article h3 {
+        @apply mt-8 scroll-mt-24 text-xl font-semibold;
+    }
+    .article h4 {
+        @apply mt-6 scroll-mt-24 text-lg font-semibold;
+    }
+    .article ul {
+        @apply list-disc pl-6;
+    }
+    .article ol {
+        @apply list-decimal pl-6;
+    }
+    .article li + li {
+        @apply mt-1.5;
+    }
+    .article a {
+        @apply font-medium underline decoration-tux-accent/40 underline-offset-2 hover:decoration-tux-accent;
+    }
+    .article blockquote {
+        @apply border-l-4 border-tux-accent/50 pl-4 italic text-tux-muted;
+    }
+    .article pre {
+        @apply overflow-x-auto rounded-xl border border-tux-border bg-tux-dark p-4 text-sm leading-6 text-tux-terminal-text;
+    }
+    .article pre code {
+        @apply bg-transparent p-0 text-inherit;
+    }
+    .article table {
+        @apply w-full text-sm;
+    }
+    .article th {
+        @apply border-b border-tux-border px-3 py-2 text-left font-semibold;
+    }
+    .article td {
+        @apply border-b border-tux-border px-3 py-2;
+    }
+    .article hr {
+        @apply border-tux-border;
+    }
+    .article img {
+        @apply rounded-xl;
+    }
+
+    /* Table of contents (built client-side from the article headings) */
+    .toc {
+        @apply sticky top-24 text-sm;
+    }
+    .toc__title {
+        @apply mb-3 text-xs font-semibold uppercase tracking-wide text-tux-muted;
+    }
+    .toc__link {
+        @apply block border-l border-tux-border py-1 pl-3 text-tux-muted transition-colors hover:text-tux-text hover:no-underline;
+    }
+    .toc__link--sub {
+        @apply pl-6;
+    }
+    .toc__link--active {
+        @apply border-tux-accent text-tux-accent;
+    }
+
+    /* Family tree (D3 output is styled here so it follows the theme) */
+    .tree {
+        @apply overflow-auto rounded-2xl border border-tux-border bg-tux-surface shadow-sm;
+    }
+    .tree__link {
+        fill: none;
+        stroke: rgb(var(--tux-muted) / 0.45);
+        stroke-width: 2;
+    }
+    .tree__node circle {
+        fill: rgb(var(--tux-solid));
+        stroke: rgb(var(--tux-surface));
+        stroke-width: 2;
+    }
+    .tree__node--root circle {
+        fill: rgb(var(--tux-amber));
+    }
+    .tree__label {
+        fill: rgb(var(--tux-text));
+        font-size: 12px;
+        font-family: Inter, system-ui, sans-serif;
+    }
+
+    /* Terminal window chrome */
+    .terminal-window {
+        @apply overflow-hidden rounded-xl border border-tux-border shadow-xl;
+    }
+    .terminal-window__bar {
+        @apply flex items-center gap-2 border-b border-white/10 bg-zinc-800 px-4 py-2.5;
+    }
+    .terminal-window__dot {
+        @apply h-3 w-3 rounded-full;
+    }
+    .terminal-window__title {
+        @apply ml-2 font-mono text-xs text-zinc-400;
     }
 }

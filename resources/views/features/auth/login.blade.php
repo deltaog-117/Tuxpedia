@@ -1,35 +1,38 @@
-<div class="max-w-md mx-auto bg-white p-6 rounded shadow">
-    <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
-
-    @if(session()->has('error'))
-        <div class="bg-red-100 text-red-700 p-3 rounded mb-4">{{ session('error') }}</div>
-    @endif
-
-    <form wire:submit.prevent="login">
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
-            <input wire:model="email" type="email" class="w-full border rounded px-3 py-2" required>
-            @error('email') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+<div class="mx-auto max-w-md animate-fade-up motion-reduce:animate-none">
+    <div class="card p-8">
+        <div class="mb-6 text-center">
+            <span class="card__mark mx-auto mb-4" aria-hidden="true">🐧</span>
+            <h2 class="text-2xl font-bold">Welcome back</h2>
+            <p class="page-lead">Log in to Tuxpedia</p>
         </div>
 
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-            <input wire:model="password" type="password" class="w-full border rounded px-3 py-2" required>
-            @error('password') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-        </div>
+        @if(session()->has('error'))
+            <div class="alert alert--error">{{ session('error') }}</div>
+        @endif
 
-        <div class="mb-4">
-            <label>
-                <input wire:model="remember" type="checkbox"> Remember me
+        <form wire:submit.prevent="login" class="space-y-4">
+            <div>
+                <label class="field-label" for="login-email">Email</label>
+                <input wire:model="email" id="login-email" type="email" class="input-field @error('email') input-field--invalid @enderror" required>
+                @error('email') <p class="field-error">{{ $message }}</p> @enderror
+            </div>
+
+            <div>
+                <label class="field-label" for="login-password">Password</label>
+                <input wire:model="password" id="login-password" type="password" class="input-field @error('password') input-field--invalid @enderror" required>
+                @error('password') <p class="field-error">{{ $message }}</p> @enderror
+            </div>
+
+            <label class="flex items-center gap-2 text-sm text-tux-muted">
+                <input wire:model="remember" type="checkbox" class="h-4 w-4 rounded accent-tux-solid">
+                Remember me
             </label>
-        </div>
 
-        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Login
-        </button>
-    </form>
+            <button type="submit" class="btn-primary w-full">Login</button>
+        </form>
 
-    <p class="mt-4 text-center text-sm text-gray-600">
-        Don't have an account? <a href="{{ route('auth.register') }}" class="text-blue-500 hover:underline">Register</a>
-    </p>
+        <p class="mt-6 text-center text-sm text-tux-muted">
+            Don't have an account? <a href="{{ route('auth.register') }}" class="font-medium">Register</a>
+        </p>
+    </div>
 </div>

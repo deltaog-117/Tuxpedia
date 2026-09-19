@@ -1,5 +1,5 @@
 <div>
-    <div id="tree-container" style="width: 100%; height: 700px; overflow: auto; border: 1px solid #e2e8f0; border-radius: 0.5rem; background: #f9fafb;">
+    <div id="tree-container" class="tree" style="width: 100%; height: 700px;">
         <!-- D3 tree will be rendered here -->
     </div>
 
@@ -24,7 +24,7 @@
             const treeData = @json($tree);
 
             if (!treeData || treeData.length === 0) {
-                document.getElementById('tree-container').innerHTML = '<p class="text-center text-gray-500 p-4">No distribution data available.</p>';
+                document.getElementById('tree-container').innerHTML = '<p class="text-center text-tux-muted p-4">No distribution data available.</p>';
                 return;
             }
 
@@ -60,15 +60,12 @@
 
             const treeData2 = treeLayout(root);
 
-            // Draw links
+            // Draw links (colours come from .tree__link so they follow the theme)
             svg.selectAll('.link')
                 .data(treeData2.links())
                 .enter()
                 .append('path')
-                .attr('class', 'link')
-                .attr('fill', 'none')
-                .attr('stroke', '#888')
-                .attr('stroke-width', 2)
+                .attr('class', 'link tree__link')
                 .attr('d', d3.linkHorizontal()
                     .x(function(d) { return d.y; })
                     .y(function(d) { return d.x; })
@@ -79,22 +76,20 @@
                 .data(treeData2.descendants())
                 .enter()
                 .append('g')
-                .attr('class', 'node')
+                .attr('class', function(d) {
+                    return d.depth === 0 ? 'node tree__node tree__node--root' : 'node tree__node';
+                })
                 .attr('transform', function(d) {
                     return 'translate(' + d.y + ',' + d.x + ')';
                 });
 
             // Circles for nodes
             node.append('circle')
-                .attr('r', 6)
-                .attr('fill', function(d) {
-                    return d.depth === 0 ? '#2b6cb0' : '#4299e1';
-                })
-                .attr('stroke', '#fff')
-                .attr('stroke-width', 2);
+                .attr('r', 6);
 
             // Labels
             node.append('text')
+                .attr('class', 'tree__label')
                 .attr('dy', '.35em')
                 .attr('x', function(d) {
                     return d.children ? -10 : 10;
@@ -102,8 +97,6 @@
                 .attr('text-anchor', function(d) {
                     return d.children ? 'end' : 'start';
                 })
-                .style('font-size', '12px')
-                .style('font-family', 'sans-serif')
                 .text(function(d) {
                     return d.data.name;
                 });

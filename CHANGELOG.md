@@ -8,7 +8,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- (No unreleased changes yet – this is the first stable release)
+- **Dark mode** – class-based theme toggle in the navbar; respects the system preference on first visit and remembers the choice in `localStorage` (applied before first paint, so no flash)
+- **Design tokens** – colours defined once as CSS variables in `resources/css/app.css` and exposed as `tux-*` Tailwind colours, so every component follows the theme
+- **Home hero** – gradient headline, prominent search box and quick links above the wiki page grid
+- **Article layout** – styled Markdown (`.article`) plus an auto-generated "On this page" table of contents with scroll-spy
+- **Keyboard search** – press `/` or `Ctrl/⌘+K` to focus the search box
+- **Mobile navigation** – hamburger menu (previously the nav links were hidden below `md`), active-page highlighting and a skip-to-content link
+- **Terminal window chrome** – title bar and traffic-light dots around the xterm container
+
+### Changed
+- **UI redesign ("Modern Docs")** – glass navbar, rounded cards with hover lift, refined buttons, badges, alerts and form fields across wiki, search, auth and distro pages
+- **Distro table** – sticky-style header, chips for "Based On", monospace package manager and architecture columns
+- **Family tree** – D3 output is styled through CSS classes so it follows light and dark themes
+- `tux-blue` is now an alias for the new indigo accent (`tux-accent`)
+- Tailwind now also scans Laravel/Livewire pagination views so their `dark:` variants are generated
+
+### Deprecated
+- (None)
+
+### Removed
+- (None)
+
+### Fixed
+- Markdown articles previously rendered unstyled because `.prose` was used without the typography plugin
+
+### Security
+- (None)
 
 ---
 

@@ -1,36 +1,40 @@
-<div class="max-w-md mx-auto bg-white p-6 rounded shadow">
-    <h2 class="text-2xl font-bold mb-6 text-center">Register</h2>
-
-    <form wire:submit.prevent="register">
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">Name</label>
-            <input wire:model="name" type="text" class="w-full border rounded px-3 py-2" required>
-            @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+<div class="mx-auto max-w-md animate-fade-up motion-reduce:animate-none">
+    <div class="card p-8">
+        <div class="mb-6 text-center">
+            <span class="card__mark mx-auto mb-4" aria-hidden="true">🐧</span>
+            <h2 class="text-2xl font-bold">Create your account</h2>
+            <p class="page-lead">Join Tuxpedia and start editing</p>
         </div>
 
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
-            <input wire:model="email" type="email" class="w-full border rounded px-3 py-2" required>
-            @error('email') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-        </div>
+        <form wire:submit.prevent="register" class="space-y-4">
+            <div>
+                <label class="field-label" for="register-name">Name</label>
+                <input wire:model="name" id="register-name" type="text" class="input-field @error('name') input-field--invalid @enderror" required>
+                @error('name') <p class="field-error">{{ $message }}</p> @enderror
+            </div>
 
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-            <input wire:model="password" type="password" class="w-full border rounded px-3 py-2" required>
-            @error('password') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-        </div>
+            <div>
+                <label class="field-label" for="register-email">Email</label>
+                <input wire:model="email" id="register-email" type="email" class="input-field @error('email') input-field--invalid @enderror" required>
+                @error('email') <p class="field-error">{{ $message }}</p> @enderror
+            </div>
 
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2">Confirm Password</label>
-            <input wire:model="password_confirmation" type="password" class="w-full border rounded px-3 py-2" required>
-        </div>
+            <div>
+                <label class="field-label" for="register-password">Password</label>
+                <input wire:model="password" id="register-password" type="password" class="input-field @error('password') input-field--invalid @enderror" required>
+                @error('password') <p class="field-error">{{ $message }}</p> @enderror
+            </div>
 
-        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Register
-        </button>
-    </form>
+            <div>
+                <label class="field-label" for="register-password-confirmation">Confirm Password</label>
+                <input wire:model="password_confirmation" id="register-password-confirmation" type="password" class="input-field" required>
+            </div>
 
-    <p class="mt-4 text-center text-sm text-gray-600">
-        Already have an account? <a href="{{ route('auth.login') }}" class="text-blue-500 hover:underline">Login</a>
-    </p>
+            <button type="submit" class="btn-primary w-full">Register</button>
+        </form>
+
+        <p class="mt-6 text-center text-sm text-tux-muted">
+            Already have an account? <a href="{{ route('auth.login') }}" class="font-medium">Login</a>
+        </p>
+    </div>
 </div>

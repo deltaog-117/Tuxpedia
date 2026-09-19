@@ -1,52 +1,44 @@
-<div>
+<div class="card p-6 sm:p-8">
     @if(session()->has('message'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        <div class="alert alert--success">
             {{ session('message') }}
         </div>
     @endif
 
     @if($errorMessage)
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div class="alert alert--error">
             {{ $errorMessage }}
         </div>
     @endif
 
-    <form wire:submit.prevent="save">
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="slug">
-                Slug (URL identifier)
-            </label>
-            <input wire:model="slug" id="slug" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('slug') border-red-500 @enderror" placeholder="e.g. ubuntu-linux">
-            @error('slug') <p class="text-red-500 text-xs italic">{{ $message }}</p> @enderror
+    <form wire:submit.prevent="save" class="space-y-5">
+        <div>
+            <label class="field-label" for="slug">Slug (URL identifier)</label>
+            <input wire:model="slug" id="slug" type="text" class="input-field font-mono @error('slug') input-field--invalid @enderror" placeholder="e.g. ubuntu-linux">
+            @error('slug') <p class="field-error">{{ $message }}</p> @enderror
         </div>
 
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
-                Title
-            </label>
-            <input wire:model="title" id="title" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline @error('title') border-red-500 @enderror" placeholder="Page title">
-            @error('title') <p class="text-red-500 text-xs italic">{{ $message }}</p> @enderror
+        <div>
+            <label class="field-label" for="title">Title</label>
+            <input wire:model="title" id="title" type="text" class="input-field @error('title') input-field--invalid @enderror" placeholder="Page title">
+            @error('title') <p class="field-error">{{ $message }}</p> @enderror
         </div>
 
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="author">
-                Author (optional)
-            </label>
-            <input wire:model="author" id="author" type="text" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Your name">
+        <div>
+            <label class="field-label" for="author">Author (optional)</label>
+            <input wire:model="author" id="author" type="text" class="input-field" placeholder="Your name">
         </div>
 
-        <div class="mb-4">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="content">
-                Content (Markdown)
-            </label>
-            <textarea wire:model="content" id="content" rows="15" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline font-mono" placeholder="Write your content in Markdown..."></textarea>
+        <div>
+            <label class="field-label" for="content">Content (Markdown)</label>
+            <textarea wire:model="content" id="content" rows="15" class="input-field font-mono" placeholder="Write your content in Markdown..."></textarea>
         </div>
 
         <div class="flex items-center justify-between">
-            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            <button type="submit" class="btn-primary">
                 {{ $isEditing ? 'Update Page' : 'Create Page' }}
             </button>
-            <a href="{{ $isEditing ? route('wiki.show', $slug) : route('wiki.index') }}" class="text-gray-600 hover:text-gray-800">Cancel</a>
+            <a href="{{ $isEditing ? route('wiki.show', $slug) : route('wiki.index') }}" class="btn-ghost">Cancel</a>
         </div>
     </form>
 </div>

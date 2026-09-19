@@ -1,5 +1,13 @@
 <div>
-    <div id="terminal-container" style="width: 100%; height: 500px; background: #1e1e1e; border-radius: 0.5rem; overflow: hidden;"></div>
+    <div class="terminal-window">
+        <div class="terminal-window__bar" aria-hidden="true">
+            <span class="terminal-window__dot bg-red-500"></span>
+            <span class="terminal-window__dot bg-yellow-400"></span>
+            <span class="terminal-window__dot bg-green-500"></span>
+            <span class="terminal-window__title">guest@tuxpedia: ~</span>
+        </div>
+        <div id="terminal-container" style="width: 100%; height: 500px; background: #1e1e1e; overflow: hidden;"></div>
+    </div>
 
     <!-- Load xterm.js from CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm/css/xterm.css" />
@@ -29,7 +37,7 @@
         });
     </script>
 
-    <div class="mt-4 text-sm text-gray-500">
-        <p>Try commands: <code class="bg-gray-100 px-2 py-1 rounded">ls</code>, <code class="bg-gray-100 px-2 py-1 rounded">pwd</code>, <code class="bg-gray-100 px-2 py-1 rounded">echo hello</code>, <code class="bg-gray-100 px-2 py-1 rounded">cat /etc/os-release</code></p>
+    <div class="mt-4 text-sm text-tux-muted">
+        <p>Try commands: <code>ls</code>, <code>pwd</code>, <code>echo hello</code>, <code>cat /etc/os-release</code></p>
     </div>
 </div>
