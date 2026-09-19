@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Keyboard search** – press `/` or `Ctrl/⌘+K` to focus the search box
 - **Mobile navigation** – hamburger menu (previously the nav links were hidden below `md`), active-page highlighting and a skip-to-content link
 - **Terminal window chrome** – title bar and traffic-light dots around the xterm container
+- **Unit tests for Markdown rendering** – `tests/Unit/Features/Wiki/ContentTest.php` covers rendering, script stripping and link handling
 
 ### Changed
 - **UI redesign ("Modern Docs")** – glass navbar, rounded cards with hover lift, refined buttons, badges, alerts and form fields across wiki, search, auth and distro pages
@@ -33,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Markdown articles previously rendered unstyled because `.prose` was used without the typography plugin
 
 ### Security
-- (None)
+- Wiki Markdown is now rendered through `Content::toHtml()`, which strips raw HTML and drops `javascript:`, `data:` and `vbscript:` links. Previously page content was printed unescaped, so a page could inject script into every visitor's browser.
 
 ---
 

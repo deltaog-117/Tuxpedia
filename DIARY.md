@@ -11,6 +11,7 @@
 | Date | Decision Area | Choice | Status |
 |------|---------------|--------|--------|
 | 2026-09-19 | UI direction | Modern Docs (COA 2) | ✅ Confirmed |
+| 2026-09-19 | Markdown safety | Strip HTML in `Content::toHtml()` | ✅ Confirmed |
 
 ---
 
@@ -68,3 +69,54 @@ The v0.1.0 UI was a plain GitHub-light theme: white navbar, grey background, thi
 
 - Sanitise Markdown output (see ROADMAP).
 - Option C distro accents.
+
+---
+
+### Safe Markdown Rendering
+
+**Date:** 2026-09-19
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Context / Background
+
+`wiki/show` printed `Str::markdown($page->content)` with `{!! !!}`. The installed Laravel version passes no options to CommonMark, whose defaults allow raw HTML and unsafe link schemes. Any user who can create or edit a page could inject a script that runs for every visitor (stored XSS).
+
+#### Options Considered
+
+**Option A: Pass strict options to `Str::markdown()` in the view**
+
+| Aspect | Assessment |
+|--------|------------|
+| **Advantages** | One-line change; no new dependency |
+| **Disadvantages** | Security settings live in a template; easy to forget if another view renders content; hard to unit test |
+| **Implementation Difficulty** | Easy |
+
+**Option B: Put rendering on the `Content` value object (`toHtml()`)**
+
+| Aspect | Assessment |
+|--------|------------|
+| **Advantages** | One place owns the safe settings; views cannot pick unsafe ones by accident; plain unit tests without a database |
+| **Disadvantages** | Slightly more code than a one-liner |
+| **Implementation Difficulty** | Easy |
+
+**Option C: Render freely, then sanitise the HTML with a library (e.g. HTMLPurifier)**
+
+| Aspect | Assessment |
+|--------|------------|
+| **Advantages** | Could allow a curated set of HTML tags in pages |
+| **Disadvantages** | New dependency and configuration; more moving parts than the current need justifies |
+| **Implementation Difficulty** | Medium |
+
+#### Decision
+
+**Option B.** CommonMark's own `html_input: strip` and `allow_unsafe_links: false` cover the need. Raw HTML in pages is not a feature anyone asked for; if it becomes one, Option C can be revisited.
+
+#### Verification
+
+Five unit tests in `tests/Unit/Features/Wiki/ContentTest.php` check that Markdown still renders, that `<script>` and `<img onerror>` are removed, that `javascript:` links are dropped, that normal https links are kept, and that empty content renders empty.
+
+#### Follow-ups
+
+- Existing pages that relied on raw HTML will now lose it. Existing page content has not been audited; check any pages that were created before this change.
+

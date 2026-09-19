@@ -34,7 +34,7 @@
     <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_14rem]">
         <article class="card p-6 sm:p-10">
             <div id="article-body" class="article">
-                {!! \Illuminate\Support\Str::markdown($page->content) !!}
+                {!! $page->content->toHtml() !!}
             </div>
         </article>
         <aside class="hidden lg:block">
