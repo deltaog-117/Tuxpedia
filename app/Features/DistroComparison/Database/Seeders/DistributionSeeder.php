@@ -7,9 +7,14 @@ use App\Features\DistroComparison\Models\Distribution;
 
 class DistributionSeeder extends Seeder
 {
-    public function run(): void
+    /**
+     * Every seeded distribution, keyed by nothing: one row per distro, in display order.
+     *
+     * @return list<array<string, string>>
+     */
+    public static function catalogue(): array
     {
-        $distros = [
+        return [
             [
                 'name' => 'Debian',
                 'slug' => 'debian',
@@ -118,9 +123,156 @@ class DistributionSeeder extends Seeder
                 'description' => 'Unique distribution built on the Nix package manager; system configuration is declarative and reproducible.',
                 'website' => 'https://nixos.org',
             ],
+            [
+                'name' => 'Artix Linux',
+                'slug' => 'artix',
+                'accent' => '#10a0cc',
+                'based_on' => 'Arch',
+                'package_manager' => 'Pacman',
+                'default_desktop' => 'None (ISOs for several desktops)',
+                'release_model' => 'Rolling',
+                'architecture' => 'x86_64',
+                'description' => 'Arch-based rolling distribution that replaces systemd with a choice of OpenRC, runit, s6 or dinit.',
+                'website' => 'https://artixlinux.org',
+            ],
+            [
+                'name' => 'Void Linux',
+                'slug' => 'void',
+                'accent' => '#478061',
+                'based_on' => 'Independent',
+                'package_manager' => 'XBPS',
+                'default_desktop' => 'None (user chooses)',
+                'release_model' => 'Rolling',
+                'architecture' => 'x86_64, i686, ARM',
+                'description' => 'Independent rolling distribution with its own package manager and the runit init system; offers glibc and musl builds.',
+                'website' => 'https://voidlinux.org',
+            ],
+            [
+                'name' => 'Slackware',
+                'slug' => 'slackware',
+                'accent' => '#35527a',
+                'based_on' => 'Independent',
+                'package_manager' => 'pkgtools (slackpkg)',
+                'default_desktop' => 'KDE Plasma',
+                'release_model' => 'Fixed (irregular)',
+                'architecture' => 'x86_64, x86, ARM',
+                'description' => 'The oldest Linux distribution still maintained: simple, BSD-style and deliberately free of automatic dependency resolution.',
+                'website' => 'http://www.slackware.com',
+            ],
+            [
+                'name' => 'Guix System',
+                'slug' => 'guix',
+                'accent' => '#f5a300',
+                'based_on' => 'Independent',
+                'package_manager' => 'Guix',
+                'default_desktop' => 'None (user chooses)',
+                'release_model' => 'Rolling via channels, with tagged releases',
+                'architecture' => 'x86_64, ARM, POWER, RISC-V',
+                'description' => 'GNU distribution configured in Guile Scheme, with transactional upgrades, rollbacks and only free software.',
+                'website' => 'https://guix.gnu.org',
+            ],
+            [
+                'name' => 'Qubes OS',
+                'slug' => 'qubes',
+                'accent' => '#3874d8',
+                'based_on' => 'Independent',
+                'package_manager' => 'DNF and APT inside templates',
+                'default_desktop' => 'Xfce',
+                'release_model' => 'Fixed',
+                'architecture' => 'x86_64',
+                'description' => 'Security-oriented system that runs every activity in its own Xen virtual machine.',
+                'website' => 'https://www.qubes-os.org',
+            ],
+            [
+                'name' => 'Tails',
+                'slug' => 'tails',
+                'accent' => '#56347c',
+                'based_on' => 'Debian',
+                'package_manager' => 'APT (managed by the project)',
+                'default_desktop' => 'GNOME',
+                'release_model' => 'Fixed (frequent point releases)',
+                'architecture' => 'x86_64',
+                'description' => 'Amnesic live system that sends all traffic through Tor and leaves no trace on the computer it runs on.',
+                'website' => 'https://tails.net',
+            ],
+            [
+                'name' => 'postmarketOS',
+                'slug' => 'postmarketos',
+                'accent' => '#009900',
+                'based_on' => 'Alpine',
+                'package_manager' => 'apk',
+                'default_desktop' => 'Phosh, Plasma Mobile, Sxmo, GNOME Mobile',
+                'release_model' => 'Fixed (six-monthly) and Edge (rolling)',
+                'architecture' => 'ARM, x86_64',
+                'description' => 'Alpine-based Linux for phones and tablets, built to give devices a decade of life through mainline kernels.',
+                'website' => 'https://postmarketos.org',
+            ],
+            [
+                'name' => 'Chimera Linux',
+                'slug' => 'chimera',
+                'accent' => '#8f5db7',
+                'based_on' => 'Independent',
+                'package_manager' => 'apk',
+                'default_desktop' => 'GNOME or KDE Plasma (live images)',
+                'release_model' => 'Rolling',
+                'architecture' => 'x86_64, aarch64, ppc64le, riscv64',
+                'description' => 'Independent distribution built on LLVM, musl, dinit and FreeBSD userland instead of the usual GNU stack.',
+                'website' => 'https://chimera-linux.org',
+            ],
+            [
+                'name' => 'Puppy Linux',
+                'slug' => 'puppy',
+                'accent' => '#c97b2a',
+                'based_on' => 'Independent',
+                'package_manager' => 'PET (petget)',
+                'default_desktop' => 'JWM',
+                'release_model' => 'Fixed',
+                'architecture' => 'x86_64, x86',
+                'description' => 'Family of tiny live distributions that load into RAM and can be built from Debian, Ubuntu or Slackware packages.',
+                'website' => 'https://puppylinux-woof-ce.github.io',
+            ],
+            [
+                'name' => 'Bedrock Linux',
+                'slug' => 'bedrock',
+                'accent' => '#6b7280',
+                'based_on' => 'Independent',
+                'package_manager' => 'Whatever its strata use (apt, pacman, dnf, ...)',
+                'default_desktop' => 'None (inherited from strata)',
+                'release_model' => 'Fixed (0.7.x point releases)',
+                'architecture' => 'x86_64, ARM, more',
+                'description' => 'Meta-distribution that lets you combine components of several other distributions in one running system.',
+                'website' => 'https://bedrocklinux.org',
+            ],
+            [
+                'name' => 'Solus',
+                'slug' => 'solus',
+                'accent' => '#5294e2',
+                'based_on' => 'Independent',
+                'package_manager' => 'eopkg',
+                'default_desktop' => 'Budgie',
+                'release_model' => 'Rolling (curated)',
+                'architecture' => 'x86_64',
+                'description' => 'Independent, desktop-focused distribution built from scratch, with Budgie, GNOME, Xfce and KDE Plasma editions.',
+                'website' => 'https://getsol.us',
+            ],
+            [
+                'name' => 'Tiny Core Linux',
+                'slug' => 'tinycore',
+                'accent' => '#2e9e9e',
+                'based_on' => 'Independent',
+                'package_manager' => 'TCZ extensions (tce-load)',
+                'default_desktop' => 'FLWM',
+                'release_model' => 'Fixed',
+                'architecture' => 'x86, x86_64, ARM (piCore)',
+                'description' => 'Minimal graphical system of roughly 11 to 16 MB that runs entirely in RAM and grows through extensions.',
+                'website' => 'http://www.tinycorelinux.net',
+            ],
         ];
+    }
 
-        foreach ($distros as $data) {
+    public function run(): void
+    {
+        foreach (self::catalogue() as $data) {
             Distribution::firstOrCreate(['slug' => $data['slug']], $data);
 
             // Rows seeded before accents existed keep their data; only the missing colour is filled in.

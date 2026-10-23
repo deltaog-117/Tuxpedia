@@ -44,7 +44,7 @@ final class UpdatePage
         $this->git->commitFile(
             $page->getMarkdownFilePath(),
             $newContent->toString(),
-            "Update page: {$page->slug}"
+            "docs(wiki): update page {$page->slug}"
         );
 
         Log::info('Wiki page updated', [

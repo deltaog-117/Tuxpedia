@@ -20,7 +20,7 @@ final class DeletePage
 
         $this->git->deleteFile(
             $page->getMarkdownFilePath(),
-            "Delete page: {$slug}"
+            "docs(wiki): delete page {$slug}"
         );
 
         $page->delete();

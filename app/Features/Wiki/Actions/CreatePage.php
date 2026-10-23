@@ -34,7 +34,7 @@ final class CreatePage
         $this->git->commitFile(
             $page->getMarkdownFilePath(),
             $content->toString(),
-            "Create page: {$page->slug}"
+            "docs(wiki): create page {$page->slug}"
         );
 
         Log::info('Wiki page created', [

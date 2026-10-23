@@ -66,7 +66,7 @@ class GitService
     public function moveFile(string $from, string $to): void
     {
         $this->runGitCommand(['mv', $from, $to]);
-        $this->runGitCommand(['commit', '-m', "Move file from {$from} to {$to}"]);
+        $this->runGitCommand(['commit', '-m', "docs(wiki): move {$from} to {$to}"]);
     }
 
     public function deleteFile(string $filePath, string $commitMessage): void

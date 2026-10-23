@@ -13,6 +13,7 @@
 | 2026-09-19 | UI direction | Modern Docs (COA 2) | ✅ Confirmed |
 | 2026-09-19 | Markdown safety | Strip HTML in `Content::toHtml()` | ✅ Confirmed |
 | 2026-10-23 | Page-to-distro link | Explicit `distribution_id` column (COA B) | ✅ Confirmed |
+| 2026-10-23 | Wiki content delivery | Markdown files in the repo plus an idempotent seeder (COA B) | ✅ Confirmed |
 
 ---
 
@@ -152,3 +153,34 @@ The "distro identity" feature (accent colours and an infobox) needs to know whic
 - The accent colour is stored as `#rrggbb` and wrapped in the `Accent` value object, which is the only way to produce the inline `--distro-accent` style; this keeps untrusted strings out of CSS.
 - `scripts/check` now runs PHPUnit only. Pint was left out on purpose: it fails on 34 existing files because the repo has no `pint.json`, and reformatting them does not belong in this change (see ROADMAP).
 - The migrations were not run against the MySQL development database in this session.
+
+---
+
+### Shipping Wiki Content With the Repository
+
+**Date:** 2026-10-23
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Context / Background
+
+The wiki had two articles (NixOS, Artix), both living only in one development database. The goal was to add the mainstream distributions plus independent and niche ones, and to correct the two existing articles.
+
+#### Options Considered
+
+| Option | Approach | Advantages | Disadvantages | Difficulty |
+|--------|----------|------------|---------------|------------|
+| A | Write straight into the database through the page actions | Fastest | Articles exist only on one machine | Easy |
+| B | Markdown files with front matter plus a seeder that uses the same actions | Reviewable in git, reproducible on any clone, safe to re-run | New parser and seeder | Medium |
+| C | Articles as PHP arrays in a seeder | No parser | Long Markdown in PHP is awkward to review | Easy |
+
+#### Decision
+
+**Option B.** Content that defines what the project shows should be reviewable and survive a fresh clone. The slug is the file name and distributions are referenced by slug, so a typo is a loud error instead of a silent missing infobox. The seeder only creates missing pages and only fills an unset distribution link, because readers may have edited pages.
+
+#### Consequences
+
+- Facts that change were verified against sources before writing; time-sensitive claims (releases, project status) carry their date or a "check the project site" note. Claims that could not be confirmed (for example Void's default C library) were left out.
+- The two rewrites were applied to the existing pages once through `UpdatePage`; the seeder alone would have skipped them.
+- A global commitlint hook rejected the wiki repository's commit messages, which exposed that saving a page writes the database before the commit and so can leave a row without history. The messages now follow Conventional Commits. Skipping the hook was considered and declined, since it would bypass a protection the owner configured. Making the save atomic is on the roadmap.
+- Article authors are fictional bylines, kept separate from the repository's commit authorship.

@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Wiki content library** – 19 new articles (Debian, Ubuntu, Arch Linux, Fedora, openSUSE, Linux Mint, Gentoo, Alpine Linux, Void Linux, Slackware, Guix System, Qubes OS, Tails, postmarketOS, Chimera Linux, Puppy Linux, Bedrock Linux, Solus, Tiny Core Linux), kept as Markdown with front matter in `database/content/wiki/` and imported by `WikiContentSeeder` (never overwrites an existing page)
+- **12 new distributions** in the comparison table, family tree and infobox: Artix, Void, Slackware, Guix System, Qubes OS, Tails, postmarketOS, Chimera, Puppy, Bedrock, Solus, Tiny Core
+- `ArticleFile` value object (front-matter parser) with tests that check every shipped article parses, names a seeded distro and contains no raw HTML
 - **Distro identity** – each distribution has a brand `accent` colour (validated `#rrggbb` via the `Accent` value object) shown on its wiki card, article header chip, comparison-table dot and family-tree node
 - **Distro infobox** – Wikipedia-style sidebar on linked wiki pages (based on, release model, package manager, default desktop, architecture, website)
 - **Page-to-distro link** – optional `wiki_pages.distribution_id` (nullable foreign key, set to null if the distro is deleted) with a "Distribution" dropdown in the wiki editor
@@ -22,6 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Unit tests for Markdown rendering** – `tests/Unit/Features/Wiki/ContentTest.php` covers rendering, script stripping and link handling
 
 ### Changed
+- **NixOS and Artix articles rewritten** – removed leftover chatbot text and layout `<br>` tags, clarified that Asterinas NixOS is not an official NixOS project, corrected the Artix GNOME-removal date to October 2025 and noted that the XLibre default was later reversed
+- Wiki repository commit messages now read `docs(wiki): create page slug` (was `Create page: slug`) so they satisfy the global commitlint hook
+- `DistributionSeeder` exposes its rows through `catalogue()`
 - `DistributionSeeder` fills in the accent colour of rows seeded earlier without overwriting other fields
 - `ExampleTest` now asserts that `/` redirects to the wiki index (it expected a 200 that the route never returned)
 - **UI redesign ("Modern Docs")** – glass navbar, rounded cards with hover lift, refined buttons, badges, alerts and form fields across wiki, search, auth and distro pages
@@ -37,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - (None)
 
 ### Fixed
+- Saving a wiki page failed after the database write whenever a Conventional Commits hook was configured globally, because the page's commit message was rejected
 - Markdown articles previously rendered unstyled because `.prose` was used without the typography plugin
 
 ### Security
