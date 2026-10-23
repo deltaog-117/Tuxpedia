@@ -12,7 +12,9 @@
 
 <section class="infobox" style="{{ $distribution->accentStyle() }}" aria-label="{{ $distribution->name }} at a glance">
     <p class="infobox__title">
-        @if($logo = $distribution->logoUrl())
+        @if(($logo = $distribution->logoUrl()) && Str::endsWith($logo, '.png'))
+            <img src="{{ $logo }}" alt="" class="h-5 w-auto shrink-0 rounded bg-white px-1">
+        @elseif($logo)
             <span class="logo-glyph logo-glyph--accent" style="--logo: url('{{ $logo }}')" aria-hidden="true"></span>
         @endif
         {{ $distribution->name }}

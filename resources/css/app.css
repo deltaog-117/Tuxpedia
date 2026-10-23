@@ -196,6 +196,11 @@
         @apply bg-none;
         background-color: rgb(var(--distro-accent));
     }
+    /* Raster logos keep their own colours, so they sit on a light chip instead of the accent. */
+    .card__mark.card__mark--raster {
+        @apply bg-white p-1 ring-1 ring-tux-border;
+        background-color: #fff;
+    }
     .card__mark {
         @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 text-lg font-bold text-white;
     }

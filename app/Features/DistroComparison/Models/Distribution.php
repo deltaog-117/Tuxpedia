@@ -55,10 +55,16 @@ class Distribution extends Model
     }
 
     /**
-     * Public URL of the official logo, or null when no SVG is bundled for this slug.
+     * Public URL of the official logo (SVG preferred, PNG when no vector exists), or null when none is bundled.
      */
     public function logoUrl(): ?string
     {
-        return is_file(public_path("images/distros/{$this->slug}.svg")) ? asset("images/distros/{$this->slug}.svg") : null;
+        foreach (['svg', 'png'] as $extension) {
+            if (is_file(public_path("images/distros/{$this->slug}.{$extension}"))) {
+                return asset("images/distros/{$this->slug}.{$extension}");
+            }
+        }
+
+        return null;
     }
 }

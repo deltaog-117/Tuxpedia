@@ -200,4 +200,4 @@ Official logos are bundled as static SVGs named by distro slug in `public/images
 
 #### Trade-offs
 
-Tiny Core publishes only a favicon, so it keeps the initial until a vector logo exists. Logos remain trademarks of their projects.
+Tiny Core publishes no vector logo, only a raster wordmark on its wiki, so its "core" wordmark (tagline cropped off) is bundled as a PNG. A mask would turn it into a blob, so raster logos render as a plain image on a light chip; `logoUrl()` prefers `.svg` and falls back to `.png`. Logos remain trademarks of their projects.

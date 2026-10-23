@@ -10,7 +10,7 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 - UI redesign "Modern Docs": design tokens, dark mode, hero, article layout with table of contents, mobile navigation, themed D3 tree and data table
 - Markdown sanitisation: raw HTML is stripped and unsafe link schemes are dropped when a page is rendered (`Content::toHtml()`, covered by unit tests)
 - Distro identity: brand accent colour per distro (wiki card, article header chip, comparison table dot, family-tree node) and an infobox sidebar on distro pages. A wiki page links to a distribution through an optional `distribution_id`, chosen in the editor
-- Distro logos: 20 of 21 distributions show their official logo (bundled SVG, CSS-masked) on the wiki card and infobox; Tiny Core has no vector logo and still uses the initial
+- Distro logos: all 21 distributions show their official logo (bundled SVG, CSS-masked; PNG for Tiny Core) on the wiki card and infobox
 - Project check command `scripts/check` (PHPUnit); stale `ExampleTest` corrected
 - Wiki content library: 21 reviewed articles (8 mainstream, 13 independent or niche distros, including rewrites of NixOS and Artix) stored as Markdown in `database/content/wiki/` and imported by `WikiContentSeeder`; 12 new distribution rows
 - Wiki commit messages follow Conventional Commits, so they pass the global commitlint hook
