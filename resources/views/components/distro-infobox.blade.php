@@ -11,7 +11,12 @@
 @endphp
 
 <section class="infobox" style="{{ $distribution->accentStyle() }}" aria-label="{{ $distribution->name }} at a glance">
-    <p class="infobox__title">{{ $distribution->name }}</p>
+    <p class="infobox__title">
+        @if($logo = $distribution->logoUrl())
+            <span class="logo-glyph logo-glyph--accent" style="--logo: url('{{ $logo }}')" aria-hidden="true"></span>
+        @endif
+        {{ $distribution->name }}
+    </p>
     @foreach($rows as $label => $value)
         @if($value)
             <div class="infobox__row">

@@ -42,7 +42,14 @@
             @foreach($pages as $page)
                 <li class="animate-fade-up motion-reduce:animate-none" style="animation-delay: {{ min($loop->index, 8) * 40 }}ms">
                     <a href="{{ route('wiki.show', $page->slug) }}" class="card card--interactive flex h-full gap-4 p-5 hover:no-underline" style="{{ $page->distribution?->accentStyle() }}">
-                        <span class="card__mark {{ $page->distribution?->accent ? 'card__mark--distro' : '' }}" aria-hidden="true">{{ Str::upper(Str::substr($page->title, 0, 1)) }}</span>
+                        @php($logo = $page->distribution?->logoUrl())
+                        <span class="card__mark {{ $page->distribution?->accent ? 'card__mark--distro' : '' }}" aria-hidden="true">
+                            @if($logo)
+                                <span class="logo-glyph" style="--logo: url('{{ $logo }}')"></span>
+                            @else
+                                {{ Str::upper(Str::substr($page->title, 0, 1)) }}
+                            @endif
+                        </span>
                         <span class="min-w-0 flex-1">
                             <span class="flex items-start justify-between gap-2">
                                 <span class="truncate font-semibold text-tux-text">{{ $page->title }}</span>

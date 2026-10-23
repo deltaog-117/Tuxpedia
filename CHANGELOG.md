@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Official distro logos** – 20 of 21 distributions show their official logo (Simple Icons plus Wikimedia Commons SVGs in `public/images/distros/`, painted through a CSS mask) on the wiki card and infobox instead of the title's initial; Tiny Core has no vector logo and keeps the initial
 - **Wiki content library** – 19 new articles (Debian, Ubuntu, Arch Linux, Fedora, openSUSE, Linux Mint, Gentoo, Alpine Linux, Void Linux, Slackware, Guix System, Qubes OS, Tails, postmarketOS, Chimera Linux, Puppy Linux, Bedrock Linux, Solus, Tiny Core Linux), kept as Markdown with front matter in `database/content/wiki/` and imported by `WikiContentSeeder` (never overwrites an existing page)
 - **12 new distributions** in the comparison table, family tree and infobox: Artix, Void, Slackware, Guix System, Qubes OS, Tails, postmarketOS, Chimera, Puppy, Bedrock, Solus, Tiny Core
 - `ArticleFile` value object (front-matter parser) with tests that check every shipped article parses, names a seeded distro and contains no raw HTML

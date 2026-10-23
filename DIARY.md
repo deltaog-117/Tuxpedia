@@ -14,6 +14,7 @@
 | 2026-09-19 | Markdown safety | Strip HTML in `Content::toHtml()` | ✅ Confirmed |
 | 2026-10-23 | Page-to-distro link | Explicit `distribution_id` column (COA B) | ✅ Confirmed |
 | 2026-10-23 | Wiki content delivery | Markdown files in the repo plus an idempotent seeder (COA B) | ✅ Confirmed |
+| 2026-10-23 | Distro logo delivery | Bundled SVGs painted via CSS mask, initial as fallback | ✅ Confirmed |
 
 ---
 
@@ -184,3 +185,19 @@ The wiki had two articles (NixOS, Artix), both living only in one development da
 - The two rewrites were applied to the existing pages once through `UpdatePage`; the seeder alone would have skipped them.
 - A global commitlint hook rejected the wiki repository's commit messages, which exposed that saving a page writes the database before the commit and so can leave a row without history. The messages now follow Conventional Commits. Skipping the hook was considered and declined, since it would bypass a protection the owner configured. Making the save atomic is on the roadmap.
 - Article authors are fictional bylines, kept separate from the repository's commit authorship.
+
+---
+
+### Distro Logos
+
+**Date:** 2026-10-23
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+Official logos are bundled as static SVGs named by distro slug in `public/images/distros/` (sources: Simple Icons, plus Wikimedia Commons for Guix, postmarketOS, Chimera and Puppy; the Guix file is cropped to its symbol) and drawn with a CSS `mask`, so they follow the accent colour and the theme with no inline SVG or runtime fetch. `Distribution::logoUrl()` returns null when no file exists and the views fall back to the initial.
+
+#### Trade-offs
+
+Tiny Core publishes only a favicon, so it keeps the initial until a vector logo exists. Logos remain trademarks of their projects.

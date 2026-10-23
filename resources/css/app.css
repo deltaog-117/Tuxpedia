@@ -166,7 +166,17 @@
         border-top: 4px solid rgb(var(--distro-accent, var(--tux-solid)));
     }
     .infobox__title {
-        @apply px-4 pt-3 text-base font-semibold text-tux-text;
+        @apply flex items-center gap-2 px-4 pt-3 text-base font-semibold text-tux-text;
+    }
+    /* Official logo painted through a mask so it takes the surrounding text colour. */
+    .logo-glyph {
+        @apply inline-block h-6 w-6 shrink-0 bg-current;
+        -webkit-mask: var(--logo) center / contain no-repeat;
+        mask: var(--logo) center / contain no-repeat;
+    }
+    .logo-glyph--accent {
+        @apply h-5 w-5;
+        background-color: rgb(var(--distro-accent));
     }
     .infobox__row {
         @apply flex flex-col gap-0.5 border-t border-tux-border px-4 py-2;

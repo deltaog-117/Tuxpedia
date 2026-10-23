@@ -53,4 +53,12 @@ class Distribution extends Model
     {
         return $this->accent === null ? '' : '--distro-accent: ' . $this->accent->toRgbChannels();
     }
+
+    /**
+     * Public URL of the official logo, or null when no SVG is bundled for this slug.
+     */
+    public function logoUrl(): ?string
+    {
+        return is_file(public_path("images/distros/{$this->slug}.svg")) ? asset("images/distros/{$this->slug}.svg") : null;
+    }
 }
