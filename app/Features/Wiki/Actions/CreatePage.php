@@ -17,7 +17,7 @@ final class CreatePage
         private GitService $git,
     ) {}
 
-    public function execute(Slug $slug, Title $title, Content $content, ?string $author = null): Page
+    public function execute(Slug $slug, Title $title, Content $content, ?string $author = null, ?int $distributionId = null): Page
     {
         if (Page::where('slug', $slug->toString())->exists()) {
             throw new \RuntimeException("Page with slug '{$slug}' already exists.");
@@ -28,6 +28,7 @@ final class CreatePage
         $page->title = $title;
         $page->content = $content;
         $page->author = $author;
+        $page->distribution_id = $distributionId;
         $page->save();
 
         $this->git->commitFile(
@@ -39,6 +40,7 @@ final class CreatePage
         Log::info('Wiki page created', [
             'slug' => $slug->toString(),
             'author' => $author,
+            'distribution_id' => $distributionId,
             'page_id' => $page->id,
         ]);
 

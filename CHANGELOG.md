@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Distro identity** – each distribution has a brand `accent` colour (validated `#rrggbb` via the `Accent` value object) shown on its wiki card, article header chip, comparison-table dot and family-tree node
+- **Distro infobox** – Wikipedia-style sidebar on linked wiki pages (based on, release model, package manager, default desktop, architecture, website)
+- **Page-to-distro link** – optional `wiki_pages.distribution_id` (nullable foreign key, set to null if the distro is deleted) with a "Distribution" dropdown in the wiki editor
+- `scripts/check` project check (runs PHPUnit) and unit tests for `Accent`
 - **Dark mode** – class-based theme toggle in the navbar; respects the system preference on first visit and remembers the choice in `localStorage` (applied before first paint, so no flash)
 - **Design tokens** – colours defined once as CSS variables in `resources/css/app.css` and exposed as `tux-*` Tailwind colours, so every component follows the theme
 - **Home hero** – gradient headline, prominent search box and quick links above the wiki page grid
@@ -18,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Unit tests for Markdown rendering** – `tests/Unit/Features/Wiki/ContentTest.php` covers rendering, script stripping and link handling
 
 ### Changed
+- `DistributionSeeder` fills in the accent colour of rows seeded earlier without overwriting other fields
+- `ExampleTest` now asserts that `/` redirects to the wiki index (it expected a 200 that the route never returned)
 - **UI redesign ("Modern Docs")** – glass navbar, rounded cards with hover lift, refined buttons, badges, alerts and form fields across wiki, search, auth and distro pages
 - **Distro table** – sticky-style header, chips for "Based On", monospace package manager and architecture columns
 - **Family tree** – D3 output is styled through CSS classes so it follows light and dark themes

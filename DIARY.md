@@ -12,6 +12,7 @@
 |------|---------------|--------|--------|
 | 2026-09-19 | UI direction | Modern Docs (COA 2) | ✅ Confirmed |
 | 2026-09-19 | Markdown safety | Strip HTML in `Content::toHtml()` | ✅ Confirmed |
+| 2026-10-23 | Page-to-distro link | Explicit `distribution_id` column (COA B) | ✅ Confirmed |
 
 ---
 
@@ -120,3 +121,34 @@ Five unit tests in `tests/Unit/Features/Wiki/ContentTest.php` check that Markdow
 
 - Existing pages that relied on raw HTML will now lose it. Existing page content has not been audited; check any pages that were created before this change.
 
+
+---
+
+### Linking Wiki Pages to Distributions
+
+**Date:** 2026-10-23
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Context / Background
+
+The "distro identity" feature (accent colours and an infobox) needs to know which distribution a wiki page is about. Wiki slugs are free-form (the editor suggests `ubuntu-linux`) while distribution slugs are short (`ubuntu`), so the two do not line up by themselves.
+
+#### Options Considered
+
+| Option | Approach | Advantages | Disadvantages | Difficulty |
+|--------|----------|------------|---------------|------------|
+| A | Match on slug | No schema change, no editor UI | Silent mismatches; renaming a page severs the link | Easy |
+| B | Nullable `distribution_id` on `wiki_pages`, chosen in the editor | Explicit and rename-safe; one distro can have many pages | Migration and editor change; Wiki now depends on DistroComparison | Medium |
+| C | Nullable `page_id` on `distributions` | One canonical page per distro | No cheap reverse lookup; needs a manual fill step | Medium |
+
+#### Decision
+
+**Option B.** It is the only option that stays correct when slugs change. The cost is a one-way dependency from Wiki to DistroComparison (`Page::distribution()`); the Wiki feature can no longer be deleted without touching that relation.
+
+#### Consequences
+
+- The foreign key uses `nullOnDelete`, so deleting a distribution never deletes the articles written about it.
+- The accent colour is stored as `#rrggbb` and wrapped in the `Accent` value object, which is the only way to produce the inline `--distro-accent` style; this keeps untrusted strings out of CSS.
+- `scripts/check` now runs PHPUnit only. Pint was left out on purpose: it fails on 34 existing files because the repo has no `pint.json`, and reformatting them does not belong in this change (see ROADMAP).
+- The migrations were not run against the MySQL development database in this session.

@@ -25,6 +25,18 @@
         </div>
 
         <div>
+            <label class="field-label" for="distribution">Distribution (optional)</label>
+            <select wire:model="distributionId" id="distribution" class="input-field @error('distributionId') input-field--invalid @enderror">
+                <option value="">None</option>
+                @foreach($distributions as $distribution)
+                    <option value="{{ $distribution->id }}">{{ $distribution->name }}</option>
+                @endforeach
+            </select>
+            <p class="mt-1 text-xs text-tux-muted">Adds the distro's colour and infobox to this page.</p>
+            @error('distributionId') <p class="field-error">{{ $message }}</p> @enderror
+        </div>
+
+        <div>
             <label class="field-label" for="author">Author (optional)</label>
             <input wire:model="author" id="author" type="text" class="input-field" placeholder="Your name">
         </div>

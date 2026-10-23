@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Features\Wiki\Http\Livewire;
 
+use App\Features\DistroComparison\Models\Distribution;
 use App\Features\Wiki\Actions\CreatePage;
 use App\Features\Wiki\Actions\UpdatePage;
 use App\Features\Wiki\Actions\GetPage;
@@ -24,6 +25,8 @@ class WikiEditor extends Component
     public string $title = '';
     public string $content = '';
     public string $author = '';
+    // String, not ?int: the <select> posts '' for "no distribution".
+    public string $distributionId = '';
 
     public bool $isEditing = false;
     public string $errorMessage = '';
@@ -33,6 +36,7 @@ class WikiEditor extends Component
         'title' => 'required|string|max:255',
         'content' => 'nullable|string',
         'author' => 'nullable|string|max:255',
+        'distributionId' => 'nullable|integer|exists:distributions,id',
     ];
 
     public function mount(?string $slug = null): void
@@ -45,6 +49,7 @@ class WikiEditor extends Component
                 $this->title = $this->page->title->toString();
                 $this->content = $this->page->content->toString();
                 $this->author = $this->page->author ?? '';
+                $this->distributionId = (string) ($this->page->distribution_id ?? '');
                 $this->isEditing = true;
             } catch (PageNotFoundException $e) {
                 abort(404, $e->getMessage());
@@ -63,15 +68,16 @@ class WikiEditor extends Component
             $titleObj = Title::fromString($this->title);
             $contentObj = Content::fromString($this->content);
             $author = $this->author ?: null;
+            $distributionId = $this->distributionId === '' ? null : (int) $this->distributionId;
 
             if ($this->isEditing) {
                 $updatePage = app(UpdatePage::class);
-                $this->page = $updatePage->execute($this->page, $slugObj, $titleObj, $contentObj, $author);
+                $this->page = $updatePage->execute($this->page, $slugObj, $titleObj, $contentObj, $author, $distributionId);
                 session()->flash('message', 'Page updated successfully.');
                 Log::info('Wiki page edited via Livewire', ['slug' => $slugObj->toString()]);
             } else {
                 $createPage = app(CreatePage::class);
-                $this->page = $createPage->execute($slugObj, $titleObj, $contentObj, $author);
+                $this->page = $createPage->execute($slugObj, $titleObj, $contentObj, $author, $distributionId);
                 session()->flash('message', 'Page created successfully.');
                 Log::info('Wiki page created via Livewire', ['slug' => $slugObj->toString()]);
             }
@@ -88,7 +94,8 @@ class WikiEditor extends Component
 
     public function render()
     {
-        return view('features.wiki.editor')
-            ->layout('layouts.app');
+        return view('features.wiki.editor', [
+            'distributions' => Distribution::orderBy('name')->get(['id', 'name']),
+        ])->layout('layouts.app');
     }
 }

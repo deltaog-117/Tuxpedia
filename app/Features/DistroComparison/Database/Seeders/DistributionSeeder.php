@@ -13,6 +13,7 @@ class DistributionSeeder extends Seeder
             [
                 'name' => 'Debian',
                 'slug' => 'debian',
+                'accent' => '#a81d33',
                 'based_on' => 'Independent',
                 'package_manager' => 'APT (dpkg)',
                 'default_desktop' => 'GNOME (optional)',
@@ -24,6 +25,7 @@ class DistributionSeeder extends Seeder
             [
                 'name' => 'Ubuntu',
                 'slug' => 'ubuntu',
+                'accent' => '#e95420',
                 'based_on' => 'Debian',
                 'package_manager' => 'APT (dpkg)',
                 'default_desktop' => 'GNOME',
@@ -35,6 +37,7 @@ class DistributionSeeder extends Seeder
             [
                 'name' => 'Arch Linux',
                 'slug' => 'arch',
+                'accent' => '#1793d1',
                 'based_on' => 'Independent',
                 'package_manager' => 'Pacman',
                 'default_desktop' => 'None (user chooses)',
@@ -46,6 +49,7 @@ class DistributionSeeder extends Seeder
             [
                 'name' => 'Fedora',
                 'slug' => 'fedora',
+                'accent' => '#51a2da',
                 'based_on' => 'Red Hat',
                 'package_manager' => 'DNF (RPM)',
                 'default_desktop' => 'GNOME',
@@ -57,6 +61,7 @@ class DistributionSeeder extends Seeder
             [
                 'name' => 'openSUSE',
                 'slug' => 'opensuse',
+                'accent' => '#73ba25',
                 'based_on' => 'Independent (SUSE)',
                 'package_manager' => 'ZYpp (RPM)',
                 'default_desktop' => 'GNOME (optional)',
@@ -68,6 +73,7 @@ class DistributionSeeder extends Seeder
             [
                 'name' => 'Linux Mint',
                 'slug' => 'linux-mint',
+                'accent' => '#87cf3e',
                 'based_on' => 'Ubuntu (LTS)',
                 'package_manager' => 'APT (dpkg)',
                 'default_desktop' => 'Cinnamon',
@@ -79,6 +85,7 @@ class DistributionSeeder extends Seeder
             [
                 'name' => 'Gentoo',
                 'slug' => 'gentoo',
+                'accent' => '#54487a',
                 'based_on' => 'Independent',
                 'package_manager' => 'Portage (emerge)',
                 'default_desktop' => 'None (user builds)',
@@ -90,6 +97,7 @@ class DistributionSeeder extends Seeder
             [
                 'name' => 'Alpine Linux',
                 'slug' => 'alpine',
+                'accent' => '#0d597f',
                 'based_on' => 'Independent',
                 'package_manager' => 'APK',
                 'default_desktop' => 'None (minimal)',
@@ -101,6 +109,7 @@ class DistributionSeeder extends Seeder
             [
                 'name' => 'NixOS',
                 'slug' => 'nixos',
+                'accent' => '#5277c3',
                 'based_on' => 'Independent',
                 'package_manager' => 'Nix',
                 'default_desktop' => 'None (declarative)',
@@ -113,6 +122,9 @@ class DistributionSeeder extends Seeder
 
         foreach ($distros as $data) {
             Distribution::firstOrCreate(['slug' => $data['slug']], $data);
+
+            // Rows seeded before accents existed keep their data; only the missing colour is filled in.
+            Distribution::where('slug', $data['slug'])->whereNull('accent')->update(['accent' => $data['accent']]);
         }
     }
 }

@@ -17,7 +17,7 @@ final class UpdatePage
         private GitService $git,
     ) {}
 
-    public function execute(Page $page, Slug $newSlug, Title $newTitle, Content $newContent, ?string $newAuthor = null): Page
+    public function execute(Page $page, Slug $newSlug, Title $newTitle, Content $newContent, ?string $newAuthor = null, ?int $distributionId = null): Page
     {
         if ($newSlug->toString() !== $page->slug->toString()) {
             if (Page::where('slug', $newSlug->toString())->where('id', '!=', $page->id)->exists()) {
@@ -31,6 +31,7 @@ final class UpdatePage
         $page->title = $newTitle;
         $page->content = $newContent;
         $page->author = $newAuthor ?? $page->author;
+        $page->distribution_id = $distributionId;
         $page->save();
 
         if ($oldSlug !== $newSlug->toString()) {
@@ -50,6 +51,7 @@ final class UpdatePage
             'old_slug' => $oldSlug,
             'new_slug' => $page->slug->toString(),
             'author' => $newAuthor,
+            'distribution_id' => $distributionId,
             'page_id' => $page->id,
         ]);
 

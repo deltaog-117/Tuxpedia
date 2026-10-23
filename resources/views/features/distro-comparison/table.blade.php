@@ -45,7 +45,9 @@
             <tbody>
                 @forelse($distributions as $distro)
                     <tr>
-                        <td class="font-semibold">{{ $distro->name }}</td>
+                        <td class="font-semibold" style="{{ $distro->accentStyle() }}">
+                            <span class="distro-dot" aria-hidden="true"></span>{{ $distro->name }}
+                        </td>
                         <td>
                             @if($distro->based_on)
                                 <span class="chip">{{ $distro->based_on }}</span>

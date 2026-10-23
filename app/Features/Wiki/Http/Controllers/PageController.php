@@ -23,7 +23,7 @@ class PageController
 
     public function index(): View
     {
-        $pages = \App\Features\Wiki\Models\Page::orderBy('title')->get();
+        $pages = \App\Features\Wiki\Models\Page::with('distribution')->orderBy('title')->get();
         return view('features.wiki.index', ['pages' => $pages]);
     }
 }

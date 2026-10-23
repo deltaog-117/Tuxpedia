@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Features\Wiki\Models;
 
 use App\Features\Auth\Models\User;
+use App\Features\DistroComparison\Models\Distribution;
 use App\Features\Wiki\ValueObjects\Content;
 use App\Features\Wiki\ValueObjects\Slug;
 use App\Features\Wiki\ValueObjects\Title;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Page extends Model
 {
@@ -19,12 +21,18 @@ class Page extends Model
         'title',
         'content',
         'author',
+        'distribution_id',
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public function distribution(): BelongsTo
+    {
+        return $this->belongsTo(Distribution::class);
+    }
 
     public function getSlugAttribute(string $value): Slug
     {

@@ -85,7 +85,10 @@
 
             // Circles for nodes
             node.append('circle')
-                .attr('r', 6);
+                .attr('r', 6)
+                .style('fill', function(d) {
+                    return d.data.accent || null;
+                });
 
             // Labels
             node.append('text')

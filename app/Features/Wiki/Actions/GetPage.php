@@ -11,7 +11,7 @@ final class GetPage
 {
     public function execute(string $slug): Page
     {
-        $page = Page::where('slug', $slug)->first();
+        $page = Page::with('distribution')->where('slug', $slug)->first();
         if (!$page) {
             throw new PageNotFoundException($slug);
         }

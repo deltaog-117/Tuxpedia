@@ -38,6 +38,7 @@ class FamilyTree extends Component
             $nodes[$distro->slug] = [
                 'name' => $distro->name,
                 'slug' => $distro->slug,
+                'accent' => $distro->accent?->toString(),
                 'based_on' => $distro->based_on,
                 'children' => [],
             ];

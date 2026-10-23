@@ -152,12 +152,39 @@
         @apply inline-flex items-center gap-1 rounded-full border border-tux-border bg-tux-surface px-2.5 py-0.5 text-xs text-tux-muted;
     }
 
+    /* Distro identity: pages set --distro-accent (r g b channels) via an inline style */
+    .distro-dot {
+        @apply mr-2 inline-block h-2.5 w-2.5 rounded-full bg-tux-solid;
+        background-color: rgb(var(--distro-accent, var(--tux-solid)));
+    }
+    .chip--distro {
+        border-color: rgb(var(--distro-accent, var(--tux-border)) / 0.5);
+        @apply text-tux-text;
+    }
+    .infobox {
+        @apply overflow-hidden rounded-2xl border border-tux-border bg-tux-surface text-sm shadow-sm;
+        border-top: 4px solid rgb(var(--distro-accent, var(--tux-solid)));
+    }
+    .infobox__title {
+        @apply px-4 pt-3 text-base font-semibold text-tux-text;
+    }
+    .infobox__row {
+        @apply flex flex-col gap-0.5 border-t border-tux-border px-4 py-2;
+    }
+    .infobox__label {
+        @apply text-xs font-medium uppercase tracking-wide text-tux-muted;
+    }
+
     /* Cards */
     .card {
         @apply rounded-2xl border border-tux-border bg-tux-surface shadow-sm transition duration-200;
     }
     .card--interactive {
         @apply hover:-translate-y-0.5 hover:border-tux-accent/40 hover:shadow-lg;
+    }
+    .card__mark.card__mark--distro {
+        @apply bg-none;
+        background-color: rgb(var(--distro-accent));
     }
     .card__mark {
         @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-violet-500 text-lg font-bold text-white;
