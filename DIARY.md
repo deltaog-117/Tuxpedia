@@ -17,6 +17,7 @@
 | 2026-10-23 | Distro logo delivery | Bundled SVGs painted via CSS mask, initial as fallback | ✅ Confirmed |
 | 2026-10-24 | Home page layout | Encyclopedia masthead replaces the gradient hero | ✅ Confirmed |
 | 2026-10-24 | Family tree parents | Resolve `based_on` by normalised name in `BuildFamilyTree` | ✅ Confirmed |
+| 2026-10-24 | Terminal simulator | Client-side shell with pipes, redirects and Tab completion | ✅ Confirmed |
 
 ---
 
@@ -294,3 +295,26 @@ The old builder appended children to a copy of the parent and only matched exact
 - The normalisation exists in two classes and could be shared if it changes again.
 - The page is a force-directed map instead of a chart with one virtual root: families are pinned to anchors and the childless distros to a central ring, so clusters cannot overlap. Selecting a node opens a side panel, not the article, so the map stays in view; D3 stays on the CDN, pinned to 7.9.0.
 - Nodes show the bundled logos: vector logos are painted white through an SVG alpha mask on an accent-coloured disc, the same idea as the CSS mask used on wiki cards; the raster Tiny Core logo sits on a white disc with an edge, and a distro with no logo shows its initial.
+
+---
+
+### Terminal Simulator Shell
+
+**Date:** 2026-10-24
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+The simulator stays a browser-only mock. Input is tokenized (quotes group words; `|`, `>` and `>>` are operators), split into pipeline segments and run left to right; each command is `(args, env, stdin)` and returns a string that becomes the next command's stdin or is written to a file. Tab completes command names for the first word and paths after it. The window dots are real buttons: close ends the session, minimize collapses the window to its title bar and maximize makes it fixed and full-size.
+
+#### Reasoning
+
+A string-in, string-out command table is enough for teaching pipes and redirects and keeps every command a pure function of its arguments and the in-memory filesystem. A real shell grammar (variables, globbing, subshells) would add far more code than the page needs.
+
+#### Consequences
+
+- The filesystem is mutable but lives only in the page, so `touch`, `mkdir` and redirects are lost on reload.
+- Commands see `env.piped` so `ls` prints one name per line when its output is piped or redirected, as a real `ls` does.
+- Not supported: variables, globbing, `&&`, `;`, `<`, `2>`, background jobs and Ctrl+C.
+- The scrollbar is styled with `scrollbar-color` and `::-webkit-scrollbar` on `.xterm-viewport`; `public/css/app.css` is rebuilt with `npm run css:build`.

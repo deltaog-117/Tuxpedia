@@ -474,7 +474,51 @@
         @apply flex items-center gap-2 border-b border-white/10 bg-zinc-800 px-4 py-2.5;
     }
     .terminal-window__dot {
-        @apply h-3 w-3 rounded-full;
+        @apply relative flex h-3 w-3 cursor-pointer items-center justify-center rounded-full;
+    }
+    .terminal-window__dot::after {
+        content: attr(data-glyph);
+        @apply text-[9px] font-bold leading-none text-black/60 opacity-0;
+    }
+    .terminal-window__bar:hover .terminal-window__dot::after {
+        @apply opacity-100;
+    }
+    .terminal-window.is-minimized .terminal-window__body {
+        @apply hidden;
+    }
+    .terminal-window.is-maximized {
+        @apply fixed inset-4 z-50 flex flex-col shadow-2xl;
+    }
+    .terminal-window.is-maximized .terminal-window__body {
+        @apply min-h-0 flex-1;
+    }
+    .terminal-window.is-maximized .terminal-window__screen {
+        @apply h-full;
+    }
+    .terminal-window__body {
+        @apply bg-[#1e1e1e] px-4 py-3;
+    }
+    .terminal-window__screen {
+        @apply h-[480px] w-full overflow-hidden;
+    }
+    /* Dark scrollbar matching the emulator background */
+    .terminal-window__screen .xterm-viewport {
+        scrollbar-width: thin;
+        scrollbar-color: #4a4a4a #1e1e1e;
+    }
+    .terminal-window__screen .xterm-viewport::-webkit-scrollbar {
+        width: 10px;
+    }
+    .terminal-window__screen .xterm-viewport::-webkit-scrollbar-track {
+        background: #1e1e1e;
+    }
+    .terminal-window__screen .xterm-viewport::-webkit-scrollbar-thumb {
+        background: #4a4a4a;
+        border: 2px solid #1e1e1e;
+        border-radius: 5px;
+    }
+    .terminal-window__screen .xterm-viewport::-webkit-scrollbar-thumb:hover {
+        background: #5c5c5c;
     }
     .terminal-window__title {
         @apply ml-2 font-mono text-xs text-zinc-400;

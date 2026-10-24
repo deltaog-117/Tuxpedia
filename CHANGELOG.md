@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Terminal shell features** – pipes (`ls | grep doc`), output redirection (`>` and `>>`), quoted arguments and Tab completion for commands and paths in the terminal simulator; `grep`, `cat`, `head`, `tail` and `wc` read piped input, and `sort` and `uniq` are new
+- **Terminal commands** – `mkdir`, `touch`, `rm`, `cp`, `mv`, `tree`, `head`, `tail`, `wc`, `grep`, `sort`, `uniq`, `id`, `hostname`, `date`, `uptime`, `free`, `df`, `ps`, `env`, `history`, `neofetch`, `which`, `man`, `cowsay`, `fortune` and `sudo`; `ls` gains `-a` and `-l`, `cat` takes several files; the filesystem is writable for the session
+- **Terminal window buttons** – the red dot ends the session, the yellow one collapses the window to its title bar and the green one maximizes it (Esc leaves); each dot shows a glyph on hover and the title follows the working directory
 - **Encyclopedia home page** – masthead with serif wordmark, tagline, search and article/distribution counts; a day-rotating featured article, a Portals list and a "Browse by family" index above the article grid (`GetFeaturedPage`, `GroupPagesByFamily`, `Content::toExcerpt()`, with unit tests)
 - Source Serif 4 for headings (h1–h4); Space Grotesk for the wordmark, tagline and navbar brand
 - **Tuxpedia logo** – a penguin at a laptop showing a terminal prompt, on an indigo badge (`public/images/tuxpedia-logo.svg`), shown beside the name in the navbar and masthead and used as the favicon, replacing the penguin emoji in the navbar
@@ -28,6 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Unit tests for Markdown rendering** – `tests/Unit/Features/Wiki/ContentTest.php` covers rendering, script stripping and link handling
 
 ### Changed
+- Terminal: the screen is padded inside the window and uses a monospace stack with a block cursor; the scrollbar is dark to match the emulator; the prompt shows the working directory
+- Terminal: paths such as `a/../b` and `~` resolve correctly, and multi-line output no longer staircases
 - **Family tree map** – the D3 chart (a made-up "Linux" root with 17 curves, labels over links, double scrollbars) is now an interactive map: each family is a cluster anchored around a central ring of independent distros, nodes show each distro's official logo on its accent colour (initial when there is no logo, raster Tiny Core logo on white) and are sized by number of derivatives, hovering highlights a lineage, and selecting a node opens a side panel with its summary, parent, derivatives and a link to its article. Zoom, pan and drag; the layout settles before the first paint and fits the view (`BuildFamilyGraph`, with unit tests)
 - Home page: the gradient hero is replaced by the encyclopedia masthead; "Wiki pages" is now "All articles"
 - **NixOS and Artix articles rewritten** – removed leftover chatbot text and layout `<br>` tags, clarified that Asterinas NixOS is not an official NixOS project, corrected the Artix GNOME-removal date to October 2025 and noted that the XLibre default was later reversed
