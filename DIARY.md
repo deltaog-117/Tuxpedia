@@ -293,3 +293,4 @@ The old builder appended children to a copy of the parent and only matched exact
 - No schema change; a stored parent slug stays an option if names drift.
 - The normalisation exists in two classes and could be shared if it changes again.
 - The page is a force-directed map instead of a chart with one virtual root: families are pinned to anchors and the childless distros to a central ring, so clusters cannot overlap. Selecting a node opens a side panel, not the article, so the map stays in view; D3 stays on the CDN, pinned to 7.9.0.
+- Nodes show the bundled logos: vector logos are painted white through an SVG alpha mask on an accent-coloured disc, the same idea as the CSS mask used on wiki cards; the raster Tiny Core logo sits on a white disc with an edge, and a distro with no logo shows its initial.

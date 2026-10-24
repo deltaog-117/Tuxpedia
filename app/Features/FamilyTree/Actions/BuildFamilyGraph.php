@@ -58,6 +58,8 @@ class BuildFamilyGraph
             'name' => $node['name'],
             'accent' => $node['accent'],
             'summary' => $node['summary'],
+            'logo' => $node['logo'],
+            'raster' => $node['logo'] !== null && str_ends_with($node['logo'], '.png'),
             'url' => $node['page'] ? $urlFor($node['page']) : null,
             'parent' => $parent,
             'cluster' => $cluster,

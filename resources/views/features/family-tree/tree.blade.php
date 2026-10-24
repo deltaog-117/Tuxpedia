@@ -30,7 +30,7 @@
                 return ids;
             }
 
-            const radius = function (d) { return 11 + 4 * Math.sqrt(d.derivatives); };
+            const radius = function (d) { return 18 + 5 * Math.sqrt(d.derivatives); };
 
             // Independents ring the centre; each family is anchored on an ellipse around them.
             const cx = width / 2;
@@ -38,7 +38,7 @@
             const families = graph.clusters.filter(function (c) { return !c.standalone; });
             const anchors = new Map(families.map(function (c, i) {
                 const angle = (i / families.length) * 2 * Math.PI - Math.PI / 2;
-                return [c.id, { x: cx + Math.cos(angle) * width * 0.34, y: cy + Math.sin(angle) * height * 0.36 }];
+                return [c.id, { x: cx + Math.cos(angle) * width * 0.34, y: cy + Math.sin(angle) * height * 0.4 }];
             }));
             const standalone = new Set(graph.clusters.filter(function (c) { return c.standalone; }).map(function (c) { return c.id; }));
             const inFamily = function (d) { return !standalone.has(d.cluster); };
@@ -59,10 +59,40 @@
                 .append('g').attr('class', 'tree-map__node').attr('tabindex', 0).attr('role', 'button')
                 .attr('aria-label', function (d) { return d.name; });
 
+            const svgNs = 'http://www.w3.org/2000/svg';
+            const defs = svg.append('defs');
+
+            // Vector logos are single-colour: an alpha mask lets a white rect take their shape.
+            nodes.filter(function (d) { return d.logo && !d.raster; }).forEach(function (d) {
+                const r = radius(d) * 0.62;
+                const mask = defs.append('mask').attr('id', 'logo-' + d.id).attr('maskUnits', 'userSpaceOnUse')
+                    .attr('x', -r).attr('y', -r).attr('width', 2 * r).attr('height', 2 * r)
+                    .style('mask-type', 'alpha');
+                mask.append('image').attr('href', d.logo).attr('x', -r).attr('y', -r)
+                    .attr('width', 2 * r).attr('height', 2 * r).attr('preserveAspectRatio', 'xMidYMid meet');
+            });
+
             node.append('circle')
+                .attr('class', function (d) { return d.raster ? 'tree-map__disc tree-map__disc--raster' : 'tree-map__disc'; })
                 .attr('r', radius)
-                .style('fill', function (d) { return d.accent || null; });
-            node.append('text').attr('dy', function (d) { return radius(d) + 15; }).attr('text-anchor', 'middle')
+                .style('fill', function (d) { return d.raster ? '#fff' : (d.accent || null); });
+
+            node.each(function (d) {
+                const g = d3.select(this);
+                const r = radius(d) * (d.raster ? 0.8 : 0.62);
+                if (d.raster) {
+                    g.append('image').attr('href', d.logo).attr('x', -r).attr('y', -r)
+                        .attr('width', 2 * r).attr('height', 2 * r).attr('class', 'tree-map__glyph');
+                } else if (d.logo) {
+                    g.append('rect').attr('x', -r).attr('y', -r).attr('width', 2 * r).attr('height', 2 * r)
+                        .attr('class', 'tree-map__glyph').attr('mask', 'url(#logo-' + d.id + ')');
+                } else {
+                    g.append('text').attr('class', 'tree-map__initial').attr('dy', '.35em').attr('text-anchor', 'middle')
+                        .text(d.name.charAt(0).toUpperCase());
+                }
+            });
+
+            node.append('text').attr('class', 'tree-map__name').attr('dy', function (d) { return radius(d) + 16; }).attr('text-anchor', 'middle')
                 .text(function (d) { return d.name; });
 
             function highlight(d) {
@@ -120,7 +150,7 @@
                 .force('collide', d3.forceCollide(function (d) { return radius(d) + 30; }))
                 .force('x', d3.forceX(function (d) { return inFamily(d) ? anchors.get(d.cluster).x : cx; }).strength(function (d) { return inFamily(d) ? 0.14 : 0.01; }))
                 .force('y', d3.forceY(function (d) { return inFamily(d) ? anchors.get(d.cluster).y : cy; }).strength(function (d) { return inFamily(d) ? 0.14 : 0.01; }))
-                .force('ring', d3.forceRadial(height * 0.2, cx, cy).strength(function (d) { return inFamily(d) ? 0 : 0.9; }))
+                .force('ring', d3.forceRadial(height * 0.19, cx, cy).strength(function (d) { return inFamily(d) ? 0 : 0.9; }))
                 .stop();
 
             // Settle before the first paint, then zoom to fit so nothing starts clipped.

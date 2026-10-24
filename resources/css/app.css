@@ -413,20 +413,33 @@
         outline: none;
         transition: opacity 0.15s;
     }
-    .tree-map__node circle {
+    .tree-map__disc {
         fill: rgb(var(--tux-solid));
         stroke: rgb(var(--tux-surface));
         stroke-width: 3;
         transition: stroke 0.15s;
     }
-    .tree-map__node text {
+    /* Raster logos keep their own colours, so the disc needs an edge against the white card. */
+    .tree-map__disc--raster {
+        stroke: rgb(var(--tux-border));
+    }
+    .tree-map__glyph {
+        fill: #fff;
+        pointer-events: none;
+    }
+    .tree-map__initial {
+        fill: #fff;
+        font: 700 18px Inter, system-ui, sans-serif;
+        pointer-events: none;
+    }
+    .tree-map__name {
         fill: rgb(var(--tux-text));
         font: 500 14px Inter, system-ui, sans-serif;
         pointer-events: none;
     }
-    .tree-map__node:hover circle,
-    .tree-map__node:focus-visible circle,
-    .tree-map__node.is-selected circle {
+    .tree-map__node:hover .tree-map__disc,
+    .tree-map__node:focus-visible .tree-map__disc,
+    .tree-map__node.is-selected .tree-map__disc {
         stroke: rgb(var(--tux-text));
     }
     .tree-map__node.is-dim,

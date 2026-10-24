@@ -9,9 +9,9 @@ use PHPUnit\Framework\TestCase;
 
 final class BuildFamilyGraphTest extends TestCase
 {
-    private function node(string $name, array $children = [], ?string $page = null): array
+    private function node(string $name, array $children = [], ?string $page = null, ?string $logo = null): array
     {
-        return ['name' => $name, 'slug' => strtolower($name), 'accent' => null, 'page' => $page, 'summary' => null, 'children' => $children];
+        return ['name' => $name, 'slug' => strtolower($name), 'accent' => null, 'page' => $page, 'summary' => null, 'logo' => $logo, 'children' => $children];
     }
 
     public function test_flattens_families_into_clusters_with_links_and_counts(): void
@@ -46,5 +46,16 @@ final class BuildFamilyGraphTest extends TestCase
         $graph = (new BuildFamilyGraph())->execute([$this->node('Debian', [$this->node('Ubuntu')])], fn (string $slug): string => $slug);
 
         $this->assertCount(1, $graph['clusters']);
+    }
+
+    public function test_flags_raster_logos_so_they_are_not_recoloured(): void
+    {
+        $graph = (new BuildFamilyGraph())->execute([
+            $this->node('Debian', [$this->node('Ubuntu', [], null, '/images/distros/ubuntu.svg')], null, '/images/distros/tinycore.png'),
+        ], fn (string $slug): string => $slug);
+
+        $byId = array_column($graph['nodes'], null, 'id');
+        $this->assertTrue($byId['debian']['raster']);
+        $this->assertFalse($byId['ubuntu']['raster']);
     }
 }

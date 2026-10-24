@@ -6,7 +6,7 @@ namespace Tests\Unit\Features\FamilyTree;
 
 use App\Features\DistroComparison\Models\Distribution;
 use App\Features\FamilyTree\Actions\BuildFamilyTree;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 final class BuildFamilyTreeTest extends TestCase
 {
