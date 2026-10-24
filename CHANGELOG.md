@@ -42,6 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Browse by family follows the whole ancestry** – `GroupPagesByFamily` now walks the `based_on` chain to its root, so Linux Mint, Ubuntu and Tails sit together under Debian and Artix under Arch Linux, instead of Mint appearing under a separate "Ubuntu" family; roots with no derivatives share "Independent"; loops in the data are cut off
 
+- **Sans-serif headings and clearer article sections** – headings and the featured-article title now use Space Grotesk, and the featured excerpt uses Inter in the muted colour, so the serif face (Source Serif 4) is no longer loaded; article headings get a wider gap above and a tight gap below so each binds to its own text, h2 gets more padding under its rule, and the body is capped at a readable line length with looser leading
+
 ### Deprecated
 - (None)
 

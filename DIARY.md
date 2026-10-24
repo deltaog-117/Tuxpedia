@@ -236,11 +236,11 @@ The hero read as a generic landing page and its gradient clashed with the refere
 
 #### Decision
 
-"Browse by family" groups each article by the root of its `based_on` chain (COA A) instead of by its direct parent.
+"Browse by family" groups each article by the root of its `based_on` chain instead of by its direct parent.
 
 #### Reasoning
 
-Grouping by direct parent listed Ubuntu both as a family (holding Linux Mint) and as a member of Debian, and put Debian itself under "Independent". Following the chain to the root removes the duplicate heading and shows Mint as the Debian descendant it is. A stored `family` column (COA B) would duplicate data already in `based_on`, and a nested tree (COA C) overlaps the family-tree page.
+Grouping by direct parent listed Ubuntu both as a family (holding Linux Mint) and as a member of Debian, and put Debian itself under "Independent". Following the chain to the root removes the duplicate heading and shows Mint as the Debian descendant it is. A stored `family` column would duplicate data already in `based_on`, and a nested tree overlaps the family-tree page.
 
 #### Consequences
 
@@ -248,3 +248,25 @@ Grouping by direct parent listed Ubuntu both as a family (holding Linux Mint) an
 - A parent without an article of its own (for example Red Hat) names the family as written.
 - A root with no derivatives goes to "Independent"; a cycle in the data stops at the last distribution reached.
 - Only distributions that have an article take part in the chain, so a missing article for an intermediate parent would split a family. The stored parent slug already on the roadmap would remove that limit.
+
+---
+
+### Sans-Serif Headings and Article Spacing
+
+**Date:** 2026-10-24
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+Headings (h1–h4), the featured-article title and the section titles use Space Grotesk, and the featured excerpt uses Inter. Source Serif 4 is removed from the font request and the Tailwind config. In rendered articles the block after a heading sits close to it, headings get a wider gap above, and the body is capped at `max-w-prose` with `leading-8`.
+
+#### Reasoning
+
+The serif face read as dated for a tool-like app and clashed with the Space Grotesk wordmark. In articles every block shared one gap, so a heading was as far from its own paragraph as from the previous section and sections blurred together.
+
+#### Consequences
+
+- One display face and one text face remain, which also drops a font download.
+- The heading-to-text gap comes from `.article > :is(h1, h2, h3, h4) + *`; paragraph spacing is unchanged.
+- `public/css/app.css` is rebuilt with `npm run css:build`. `npm run build` (Vite) fails on a `laravel-vite-plugin` "./fonts" import with or without these changes, and is left alone.
