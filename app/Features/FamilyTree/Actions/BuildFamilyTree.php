@@ -6,6 +6,7 @@ namespace App\Features\FamilyTree\Actions;
 
 use App\Features\DistroComparison\Models\Distribution;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class BuildFamilyTree
 {
@@ -20,7 +21,7 @@ class BuildFamilyTree
      *
      * @param  Collection<int, Distribution>  $distros
      * @param  array<string, string>  $pageSlugs  wiki page slug by distribution slug
-     * @return list<array{name: string, slug: string, accent: ?string, page: ?string, children: list<array>}>
+     * @return list<array{name: string, slug: string, accent: ?string, page: ?string, summary: ?string, children: list<array>}>
      */
     public function execute(Collection $distros, array $pageSlugs = []): array
     {
@@ -32,6 +33,7 @@ class BuildFamilyTree
                 'slug' => (string) $distro->slug,
                 'accent' => $distro->accent?->toString(),
                 'page' => $pageSlugs[$distro->slug] ?? null,
+                'summary' => $distro->description ? Str::limit(trim((string) $distro->description), 180) : null,
             ];
         }
 
@@ -46,7 +48,7 @@ class BuildFamilyTree
             }
 
             if (! isset($nodes[$parent])) {
-                $nodes[$parent] = ['name' => trim((string) preg_replace('/\s*\(.*\)$/', '', (string) $distro->based_on)), 'slug' => $parent, 'accent' => null, 'page' => null];
+                $nodes[$parent] = ['name' => trim((string) preg_replace('/\s*\(.*\)$/', '', (string) $distro->based_on)), 'slug' => $parent, 'accent' => null, 'page' => null, 'summary' => null];
             }
 
             $parents[$key] = $parent;
@@ -87,7 +89,7 @@ class BuildFamilyTree
     }
 
     /**
-     * @param  array<string, array{name: string, slug: string, accent: ?string, page: ?string}>  $nodes
+     * @param  array<string, array{name: string, slug: string, accent: ?string, page: ?string, summary: ?string}>  $nodes
      * @param  array<string, list<string>>  $children
      */
     private function assemble(string $key, array $nodes, array $children): array

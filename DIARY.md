@@ -292,4 +292,4 @@ The old builder appended children to a copy of the parent and only matched exact
 
 - No schema change; a stored parent slug stays an option if names drift.
 - The normalisation exists in two classes and could be shared if it changes again.
-- The page no longer uses D3: a few shallow families read better as nested cards than as a chart with one virtual root, and plain HTML follows the theme and links to articles without script.
+- The page is a force-directed map instead of a chart with one virtual root: families are pinned to anchors and the childless distros to a central ring, so clusters cannot overlap. Selecting a node opens a side panel, not the article, so the map stays in view; D3 stays on the CDN, pinned to 7.9.0.

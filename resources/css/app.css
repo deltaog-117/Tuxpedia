@@ -383,33 +383,74 @@
         @apply border-tux-accent text-tux-accent;
     }
 
-    /* Family tree: one card per family, nested lists joined by connector lines */
-    .tree-card {
-        @apply rounded-2xl border border-tux-border bg-tux-surface p-5 shadow-sm;
-        border-top: 4px solid var(--tree-accent, rgb(var(--tux-border)));
+    /* Family tree map: D3 output is styled here so it follows the theme */
+    .tree-map {
+        @apply grid gap-4 lg:grid-cols-[1fr_20rem];
     }
-    .tree-list {
-        @apply m-0 list-none p-0;
+    .tree-map__stage {
+        @apply relative overflow-hidden rounded-2xl border border-tux-border bg-tux-surface shadow-sm;
     }
-    .tree-list .tree-list {
-        @apply ml-3 mt-1 border-l border-tux-border pl-5;
+    .tree-map__svg {
+        @apply block h-[40rem] w-full cursor-grab touch-none active:cursor-grabbing;
     }
-    .tree-list li {
-        @apply relative py-1;
+    .tree-map__hint {
+        @apply pointer-events-none absolute bottom-3 left-4 text-xs text-tux-muted;
     }
-    .tree-list .tree-list li::before {
-        content: "";
-        @apply absolute -left-5 top-[1.15rem] w-5 border-t border-tux-border;
+    .tree-map__cluster {
+        fill: rgb(var(--tux-muted) / 0.7);
+        font: 600 14px Inter, system-ui, sans-serif;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        pointer-events: none;
     }
-    .tree-chip {
-        @apply inline-flex items-center gap-2 rounded-full border border-tux-border bg-tux-bg px-3 py-1 text-sm font-medium text-tux-text no-underline;
+    .tree-map__link {
+        stroke: rgb(var(--tux-muted) / 0.5);
+        stroke-width: 2;
+        transition: opacity 0.15s;
     }
-    a.tree-chip {
-        @apply transition-colors hover:border-tux-accent hover:text-tux-accent;
+    .tree-map__node {
+        cursor: pointer;
+        outline: none;
+        transition: opacity 0.15s;
     }
-    .tree-chip__dot {
-        @apply h-2.5 w-2.5 rounded-full;
-        background-color: var(--tree-accent, rgb(var(--tux-solid)));
+    .tree-map__node circle {
+        fill: rgb(var(--tux-solid));
+        stroke: rgb(var(--tux-surface));
+        stroke-width: 3;
+        transition: stroke 0.15s;
+    }
+    .tree-map__node text {
+        fill: rgb(var(--tux-text));
+        font: 500 14px Inter, system-ui, sans-serif;
+        pointer-events: none;
+    }
+    .tree-map__node:hover circle,
+    .tree-map__node:focus-visible circle,
+    .tree-map__node.is-selected circle {
+        stroke: rgb(var(--tux-text));
+    }
+    .tree-map__node.is-dim,
+    .tree-map__link.is-dim {
+        opacity: 0.15;
+    }
+    .tree-panel {
+        @apply rounded-2xl border border-tux-border bg-tux-surface p-5 shadow-sm lg:self-start;
+    }
+    .tree-panel__empty {
+        @apply text-sm text-tux-muted;
+    }
+    .tree-panel__title {
+        @apply mb-2 border-l-4 pl-3 text-xl font-semibold;
+        border-color: var(--tree-accent);
+    }
+    .tree-panel__meta {
+        @apply mb-2 text-sm text-tux-muted;
+    }
+    .tree-panel__text {
+        @apply mb-3 text-sm leading-6;
+    }
+    .tree-panel__link {
+        @apply mt-2 inline-block;
     }
 
     /* Terminal window chrome */
