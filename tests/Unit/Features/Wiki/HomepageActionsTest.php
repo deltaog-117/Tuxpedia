@@ -17,7 +17,7 @@ class HomepageActionsTest extends TestCase
     private function page(string $slug, ?string $basedOn): Page
     {
         $page = new Page(['slug' => $slug, 'title' => ucfirst($slug), 'content' => 'Body']);
-        $page->setRelation('distribution', $basedOn === null ? null : new Distribution(['slug' => $slug, 'based_on' => $basedOn]));
+        $page->setRelation('distribution', $basedOn === null ? null : new Distribution(['name' => ucfirst($slug), 'slug' => $slug, 'based_on' => $basedOn]));
 
         return $page;
     }
@@ -47,21 +47,36 @@ class HomepageActionsTest extends TestCase
         $this->assertSame('arch', (string) $action->execute($pages, $day)->slug);
     }
 
-    public function test_pages_group_by_family_with_qualifiers_folded_and_catch_alls_last(): void
+    public function test_pages_group_by_root_ancestor_with_catch_alls_last(): void
     {
         $pages = new Collection([
             $this->page('notes', null),
             $this->page('nix', 'Independent'),
-            $this->page('mint', 'Ubuntu (LTS)'),
+            $this->page('debian', 'Independent'),
             $this->page('ubuntu', 'Debian'),
+            $this->page('mint', 'Ubuntu (LTS)'),
+            $this->page('tails', 'Debian'),
+            $this->page('fedora', 'Red Hat'),
+            $this->page('arch', 'Independent'),
+            $this->page('artix', 'Arch'),
             $this->page('suse', 'Independent (SUSE)'),
-            $this->page('ubuntu-flavour', 'Ubuntu'),
         ]);
 
         $families = (new GroupPagesByFamily())->execute($pages);
 
-        $this->assertSame(['Debian', 'Ubuntu', 'Independent', 'Other'], $families->keys()->all());
-        $this->assertSame(['Mint', 'Ubuntu-flavour'], $families['Ubuntu']->map(fn (Page $p): string => (string) $p->title)->values()->all());
-        $this->assertCount(2, $families['Independent']);
+        $this->assertSame(['Arch', 'Debian', 'Red Hat', 'Independent', 'Other'], $families->keys()->all());
+        $this->assertSame(
+            ['Debian', 'Mint', 'Tails', 'Ubuntu'],
+            $families['Debian']->map(fn (Page $p): string => (string) $p->title)->values()->all()
+        );
+        $this->assertSame(['Fedora'], $families['Red Hat']->map(fn (Page $p): string => (string) $p->title)->values()->all());
+        $this->assertSame(['Nix', 'Suse'], $families['Independent']->map(fn (Page $p): string => (string) $p->title)->values()->all());
+    }
+
+    public function test_a_cycle_in_based_on_terminates(): void
+    {
+        $pages = new Collection([$this->page('a', 'B'), $this->page('b', 'A')]);
+
+        $this->assertSame(2, (new GroupPagesByFamily())->execute($pages)->flatten()->count());
     }
 }

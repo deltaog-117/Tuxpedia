@@ -225,3 +225,26 @@ The hero read as a generic landing page and its gradient clashed with the refere
 - Families come from `based_on`, with qualifiers folded in ("Ubuntu (LTS)" becomes "Ubuntu"); standalone distros and unlinked pages go last (`GroupPagesByFamily`). A stored parent slug, already on the roadmap for the family tree, would make this exact.
 - The logo mark markup moved into one partial shared by the card and the featured article.
 - The wordmark and tagline use Space Grotesk (a geometric sans) instead of the serif, which stays on article and section headings. The logo is a single original SVG, a penguin at a laptop showing a terminal prompt on an indigo badge (Linux plus a reference you consult), drawn from scratch rather than reusing Tux, and used as an image in the navbar and masthead and as the favicon. Its fixed indigo works on both themes, so it needs no per-theme variant.
+
+---
+
+### Family Grouping by Root Ancestor
+
+**Date:** 2026-10-24
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+"Browse by family" groups each article by the root of its `based_on` chain (COA A) instead of by its direct parent.
+
+#### Reasoning
+
+Grouping by direct parent listed Ubuntu both as a family (holding Linux Mint) and as a member of Debian, and put Debian itself under "Independent". Following the chain to the root removes the duplicate heading and shows Mint as the Debian descendant it is. A stored `family` column (COA B) would duplicate data already in `based_on`, and a nested tree (COA C) overlaps the family-tree page.
+
+#### Consequences
+
+- Names are matched case-insensitively with a trailing " Linux" ignored, so "Arch" and "Arch Linux" are the same distribution; qualifiers such as "(LTS)" are still folded.
+- A parent without an article of its own (for example Red Hat) names the family as written.
+- A root with no derivatives goes to "Independent"; a cycle in the data stops at the last distribution reached.
+- Only distributions that have an article take part in the chain, so a missing article for an intermediate parent would split a family. The stored parent slug already on the roadmap would remove that limit.

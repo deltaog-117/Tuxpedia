@@ -40,6 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `tux-blue` is now an alias for the new indigo accent (`tux-accent`)
 - Tailwind now also scans Laravel/Livewire pagination views so their `dark:` variants are generated
 
+- **Browse by family follows the whole ancestry** – `GroupPagesByFamily` now walks the `based_on` chain to its root, so Linux Mint, Ubuntu and Tails sit together under Debian and Artix under Arch Linux, instead of Mint appearing under a separate "Ubuntu" family; roots with no derivatives share "Independent"; loops in the data are cut off
+
 ### Deprecated
 - (None)
 
