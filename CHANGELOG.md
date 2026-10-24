@@ -51,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - (None)
 
 ### Fixed
+- **Family tree** – derivatives were detached or lost: parents named "Ubuntu (LTS)", "Arch" or "Red Hat" matched nothing, and children were appended to a copy of the parent. Tree building is now `BuildFamilyTree`, which folds qualifiers, matches "Arch" to "Arch Linux", adds a node for a parent with no row, and breaks loops (with unit tests)
 - Saving a wiki page failed after the database write whenever a Conventional Commits hook was configured globally, because the page's commit message was rejected
 - Markdown articles previously rendered unstyled because `.prose` was used without the typography plugin
 

@@ -6,6 +6,7 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## ✅ Completed (Milestones Achieved)
+- Family-tree parent matching fixed: `BuildFamilyTree` normalises `based_on` (qualifiers, "Linux" suffix, parents without a row) and breaks loops
 - v0.1.0: wiki CRUD with Git versioning, distro comparison table, full-text search, D3 family tree, authentication, "changed since last visit" badges, terminal simulator
 - UI redesign "Modern Docs": design tokens, dark mode, hero, article layout with table of contents, mobile navigation, themed D3 tree and data table
 - Markdown sanitisation: raw HTML is stripped and unsafe link schemes are dropped when a page is rendered (`Content::toHtml()`, covered by unit tests)
@@ -27,7 +28,6 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 
 ## 🟡 Medium Priority (Important)
 - Make page saves atomic *(proposed)* – `CreatePage` and `UpdatePage` save to the database before committing to the wiki repository, so a failed commit leaves a database row with no history
-- Fix family-tree parent matching *(proposed)* – `FamilyTree::buildTree()` loses nodes whose `based_on` matches a distro by name only, and `Linux Mint` uses `Ubuntu (LTS)`, which matches nothing; a stored parent slug would remove the guesswork
 - Keep articles current *(proposed)* – several articles quote release status (Fedora, Ubuntu, Alpine, Tails, Solus, Slackware 16); review them each quarter
 - Code style gate *(proposed)* – add a `pint.json` and format the existing code so `pint --test` can join `scripts/check` (34 files fail the default preset today)
 - Feature tests for the page-to-distribution link *(proposed)* – the feature migrations are MySQL-only (FULLTEXT), so these need a MySQL test database

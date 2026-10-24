@@ -16,6 +16,7 @@
 | 2026-10-23 | Wiki content delivery | Markdown files in the repo plus an idempotent seeder (COA B) | ✅ Confirmed |
 | 2026-10-23 | Distro logo delivery | Bundled SVGs painted via CSS mask, initial as fallback | ✅ Confirmed |
 | 2026-10-24 | Home page layout | Encyclopedia masthead replaces the gradient hero | ✅ Confirmed |
+| 2026-10-24 | Family tree parents | Resolve `based_on` by normalised name in `BuildFamilyTree` | ✅ Confirmed |
 
 ---
 
@@ -270,3 +271,24 @@ The serif face read as dated for a tool-like app and clashed with the Space Grot
 - One display face and one text face remain, which also drops a font download.
 - The heading-to-text gap comes from `.article > :is(h1, h2, h3, h4) + *`; paragraph spacing is unchanged.
 - `public/css/app.css` is rebuilt with `npm run css:build`. `npm run build` (Vite) fails on a `laravel-vite-plugin` "./fonts" import with or without these changes, and is left alone.
+
+---
+
+### Family Tree Parent Resolution
+
+**Date:** 2026-10-24
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+The tree is built by `BuildFamilyTree`, which resolves each `based_on` by a normalised name (lower-case, `(qualifier)` and a trailing "Linux" removed) and nests the result recursively. A parent with no row becomes a bare node; "Independent" and loops make roots.
+
+#### Reasoning
+
+The old builder appended children to a copy of the parent and only matched exact slugs, so Linux Mint, Fedora and openSUSE ended up detached. The same normalisation already drives `GroupPagesByFamily`, so both views agree.
+
+#### Consequences
+
+- No schema change; a stored parent slug stays an option if names drift.
+- The normalisation exists in two classes and could be shared if it changes again.
