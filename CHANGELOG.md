@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Encyclopedia home page** – masthead with serif wordmark, tagline, search and article/distribution counts; a day-rotating featured article, a Portals list and a "Browse by family" index above the article grid (`GetFeaturedPage`, `GroupPagesByFamily`, `Content::toExcerpt()`, with unit tests)
+- Source Serif 4 for headings (h1–h4)
 - **Official distro logos** – all 21 distributions show their official logo on the wiki card and infobox instead of the title's initial: SVGs (Simple Icons, Wikimedia Commons) in `public/images/distros/` painted through a CSS mask, and a raster PNG for Tiny Core, which has no vector logo, shown as-is on a light chip
 - **Wiki content library** – 19 new articles (Debian, Ubuntu, Arch Linux, Fedora, openSUSE, Linux Mint, Gentoo, Alpine Linux, Void Linux, Slackware, Guix System, Qubes OS, Tails, postmarketOS, Chimera Linux, Puppy Linux, Bedrock Linux, Solus, Tiny Core Linux), kept as Markdown with front matter in `database/content/wiki/` and imported by `WikiContentSeeder` (never overwrites an existing page)
 - **12 new distributions** in the comparison table, family tree and infobox: Artix, Void, Slackware, Guix System, Qubes OS, Tails, postmarketOS, Chimera, Puppy, Bedrock, Solus, Tiny Core
@@ -18,7 +20,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `scripts/check` project check (runs PHPUnit) and unit tests for `Accent`
 - **Dark mode** – class-based theme toggle in the navbar; respects the system preference on first visit and remembers the choice in `localStorage` (applied before first paint, so no flash)
 - **Design tokens** – colours defined once as CSS variables in `resources/css/app.css` and exposed as `tux-*` Tailwind colours, so every component follows the theme
-- **Home hero** – gradient headline, prominent search box and quick links above the wiki page grid
 - **Article layout** – styled Markdown (`.article`) plus an auto-generated "On this page" table of contents with scroll-spy
 - **Keyboard search** – press `/` or `Ctrl/⌘+K` to focus the search box
 - **Mobile navigation** – hamburger menu (previously the nav links were hidden below `md`), active-page highlighting and a skip-to-content link
@@ -26,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Unit tests for Markdown rendering** – `tests/Unit/Features/Wiki/ContentTest.php` covers rendering, script stripping and link handling
 
 ### Changed
+- Home page: the gradient hero is replaced by the encyclopedia masthead; "Wiki pages" is now "All articles"
 - **NixOS and Artix articles rewritten** – removed leftover chatbot text and layout `<br>` tags, clarified that Asterinas NixOS is not an official NixOS project, corrected the Artix GNOME-removal date to October 2025 and noted that the XLibre default was later reversed
 - Wiki repository commit messages now read `docs(wiki): create page slug` (was `Create page: slug`) so they satisfy the global commitlint hook
 - `DistributionSeeder` exposes its rows through `catalogue()`

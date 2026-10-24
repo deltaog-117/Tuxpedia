@@ -11,6 +11,7 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 - Markdown sanitisation: raw HTML is stripped and unsafe link schemes are dropped when a page is rendered (`Content::toHtml()`, covered by unit tests)
 - Distro identity: brand accent colour per distro (wiki card, article header chip, comparison table dot, family-tree node) and an infobox sidebar on distro pages. A wiki page links to a distribution through an optional `distribution_id`, chosen in the editor
 - Distro logos: all 21 distributions show their official logo (bundled SVG, CSS-masked; PNG for Tiny Core) on the wiki card and infobox
+- Encyclopedia home page: masthead, day-rotating featured article, Portals and a "Browse by family" index replace the gradient hero; serif headings
 - Project check command `scripts/check` (PHPUnit); stale `ExampleTest` corrected
 - Wiki content library: 21 reviewed articles (8 mainstream, 13 independent or niche distros, including rewrites of NixOS and Artix) stored as Markdown in `database/content/wiki/` and imported by `WikiContentSeeder`; 12 new distribution rows
 - Wiki commit messages follow Conventional Commits, so they pass the global commitlint hook

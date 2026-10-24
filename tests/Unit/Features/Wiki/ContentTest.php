@@ -44,4 +44,20 @@ class ContentTest extends TestCase
     {
         $this->assertSame('', trim(Content::fromString('')->toHtml()));
     }
+
+    public function test_excerpt_is_the_first_paragraph_as_plain_text(): void
+    {
+        $excerpt = Content::fromString("### Overview\n\n**Arch** is a *rolling* [distro](https://x.test) & more.\n\nSecond paragraph.")->toExcerpt();
+
+        $this->assertSame('Arch is a rolling distro & more.', $excerpt);
+    }
+
+    public function test_excerpt_is_cut_at_a_word_boundary_and_empty_without_a_paragraph(): void
+    {
+        $long = Content::fromString(str_repeat('word ', 100))->toExcerpt(30);
+
+        $this->assertLessThanOrEqual(31, mb_strlen($long));
+        $this->assertStringEndsWith('…', $long);
+        $this->assertSame('', Content::fromString('### Heading only')->toExcerpt());
+    }
 }

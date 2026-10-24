@@ -57,6 +57,9 @@
     h1, h2, h3, h4, h5, h6 {
         @apply font-bold tracking-tight;
     }
+    h1, h2, h3, h4 {
+        @apply font-serif;
+    }
     a {
         @apply text-tux-accent hover:underline;
     }
@@ -111,31 +114,61 @@
         @apply pointer-events-none absolute right-2.5 rounded border border-tux-border px-1.5 font-mono text-xs text-tux-muted;
     }
 
-    /* Hero */
-    .hero {
-        @apply relative overflow-hidden rounded-3xl border border-tux-border bg-tux-surface px-6 py-14 text-center sm:px-12 sm:py-20;
-        background-image: radial-gradient(60% 80% at 50% 0%, rgb(var(--tux-solid) / 0.16), transparent 70%);
+    /* Masthead */
+    .masthead {
+        @apply border-b border-tux-border pb-10 pt-6 text-center;
     }
-    .hero__eyebrow {
-        @apply mb-5 inline-flex items-center gap-2 rounded-full border border-tux-border bg-tux-bg px-3 py-1 text-xs font-medium text-tux-muted;
+    .masthead__title {
+        @apply font-serif text-5xl font-bold tracking-tight sm:text-6xl;
     }
-    .hero__title {
-        @apply text-4xl font-bold tracking-tight sm:text-6xl;
+    .masthead__tagline {
+        @apply mt-3 font-serif text-lg italic text-tux-muted sm:text-xl;
     }
-    .hero__title-accent {
-        @apply bg-gradient-to-r from-tux-accent to-tux-amber bg-clip-text text-transparent;
+    .masthead__search {
+        @apply mx-auto mt-8 max-w-2xl text-left;
     }
-    .hero__lead {
-        @apply mx-auto mt-5 max-w-2xl text-base text-tux-muted sm:text-lg;
-    }
-    .hero__search {
-        @apply mx-auto mt-8 max-w-xl text-left;
-    }
-    .hero__search .search__input {
+    .masthead__search .search__input {
         @apply py-3 text-base;
     }
-    .hero__actions {
-        @apply mt-6 flex flex-wrap items-center justify-center gap-3;
+    .masthead__stats {
+        @apply mt-4 text-sm text-tux-muted;
+    }
+    .section-label {
+        @apply mb-3 border-b border-tux-border pb-2 font-sans text-xs font-semibold uppercase tracking-widest text-tux-muted;
+    }
+    .featured {
+        @apply rounded-2xl border border-tux-border bg-tux-surface p-6;
+        border-left: 4px solid rgb(var(--distro-accent, var(--tux-solid)));
+    }
+    .featured__title {
+        @apply font-serif text-2xl font-bold sm:text-3xl;
+    }
+    .featured__title a {
+        @apply text-tux-text;
+    }
+    .featured__excerpt {
+        @apply mt-4 font-serif text-base leading-7 text-tux-text sm:text-lg;
+    }
+    .featured__more {
+        @apply mt-4 inline-block text-sm font-medium;
+    }
+    .portals {
+        @apply divide-y divide-tux-border rounded-2xl border border-tux-border bg-tux-surface;
+    }
+    .portal {
+        @apply block px-4 py-3 transition-colors hover:bg-tux-text/5 hover:no-underline;
+    }
+    .portal__name {
+        @apply block text-sm font-semibold text-tux-accent;
+    }
+    .portal__text {
+        @apply mt-0.5 block text-sm text-tux-muted;
+    }
+    .family__name {
+        @apply mb-2 font-serif text-lg font-bold;
+    }
+    .family__list {
+        @apply space-y-1 text-sm;
     }
 
     /* Layout helpers */

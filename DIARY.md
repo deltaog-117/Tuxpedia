@@ -15,6 +15,7 @@
 | 2026-10-23 | Page-to-distro link | Explicit `distribution_id` column (COA B) | ✅ Confirmed |
 | 2026-10-23 | Wiki content delivery | Markdown files in the repo plus an idempotent seeder (COA B) | ✅ Confirmed |
 | 2026-10-23 | Distro logo delivery | Bundled SVGs painted via CSS mask, initial as fallback | ✅ Confirmed |
+| 2026-10-24 | Home page layout | Encyclopedia masthead replaces the gradient hero | ✅ Confirmed |
 
 ---
 
@@ -201,3 +202,26 @@ Official logos are bundled as static SVGs named by distro slug in `public/images
 #### Trade-offs
 
 Tiny Core publishes no vector logo, only a raster wordmark on its wiki, so its "core" wordmark (tagline cropped off) is bundled as a PNG. A mask would turn it into a blob, so raster logos render as a plain image on a light chip; `logoUrl()` prefers `.svg` and falls back to `.png`. Logos remain trademarks of their projects.
+
+---
+
+### Encyclopedia Home Page
+
+**Date:** 2026-10-24
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+The gradient hero (emoji pill, gradient headline, three buttons) is replaced by a masthead in the style of an encyclopedia main page: serif wordmark and tagline, the search box, and a plain "N distributions · N articles" line. Below it sit a featured article, a Portals list (compare, family tree, terminal), a "Browse by family" index and the full article grid.
+
+#### Reasoning
+
+The hero read as a generic landing page and its gradient clashed with the reference-work feel. Reference sites lead with search and content, so the page now shows real articles at the top and keeps colour for the per-distro accent only. Headings (h1–h4) use Source Serif 4 site-wide; body text stays Inter.
+
+#### Consequences
+
+- The featured article rotates by day of the year over articles linked to a distribution (`GetFeaturedPage`), so nothing needs curating. Its excerpt is the first Markdown paragraph as plain text (`Content::toExcerpt()`).
+- Families come from `based_on`, with qualifiers folded in ("Ubuntu (LTS)" becomes "Ubuntu"); standalone distros and unlinked pages go last (`GroupPagesByFamily`). A stored parent slug, already on the roadmap for the family tree, would make this exact.
+- The logo mark markup moved into one partial shared by the card and the featured article.
+

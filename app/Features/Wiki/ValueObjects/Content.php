@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Features\Wiki\ValueObjects;
 
 use Illuminate\Support\Str;
-use InvalidArgumentException;
 
 final class Content
 {
@@ -39,6 +38,20 @@ final class Content
             'html_input' => 'strip',
             'allow_unsafe_links' => false,
         ]);
+    }
+
+    /**
+     * Plain-text summary: the first paragraph without markup, cut at a word boundary.
+     */
+    public function toExcerpt(int $limit = 220): string
+    {
+        if (preg_match('#<p>(.*?)</p>#s', $this->toHtml(), $match) !== 1) {
+            return '';
+        }
+
+        $text = html_entity_decode(strip_tags($match[1]), ENT_QUOTES | ENT_HTML5);
+
+        return Str::limit(trim((string) preg_replace('/\s+/', ' ', $text)), $limit, '…', true);
     }
 
     public function __toString(): string
