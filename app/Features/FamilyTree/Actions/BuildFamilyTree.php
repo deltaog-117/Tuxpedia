@@ -19,9 +19,10 @@ class BuildFamilyTree
      * its derivatives still hang together. "Independent" and loops in the data make a root.
      *
      * @param  Collection<int, Distribution>  $distros
-     * @return list<array{name: string, slug: string, accent: ?string, children: list<array>}>
+     * @param  array<string, string>  $pageSlugs  wiki page slug by distribution slug
+     * @return list<array{name: string, slug: string, accent: ?string, page: ?string, children: list<array>}>
      */
-    public function execute(Collection $distros): array
+    public function execute(Collection $distros, array $pageSlugs = []): array
     {
         $nodes = [];
 
@@ -30,6 +31,7 @@ class BuildFamilyTree
                 'name' => (string) $distro->name,
                 'slug' => (string) $distro->slug,
                 'accent' => $distro->accent?->toString(),
+                'page' => $pageSlugs[$distro->slug] ?? null,
             ];
         }
 
@@ -44,7 +46,7 @@ class BuildFamilyTree
             }
 
             if (! isset($nodes[$parent])) {
-                $nodes[$parent] = ['name' => trim((string) preg_replace('/\s*\(.*\)$/', '', (string) $distro->based_on)), 'slug' => $parent, 'accent' => null];
+                $nodes[$parent] = ['name' => trim((string) preg_replace('/\s*\(.*\)$/', '', (string) $distro->based_on)), 'slug' => $parent, 'accent' => null, 'page' => null];
             }
 
             $parents[$key] = $parent;
@@ -85,7 +87,7 @@ class BuildFamilyTree
     }
 
     /**
-     * @param  array<string, array{name: string, slug: string, accent: ?string}>  $nodes
+     * @param  array<string, array{name: string, slug: string, accent: ?string, page: ?string}>  $nodes
      * @param  array<string, list<string>>  $children
      */
     private function assemble(string $key, array $nodes, array $children): array

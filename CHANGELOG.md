@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Unit tests for Markdown rendering** – `tests/Unit/Features/Wiki/ContentTest.php` covers rendering, script stripping and link handling
 
 ### Changed
+- **Family tree page** – the D3 chart (a made-up "Linux" root with 17 curves, labels over links, double scrollbars) is replaced by one card per family with nested, connector-linked chips, plus an "Independent" group for distros without derivatives. Nodes link to their wiki article and follow the dark theme; the D3 CDN dependency is gone
 - Home page: the gradient hero is replaced by the encyclopedia masthead; "Wiki pages" is now "All articles"
 - **NixOS and Artix articles rewritten** – removed leftover chatbot text and layout `<br>` tags, clarified that Asterinas NixOS is not an official NixOS project, corrected the Artix GNOME-removal date to October 2025 and noted that the XLibre default was later reversed
 - Wiki repository commit messages now read `docs(wiki): create page slug` (was `Create page: slug`) so they satisfy the global commitlint hook

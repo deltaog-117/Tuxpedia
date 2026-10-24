@@ -383,27 +383,33 @@
         @apply border-tux-accent text-tux-accent;
     }
 
-    /* Family tree (D3 output is styled here so it follows the theme) */
-    .tree {
-        @apply overflow-auto rounded-2xl border border-tux-border bg-tux-surface shadow-sm;
+    /* Family tree: one card per family, nested lists joined by connector lines */
+    .tree-card {
+        @apply rounded-2xl border border-tux-border bg-tux-surface p-5 shadow-sm;
+        border-top: 4px solid var(--tree-accent, rgb(var(--tux-border)));
     }
-    .tree__link {
-        fill: none;
-        stroke: rgb(var(--tux-muted) / 0.45);
-        stroke-width: 2;
+    .tree-list {
+        @apply m-0 list-none p-0;
     }
-    .tree__node circle {
-        fill: rgb(var(--tux-solid));
-        stroke: rgb(var(--tux-surface));
-        stroke-width: 2;
+    .tree-list .tree-list {
+        @apply ml-3 mt-1 border-l border-tux-border pl-5;
     }
-    .tree__node--root circle {
-        fill: rgb(var(--tux-amber));
+    .tree-list li {
+        @apply relative py-1;
     }
-    .tree__label {
-        fill: rgb(var(--tux-text));
-        font-size: 12px;
-        font-family: Inter, system-ui, sans-serif;
+    .tree-list .tree-list li::before {
+        content: "";
+        @apply absolute -left-5 top-[1.15rem] w-5 border-t border-tux-border;
+    }
+    .tree-chip {
+        @apply inline-flex items-center gap-2 rounded-full border border-tux-border bg-tux-bg px-3 py-1 text-sm font-medium text-tux-text no-underline;
+    }
+    a.tree-chip {
+        @apply transition-colors hover:border-tux-accent hover:text-tux-accent;
+    }
+    .tree-chip__dot {
+        @apply h-2.5 w-2.5 rounded-full;
+        background-color: var(--tree-accent, rgb(var(--tux-solid)));
     }
 
     /* Terminal window chrome */

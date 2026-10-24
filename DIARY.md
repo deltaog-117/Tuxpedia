@@ -292,3 +292,4 @@ The old builder appended children to a copy of the parent and only matched exact
 
 - No schema change; a stored parent slug stays an option if names drift.
 - The normalisation exists in two classes and could be shared if it changes again.
+- The page no longer uses D3: a few shallow families read better as nested cards than as a chart with one virtual root, and plain HTML follows the theme and links to articles without script.
