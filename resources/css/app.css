@@ -82,7 +82,7 @@
         @apply sticky top-0 z-50 border-b border-tux-border bg-tux-surface/80 backdrop-blur-md;
     }
     .site-nav__brand {
-        @apply flex items-center gap-2 text-lg font-bold text-tux-text hover:no-underline;
+        @apply flex items-center gap-2.5 font-display text-lg font-bold tracking-tight text-tux-text hover:no-underline;
     }
     .site-nav__link {
         @apply rounded-md px-3 py-1.5 text-sm font-medium text-tux-muted transition-colors hover:bg-tux-text/5 hover:text-tux-text hover:no-underline;
@@ -119,10 +119,10 @@
         @apply border-b border-tux-border pb-10 pt-6 text-center;
     }
     .masthead__title {
-        @apply font-serif text-5xl font-bold tracking-tight sm:text-6xl;
+        @apply font-display text-5xl font-bold tracking-tight sm:text-6xl;
     }
     .masthead__tagline {
-        @apply mt-3 font-serif text-lg italic text-tux-muted sm:text-xl;
+        @apply mt-3 font-display text-lg font-medium text-tux-muted sm:text-xl;
     }
     .masthead__search {
         @apply mx-auto mt-8 max-w-2xl text-left;

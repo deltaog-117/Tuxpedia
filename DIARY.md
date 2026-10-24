@@ -224,4 +224,4 @@ The hero read as a generic landing page and its gradient clashed with the refere
 - The featured article rotates by day of the year over articles linked to a distribution (`GetFeaturedPage`), so nothing needs curating. Its excerpt is the first Markdown paragraph as plain text (`Content::toExcerpt()`).
 - Families come from `based_on`, with qualifiers folded in ("Ubuntu (LTS)" becomes "Ubuntu"); standalone distros and unlinked pages go last (`GroupPagesByFamily`). A stored parent slug, already on the roadmap for the family tree, would make this exact.
 - The logo mark markup moved into one partial shared by the card and the featured article.
-
+- The wordmark and tagline use Space Grotesk (a geometric sans) instead of the serif, which stays on article and section headings. The logo is a single SVG, a dog-eared page carrying a terminal prompt (an encyclopedia page that is also a shell), used as an image in the navbar and masthead and as the favicon. Its fixed indigo works on both themes, so it needs no per-theme variant.

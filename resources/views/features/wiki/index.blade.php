@@ -4,6 +4,7 @@
 
 @section('content')
 <header class="masthead animate-fade-up motion-reduce:animate-none">
+    <img src="{{ asset('images/tuxpedia-logo.svg') }}" alt="" width="64" height="64" class="mx-auto mb-4 h-14 w-14 sm:h-16 sm:w-16">
     <h1 class="masthead__title">Tuxpedia</h1>
     <p class="masthead__tagline">The free Linux encyclopedia</p>
     <div class="masthead__search">

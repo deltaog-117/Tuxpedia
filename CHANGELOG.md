@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - **Encyclopedia home page** – masthead with serif wordmark, tagline, search and article/distribution counts; a day-rotating featured article, a Portals list and a "Browse by family" index above the article grid (`GetFeaturedPage`, `GroupPagesByFamily`, `Content::toExcerpt()`, with unit tests)
-- Source Serif 4 for headings (h1–h4)
+- Source Serif 4 for headings (h1–h4); Space Grotesk for the wordmark, tagline and navbar brand
+- **Tuxpedia logo** – a dog-eared page with a terminal prompt (`public/images/tuxpedia-logo.svg`), shown beside the name in the navbar and masthead and used as the favicon, replacing the penguin emoji in the navbar
 - **Official distro logos** – all 21 distributions show their official logo on the wiki card and infobox instead of the title's initial: SVGs (Simple Icons, Wikimedia Commons) in `public/images/distros/` painted through a CSS mask, and a raster PNG for Tiny Core, which has no vector logo, shown as-is on a light chip
 - **Wiki content library** – 19 new articles (Debian, Ubuntu, Arch Linux, Fedora, openSUSE, Linux Mint, Gentoo, Alpine Linux, Void Linux, Slackware, Guix System, Qubes OS, Tails, postmarketOS, Chimera Linux, Puppy Linux, Bedrock Linux, Solus, Tiny Core Linux), kept as Markdown with front matter in `database/content/wiki/` and imported by `WikiContentSeeder` (never overwrites an existing page)
 - **12 new distributions** in the comparison table, family tree and infobox: Artix, Void, Slackware, Guix System, Qubes OS, Tails, postmarketOS, Chimera, Puppy, Bedrock, Solus, Tiny Core

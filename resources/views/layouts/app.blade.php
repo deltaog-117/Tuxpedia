@@ -15,10 +15,11 @@
             } catch (e) {}
         })();
     </script>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/tuxpedia-logo.svg') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
     @livewireStyles
 </head>
 <body class="min-h-screen flex flex-col">
@@ -39,7 +40,7 @@
             <div class="flex h-16 items-center justify-between gap-4">
                 <div class="flex items-center gap-6">
                     <a href="{{ route('wiki.index') }}" class="site-nav__brand">
-                        <span aria-hidden="true">🐧</span> Tuxpedia
+                        <img src="{{ asset('images/tuxpedia-logo.svg') }}" alt="" width="28" height="28" class="h-7 w-7"> Tuxpedia
                     </a>
                     <div class="hidden items-center gap-1 lg:flex">
                         @foreach($navLinks as $link)
