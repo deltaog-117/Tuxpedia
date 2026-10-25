@@ -20,6 +20,7 @@
 | 2026-10-24 | Terminal simulator | Client-side shell with pipes, redirects and Tab completion | ✅ Confirmed |
 | 2026-10-25 | Command palette | Livewire modal reusing the search stack (COA A) | ✅ Confirmed |
 | 2026-10-25 | Revision history | Git holds content, slim `wiki_revisions` rows point at commits (COA C) | ✅ Confirmed |
+| 2026-10-25 | Discovery pages | Single-purpose Actions + `DiscoveryController`, plain Blade views (COA A) | ✅ Confirmed |
 
 ---
 
@@ -368,3 +369,27 @@ Three options were weighed: Git only (A), a database copy of every revision (B) 
 - Pages with commits older than this change show an empty history until `php artisan wiki:backfill-revisions` is run once.
 - Revert, history and diff have no permission check, like editing today; roles are a separate roadmap item.
 - A diff over about a million line pairs falls back to one replaced block. Restore is not covered by an automated test (the feature migrations are MySQL-only); it was not run against the dev wiki repo.
+
+---
+
+### Discovery Pages
+
+**Date:** 2026-10-25
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+Random article, Recent changes and All pages (A–Z) live at `/random`, `/recent-changes` and `/all-pages`, served by a new `DiscoveryController`. Each has one Action: `GetRandomPage` picks a slug from the collection it is given, `ListRecentChanges` pages through `wiki_revisions` newest first, and `GroupPagesAlphabetically` groups titles by first letter with non-letters under `#`. The views are plain Blade; the home page masthead and the command palette link to them.
+
+#### Reasoning
+
+Three options were weighed: Actions with a controller and Blade views (A), one tabbed Livewire component (B) and query scopes on `PageController` and `Page` (C). A matches how the Wiki feature is already built, gives each page a bookmarkable URL and works without JS. The routes sit outside `/wiki/` because `/wiki/{slug}` would otherwise swallow a page whose slug is `random`.
+
+#### Consequences
+
+- Recent changes shows one row per revision, so a page saved ten times appears ten times. Its "Changes" link needs the previous revision of the same page, which a correlated subquery supplies as `previous_sha` (checked against the dev MySQL data, not by an automated test).
+- Pages saved before `wiki:backfill-revisions` was run have no rows and do not appear in Recent changes.
+- Only the pure Actions have unit tests; the controller and views are not covered, because the feature migrations are MySQL-only.
+- The list of palette commands grew by three, so the palette test's expected list changed with it.
+- Random chooses among all pages with equal weight and can return the page you are already reading.

@@ -15,6 +15,11 @@
         <span aria-hidden="true">·</span>
         {{ $pages->count() }} {{ Str::plural('article', $pages->count()) }}
     </p>
+    <nav aria-label="Browse" class="mt-4 flex flex-wrap justify-center gap-2">
+        <a href="{{ route('wiki.random') }}" class="btn-ghost">Random article</a>
+        <a href="{{ route('wiki.recent') }}" class="btn-ghost">Recent changes</a>
+        <a href="{{ route('wiki.all') }}" class="btn-ghost">All pages</a>
+    </nav>
 </header>
 
 <div class="mt-10 grid gap-8 lg:grid-cols-3">

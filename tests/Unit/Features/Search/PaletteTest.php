@@ -24,7 +24,7 @@ class PaletteTest extends TestCase
     {
         $labels = $this->labels((new FilterPaletteCommands())->execute('  ', true));
 
-        $this->assertSame(['Wiki', 'New page', 'Distros', 'Family tree', 'Terminal', 'Toggle dark mode'], $labels);
+        $this->assertSame(['Wiki', 'Random article', 'Recent changes', 'All pages', 'New page', 'Distros', 'Family tree', 'Terminal', 'Toggle dark mode'], $labels);
     }
 
     public function test_query_matches_labels_and_keywords_case_insensitively(): void

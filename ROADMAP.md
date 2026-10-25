@@ -6,6 +6,7 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## ✅ Completed (Milestones Achieved)
+- Discovery pages: Random article, Recent changes (from `wiki_revisions`) and All pages A–Z, linked from the home page and the command palette
 - Revision history: history page, read-only old revisions, line diff and restore, backed by a slim `wiki_revisions` table that points at Git commits; edit summaries; `wiki:backfill-revisions` for older commits
 - Family-tree map shows a logo on parent nodes that have no distribution row (Red Hat); SVG mask ids are sanitised
 - Command palette: Ctrl/Cmd+K opens a Livewire modal that searches page titles and jumps to the main routes or toggles dark mode, with arrow-key navigation
@@ -30,7 +31,6 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 - Citations and references – `[^1]` footnotes rendered with a References section
 - Categories and tags – attach categories to articles; category pages (init system, package manager, desktop)
 - Talk page per article – discussion separated from the article, used to flag stale or disputed content
-- Discovery pages – Random article, Recent changes, All pages (A–Z index)
 - Roles and edit permissions – reader, editor and admin roles; page protection; rollback for moderators
 - Glossary and disambiguation pages – ambiguous terms (Arch/Artix, "Mint") and concept entries (kernel, init)
 - Per-distro landing pages – infobox, family-tree position and related wiki pages on one page

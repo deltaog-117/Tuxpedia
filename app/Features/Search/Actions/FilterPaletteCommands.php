@@ -32,6 +32,9 @@ class FilterPaletteCommands
     {
         $commands = [
             ['home articles', PaletteItem::link('Wiki', 'Go to', route('wiki.index'))],
+            ['lucky surprise', PaletteItem::link('Random article', 'Go to', route('wiki.random'))],
+            ['changes latest history', PaletteItem::link('Recent changes', 'Go to', route('wiki.recent'))],
+            ['index a-z list', PaletteItem::link('All pages', 'Go to', route('wiki.all'))],
             ['create write add', PaletteItem::link('New page', 'Go to', route('wiki.create'))],
             ['compare table', PaletteItem::link('Distros', 'Go to', route('distro-comparison.index'))],
             ['map graph parents', PaletteItem::link('Family tree', 'Go to', route('family-tree.index'))],
