@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Command palette** – Ctrl/Cmd+K opens a modal that filters the main routes and a dark-mode toggle, and finds wiki pages by title (the most recently updated pages when the query is blank); arrow keys, Enter and Esc work, and `/` still focuses the navbar search (`FilterPaletteCommands`, `FindPalettePages`, `CommandPalette`, with unit tests)
 - **Terminal shell features** – pipes (`ls | grep doc`), output redirection (`>` and `>>`), quoted arguments and Tab completion for commands and paths in the terminal simulator; `grep`, `cat`, `head`, `tail` and `wc` read piped input, and `sort` and `uniq` are new
 - **Terminal commands** – `mkdir`, `touch`, `rm`, `cp`, `mv`, `tree`, `head`, `tail`, `wc`, `grep`, `sort`, `uniq`, `id`, `hostname`, `date`, `uptime`, `free`, `df`, `ps`, `env`, `history`, `neofetch`, `which`, `man`, `cowsay`, `fortune` and `sudo`; `ls` gains `-a` and `-l`, `cat` takes several files; the filesystem is writable for the session
 - **Terminal window buttons** – the red dot ends the session, the yellow one collapses the window to its title bar and the green one maximizes it (Esc leaves); each dot shows a glyph on hover and the title follows the working directory

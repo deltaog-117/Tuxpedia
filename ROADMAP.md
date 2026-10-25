@@ -6,6 +6,7 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## ✅ Completed (Milestones Achieved)
+- Command palette: Ctrl/Cmd+K opens a Livewire modal that searches page titles and jumps to the main routes or toggles dark mode, with arrow-key navigation
 - Family-tree parent matching fixed: `BuildFamilyTree` normalises `based_on` (qualifiers, "Linux" suffix, parents without a row) and breaks loops
 - v0.1.0: wiki CRUD with Git versioning, distro comparison table, full-text search, D3 family tree, authentication, "changed since last visit" badges, terminal simulator
 - UI redesign "Modern Docs": design tokens, dark mode, hero, article layout with table of contents, mobile navigation, themed D3 tree and data table
@@ -40,7 +41,6 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 
 ## 🟢 Low Priority (Nice‑to‑Have)
 - Syntax highlighting for code blocks in articles
-- Command palette (⌘K) that searches pages and jumps to routes
 
 ---
 

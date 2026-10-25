@@ -18,6 +18,7 @@
 | 2026-10-24 | Home page layout | Encyclopedia masthead replaces the gradient hero | ✅ Confirmed |
 | 2026-10-24 | Family tree parents | Resolve `based_on` by normalised name in `BuildFamilyTree` | ✅ Confirmed |
 | 2026-10-24 | Terminal simulator | Client-side shell with pipes, redirects and Tab completion | ✅ Confirmed |
+| 2026-10-25 | Command palette | Livewire modal reusing the search stack (COA A) | ✅ Confirmed |
 
 ---
 
@@ -318,3 +319,26 @@ A string-in, string-out command table is enough for teaching pipes and redirects
 - Commands see `env.piped` so `ls` prints one name per line when its output is piped or redirected, as a real `ls` does.
 - Not supported: variables, globbing, `&&`, `;`, `<`, `2>`, background jobs and Ctrl+C.
 - The scrollbar is styled with `scrollbar-color` and `::-webkit-scrollbar` on `.xterm-viewport`; `public/css/app.css` is rebuilt with `npm run css:build`.
+
+---
+
+### Command Palette
+
+**Date:** 2026-10-25
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+Ctrl/Cmd+K opens a Livewire modal (`CommandPalette`) in the shared layout. Two single-purpose actions feed it: `FilterPaletteCommands` filters a fixed list of routes and a theme toggle by label and keywords (guests also see Login and Register), and `FindPalettePages` matches page titles with `LIKE`. Alpine holds the open state and the highlighted row; the layout script only dispatches a `palette-open` event.
+
+#### Reasoning
+
+Three options were weighed: a Livewire modal (A), a client-side palette over a pre-built JSON index (B) and a hybrid (C). A reuses the search stack and needs no JS build or index that can go stale. A round-trip per keystroke is cheap for a wiki this size, and the input is debounced by 150 ms.
+
+#### Consequences
+
+- Page lookup uses `LIKE` on the title, not the FULLTEXT index behind the search page, so it also works on SQLite and matches partial words. It does not search article bodies; the search page still does.
+- `LIKE` wildcards in the input are escaped with `!`, which means the same in MySQL and SQLite, unlike a backslash.
+- The command list is hard-coded in `FilterPaletteCommands`; a new nav item has to be added there too.
+- Not yet covered by a browser or feature test: the feature migrations are MySQL-only, so only the pure parts have unit tests.

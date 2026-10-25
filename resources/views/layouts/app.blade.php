@@ -122,6 +122,8 @@
         </div>
     </footer>
 
+    <livewire:command-palette />
+
     @livewireScripts
     @stack('scripts')
     <script>
@@ -133,14 +135,18 @@
                 });
             });
 
-            // "/" or Ctrl/Cmd+K focuses the first visible search box.
+            // Ctrl/Cmd+K opens the command palette; "/" focuses the first visible search box.
             document.addEventListener('keydown', function (event) {
                 var active = document.activeElement;
                 var typing = active && /^(INPUT|TEXTAREA|SELECT)$/.test(active.tagName);
                 var inTerminal = active && active.closest('#terminal-container');
-                var wantsSearch = (event.key === 'k' && (event.ctrlKey || event.metaKey) && !inTerminal)
-                    || (event.key === '/' && !typing);
-                if (!wantsSearch) { return; }
+
+                if (event.key === 'k' && (event.ctrlKey || event.metaKey) && !inTerminal) {
+                    event.preventDefault();
+                    window.dispatchEvent(new CustomEvent('palette-open'));
+                    return;
+                }
+                if (event.key !== '/' || typing) { return; }
 
                 var input = Array.prototype.find.call(
                     document.querySelectorAll('[data-search-input]'),

@@ -114,6 +114,38 @@
         @apply pointer-events-none absolute right-2.5 rounded border border-tux-border px-1.5 font-mono text-xs text-tux-muted;
     }
 
+    /* Command palette */
+    .palette {
+        @apply fixed inset-0 z-50 flex items-start justify-center bg-black/50 px-4 pt-[12vh];
+    }
+    .palette__panel {
+        @apply w-full max-w-xl overflow-hidden rounded-xl border border-tux-border bg-tux-surface shadow-2xl;
+    }
+    .palette__input {
+        @apply w-full border-b border-tux-border bg-transparent px-4 py-3 text-base text-tux-text placeholder:text-tux-muted focus:outline-none;
+    }
+    .palette__list {
+        @apply max-h-80 overflow-y-auto p-2;
+    }
+    .palette__group {
+        @apply px-2 pb-1 pt-2 text-xs font-medium uppercase tracking-wide text-tux-muted;
+    }
+    .palette__item {
+        @apply block w-full rounded-md px-3 py-2 text-left text-sm text-tux-text hover:no-underline;
+    }
+    .palette__item[aria-selected='true'] {
+        @apply bg-tux-accent/10 text-tux-accent;
+    }
+    .palette__empty {
+        @apply px-3 py-6 text-center text-sm text-tux-muted;
+    }
+    .palette__footer {
+        @apply flex gap-4 border-t border-tux-border px-4 py-2 text-xs text-tux-muted;
+    }
+    .palette__footer kbd {
+        @apply rounded border border-tux-border px-1 font-mono;
+    }
+
     /* Masthead */
     .masthead {
         @apply border-b border-tux-border pb-10 pt-6 text-center;

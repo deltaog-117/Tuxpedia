@@ -7,6 +7,7 @@ namespace App\Features\Search\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
+use App\Features\Search\Http\Livewire\CommandPalette;
 use App\Features\Search\Http\Livewire\SearchBar;
 use App\Features\Search\Http\Livewire\SearchResults;
 
@@ -19,6 +20,7 @@ class SearchServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        Livewire::component('command-palette', CommandPalette::class);
         Livewire::component('search-bar', SearchBar::class);
         Livewire::component('search-results', SearchResults::class);
 
