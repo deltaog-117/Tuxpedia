@@ -6,6 +6,7 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## ✅ Completed (Milestones Achieved)
+- Family-tree map shows a logo on parent nodes that have no distribution row (Red Hat); SVG mask ids are sanitised
 - Command palette: Ctrl/Cmd+K opens a Livewire modal that searches page titles and jumps to the main routes or toggles dark mode, with arrow-key navigation
 - Family-tree parent matching fixed: `BuildFamilyTree` normalises `based_on` (qualifiers, "Linux" suffix, parents without a row) and breaks loops
 - v0.1.0: wiki CRUD with Git versioning, distro comparison table, full-text search, D3 family tree, authentication, "changed since last visit" badges, terminal simulator

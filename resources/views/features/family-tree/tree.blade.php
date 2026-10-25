@@ -61,11 +61,12 @@
 
             const svgNs = 'http://www.w3.org/2000/svg';
             const defs = svg.append('defs');
+            const maskId = function (d) { return 'logo-' + String(d.id).replace(/[^\w-]/g, '-'); };
 
             // Vector logos are single-colour: an alpha mask lets a white rect take their shape.
             nodes.filter(function (d) { return d.logo && !d.raster; }).forEach(function (d) {
                 const r = radius(d) * 0.62;
-                const mask = defs.append('mask').attr('id', 'logo-' + d.id).attr('maskUnits', 'userSpaceOnUse')
+                const mask = defs.append('mask').attr('id', maskId(d)).attr('maskUnits', 'userSpaceOnUse')
                     .attr('x', -r).attr('y', -r).attr('width', 2 * r).attr('height', 2 * r)
                     .style('mask-type', 'alpha');
                 mask.append('image').attr('href', d.logo).attr('x', -r).attr('y', -r)
@@ -85,7 +86,7 @@
                         .attr('width', 2 * r).attr('height', 2 * r).attr('class', 'tree-map__glyph');
                 } else if (d.logo) {
                     g.append('rect').attr('x', -r).attr('y', -r).attr('width', 2 * r).attr('height', 2 * r)
-                        .attr('class', 'tree-map__glyph').attr('mask', 'url(#logo-' + d.id + ')');
+                        .attr('class', 'tree-map__glyph').attr('mask', 'url(#' + maskId(d) + ')');
                 } else {
                     g.append('text').attr('class', 'tree-map__initial').attr('dy', '.35em').attr('text-anchor', 'middle')
                         .text(d.name.charAt(0).toUpperCase());

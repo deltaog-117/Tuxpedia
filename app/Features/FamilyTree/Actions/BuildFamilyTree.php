@@ -49,7 +49,7 @@ class BuildFamilyTree
             }
 
             if (! isset($nodes[$parent])) {
-                $nodes[$parent] = ['name' => trim((string) preg_replace('/\s*\(.*\)$/', '', (string) $distro->based_on)), 'slug' => $parent, 'accent' => null, 'page' => null, 'summary' => null, 'logo' => null];
+                $nodes[$parent] = ['name' => trim((string) preg_replace('/\s*\(.*\)$/', '', (string) $distro->based_on)), 'slug' => $parent, 'accent' => null, 'page' => null, 'summary' => null, 'logo' => $this->bundledLogo(Str::slug($parent))];
             }
 
             $parents[$key] = $parent;
@@ -98,6 +98,18 @@ class BuildFamilyTree
         return $nodes[$key] + [
             'children' => array_map(fn (string $child): array => $this->assemble($child, $nodes, $children), $children[$key] ?? []),
         ];
+    }
+
+    /** Public URL of a logo bundled under the given slug, for parents that have no distribution row. */
+    private function bundledLogo(string $slug): ?string
+    {
+        foreach (['svg', 'png'] as $extension) {
+            if (is_file(public_path("images/distros/{$slug}.{$extension}"))) {
+                return asset("images/distros/{$slug}.{$extension}");
+            }
+        }
+
+        return null;
     }
 
     /** "Arch" and "Arch Linux" must name the same distribution. */

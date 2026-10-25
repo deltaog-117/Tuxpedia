@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Logos for row-less parents** – family-tree nodes for parents without a distribution row (such as Red Hat) use a bundled logo from `public/images/distros/` when one exists (`BuildFamilyTree::bundledLogo()`); adds the Red Hat logo
 - **Command palette** – Ctrl/Cmd+K opens a modal that filters the main routes and a dark-mode toggle, and finds wiki pages by title (the most recently updated pages when the query is blank); arrow keys, Enter and Esc work, and `/` still focuses the navbar search (`FilterPaletteCommands`, `FindPalettePages`, `CommandPalette`, with unit tests)
 - **Terminal shell features** – pipes (`ls | grep doc`), output redirection (`>` and `>>`), quoted arguments and Tab completion for commands and paths in the terminal simulator; `grep`, `cat`, `head`, `tail` and `wc` read piped input, and `sort` and `uniq` are new
 - **Terminal commands** – `mkdir`, `touch`, `rm`, `cp`, `mv`, `tree`, `head`, `tail`, `wc`, `grep`, `sort`, `uniq`, `id`, `hostname`, `date`, `uptime`, `free`, `df`, `ps`, `env`, `history`, `neofetch`, `which`, `man`, `cowsay`, `fortune` and `sudo`; `ls` gains `-a` and `-l`, `cat` takes several files; the filesystem is writable for the session
@@ -58,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - (None)
 
 ### Fixed
+- Family-tree logo mask ids are sanitised, so a node id with unusual characters can no longer break its `url(#…)` reference
 - **Family tree** – derivatives were detached or lost: parents named "Ubuntu (LTS)", "Arch" or "Red Hat" matched nothing, and children were appended to a copy of the parent. Tree building is now `BuildFamilyTree`, which folds qualifiers, matches "Arch" to "Arch Linux", adds a node for a parent with no row, and breaks loops (with unit tests)
 - Saving a wiki page failed after the database write whenever a Conventional Commits hook was configured globally, because the page's commit message was rejected
 - Markdown articles previously rendered unstyled because `.prose` was used without the typography plugin
