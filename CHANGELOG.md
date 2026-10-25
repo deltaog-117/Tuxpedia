@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Revision history** – each article has a history page listing its saved revisions (commit, date, author, edit summary), a read-only view of any old revision, a line-by-line diff between a revision and the one before it, and a "Restore" button that saves an old revision as a new one. Content stays in the wiki Git repository; a slim `wiki_revisions` row per commit stores the sha, the file path at that commit, the author and the summary. The editor has a new "Edit summary" field. `php artisan wiki:backfill-revisions` creates rows for commits made before this change (`RecordRevision`, `ReadRevision`, `CompareRevisions`, `RevertPage`, `LineDiff`, with unit tests)
 - **Logos for row-less parents** – family-tree nodes for parents without a distribution row (such as Red Hat) use a bundled logo from `public/images/distros/` when one exists (`BuildFamilyTree::bundledLogo()`); adds the Red Hat logo
 - **Command palette** – Ctrl/Cmd+K opens a modal that filters the main routes and a dark-mode toggle, and finds wiki pages by title (the most recently updated pages when the query is blank); arrow keys, Enter and Esc work, and `/` still focuses the navbar search (`FilterPaletteCommands`, `FindPalettePages`, `CommandPalette`, with unit tests)
 - **Terminal shell features** – pipes (`ls | grep doc`), output redirection (`>` and `>>`), quoted arguments and Tab completion for commands and paths in the terminal simulator; `grep`, `cat`, `head`, `tail` and `wc` read piped input, and `sort` and `uniq` are new
@@ -59,6 +60,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - (None)
 
 ### Fixed
+- Saving a page whose text did not change (for example only its distribution link) no longer fails with "nothing to commit": `GitService::commitFile()` skips the commit and returns null
+- Every page returned HTTP 500 because the command palette passed a `Title` object where `PaletteItem::link()` expects a string; the title is now cast to a string
 - Family-tree logo mask ids are sanitised, so a node id with unusual characters can no longer break its `url(#…)` reference
 - **Family tree** – derivatives were detached or lost: parents named "Ubuntu (LTS)", "Arch" or "Red Hat" matched nothing, and children were appended to a copy of the parent. Tree building is now `BuildFamilyTree`, which folds qualifiers, matches "Arch" to "Arch Linux", adds a node for a parent with no row, and breaks loops (with unit tests)
 - Saving a wiki page failed after the database write whenever a Conventional Commits hook was configured globally, because the page's commit message was rejected

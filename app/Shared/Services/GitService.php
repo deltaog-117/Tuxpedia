@@ -12,9 +12,9 @@ class GitService
 {
     protected string $repoPath;
 
-    public function __construct()
+    public function __construct(?string $repoPath = null)
     {
-        $this->repoPath = storage_path('app/wiki-repo');
+        $this->repoPath = $repoPath ?? storage_path('app/wiki-repo');
         $this->ensureRepoExists();
     }
 
@@ -50,7 +50,11 @@ class GitService
         return $process->getOutput();
     }
 
-    public function commitFile(string $filePath, string $content, string $commitMessage): void
+    /**
+     * Commit the file and return the new commit's sha, or null when the
+     * content is identical to what is already committed.
+     */
+    public function commitFile(string $filePath, string $content, string $commitMessage): ?string
     {
         $fullPath = $this->repoPath . '/' . $filePath;
         $dir = dirname($fullPath);
@@ -60,7 +64,54 @@ class GitService
         file_put_contents($fullPath, $content);
 
         $this->runGitCommand(['add', $filePath]);
+        if (!$this->hasStagedChanges()) {
+            return null;
+        }
         $this->runGitCommand(['commit', '-m', $commitMessage]);
+
+        return trim($this->runGitCommand(['rev-parse', 'HEAD']));
+    }
+
+    protected function hasStagedChanges(): bool
+    {
+        $process = new Process(['git', '-C', $this->repoPath, 'diff', '--cached', '--quiet']);
+        $process->run();
+
+        // Exit code 1 means differences; anything above is a real failure.
+        if ($process->getExitCode() > 1) {
+            throw new RuntimeException('Git command failed: ' . $process->getErrorOutput());
+        }
+
+        return $process->getExitCode() === 1;
+    }
+
+    /**
+     * File content as it was at a commit.
+     */
+    public function show(string $sha, string $filePath): string
+    {
+        return $this->runGitCommand(['show', $sha . ':' . $filePath]);
+    }
+
+    /**
+     * Commits that touched the file, newest first, following renames.
+     *
+     * @return list<array{sha: string, date: string, subject: string, path: string}>
+     */
+    public function log(string $filePath): array
+    {
+        $output = $this->runGitCommand([
+            'log', '--follow', '--name-only', '--format=%x1e%H%x09%aI%x09%s', '--', $filePath,
+        ]);
+
+        $entries = [];
+        foreach (array_filter(explode("\x1e", $output)) as $chunk) {
+            [$header, $path] = array_pad(explode("\n", trim($chunk), 2), 2, '');
+            [$sha, $date, $subject] = array_pad(explode("\t", $header, 3), 3, '');
+            $entries[] = ['sha' => $sha, 'date' => $date, 'subject' => $subject, 'path' => trim($path)];
+        }
+
+        return $entries;
     }
 
     public function moveFile(string $from, string $to): void

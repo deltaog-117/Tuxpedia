@@ -6,6 +6,7 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## ✅ Completed (Milestones Achieved)
+- Revision history: history page, read-only old revisions, line diff and restore, backed by a slim `wiki_revisions` table that points at Git commits; edit summaries; `wiki:backfill-revisions` for older commits
 - Family-tree map shows a logo on parent nodes that have no distribution row (Red Hat); SVG mask ids are sanitised
 - Command palette: Ctrl/Cmd+K opens a Livewire modal that searches page titles and jumps to the main routes or toggles dark mode, with arrow-key navigation
 - Family-tree parent matching fixed: `BuildFamilyTree` normalises `based_on` (qualifiers, "Linux" suffix, parents without a row) and breaks loops
@@ -25,6 +26,15 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## 🔥 High Priority (Critical)
+- Wiki links `[[Debian]]` – render to article links, red links for missing pages, and a "What links here" list (needs a link table)
+- Citations and references – `[^1]` footnotes rendered with a References section
+- Categories and tags – attach categories to articles; category pages (init system, package manager, desktop)
+- Talk page per article – discussion separated from the article, used to flag stale or disputed content
+- Discovery pages – Random article, Recent changes, All pages (A–Z index)
+- Roles and edit permissions – reader, editor and admin roles; page protection; rollback for moderators
+- Glossary and disambiguation pages – ambiguous terms (Arch/Artix, "Mint") and concept entries (kernel, init)
+- Per-distro landing pages – infobox, family-tree position and related wiki pages on one page
+- Print, export and permalinks – print stylesheet, Markdown/PDF export, stable per-revision URLs
 - Visual verification pass *(proposed)* – screenshot every page in light and dark and refresh `screenshots/` and the README
 
 ---
@@ -46,4 +56,3 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## 🔭 Long‑Term Vision
-- Per-distro landing pages that combine the infobox, family-tree position and related wiki pages

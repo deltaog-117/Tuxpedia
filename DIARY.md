@@ -19,6 +19,7 @@
 | 2026-10-24 | Family tree parents | Resolve `based_on` by normalised name in `BuildFamilyTree` | ✅ Confirmed |
 | 2026-10-24 | Terminal simulator | Client-side shell with pipes, redirects and Tab completion | ✅ Confirmed |
 | 2026-10-25 | Command palette | Livewire modal reusing the search stack (COA A) | ✅ Confirmed |
+| 2026-10-25 | Revision history | Git holds content, slim `wiki_revisions` rows point at commits (COA C) | ✅ Confirmed |
 
 ---
 
@@ -342,3 +343,28 @@ Three options were weighed: a Livewire modal (A), a client-side palette over a p
 - `LIKE` wildcards in the input are escaped with `!`, which means the same in MySQL and SQLite, unlike a backslash.
 - The command list is hard-coded in `FilterPaletteCommands`; a new nav item has to be added there too.
 - Not yet covered by a browser or feature test: the feature migrations are MySQL-only, so only the pure parts have unit tests.
+
+---
+
+### Revision History
+
+**Date:** 2026-10-25
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+Content stays in the wiki Git repository. A `wiki_revisions` row per commit (page_id, sha, path, author, summary, created_at) points at it, and old text is read with `git show <sha>:<path>`. `GitService::commitFile()` now returns the new sha, or null when nothing changed, and `CreatePage` and `UpdatePage` record a row from it. Differences are computed in PHP by `LineDiff` (longest common subsequence over lines). Restoring goes through `UpdatePage`, so a restore is a new revision and history is never rewritten.
+
+#### Reasoning
+
+Three options were weighed: Git only (A), a database copy of every revision (B) and the hybrid (C). Copying bodies into the database duplicates what Git already stores, while Git alone makes lists, authors and summaries slow to query. The slim row gives later features (recent changes, rollback, permalinks) what they need without a second copy of the text. Diffing in PHP avoids parsing `git diff` output and can be property-tested without a repository.
+
+#### Consequences
+
+- The `path` is stored per revision because a rename changes it; reading an old revision uses the path at that commit.
+- Only shas that belong to the page (matched against its rows) are ever passed to Git, and routes accept only 40-hex shas.
+- Commit and row are not atomic: a failure between them leaves a commit without a row (`wiki:backfill-revisions` repairs this). The page-save atomicity item stays on the roadmap.
+- Pages with commits older than this change show an empty history until `php artisan wiki:backfill-revisions` is run once.
+- Revert, history and diff have no permission check, like editing today; roles are a separate roadmap item.
+- A diff over about a million line pairs falls back to one replaced block. Restore is not covered by an automated test (the feature migrations are MySQL-only); it was not run against the dev wiki repo.

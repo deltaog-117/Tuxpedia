@@ -10,6 +10,10 @@
         <span class="text-tux-text">{{ $page->title }}</span>
     </nav>
 
+    @if(session()->has('message'))
+        <div class="alert alert--success">{{ session('message') }}</div>
+    @endif
+
     <header class="page-header">
         <div>
             <div class="flex flex-wrap items-center gap-3">
@@ -33,7 +37,10 @@
                 </span>
             </div>
         </div>
-        <a href="{{ route('wiki.edit', $page->slug) }}" class="btn-secondary">Edit</a>
+        <div class="flex gap-2">
+            <a href="{{ route('wiki.history', $page->slug) }}" class="btn-ghost">History</a>
+            <a href="{{ route('wiki.edit', $page->slug) }}" class="btn-secondary">Edit</a>
+        </div>
     </header>
 
     @if($page->distribution)

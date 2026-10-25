@@ -46,6 +46,12 @@
             <textarea wire:model="content" id="content" rows="15" class="input-field font-mono" placeholder="Write your content in Markdown..."></textarea>
         </div>
 
+        <div>
+            <label class="field-label" for="summary">Edit summary (optional)</label>
+            <input wire:model="summary" id="summary" type="text" maxlength="255" class="input-field @error('summary') input-field--invalid @enderror" placeholder="What changed and why">
+            @error('summary') <p class="field-error">{{ $message }}</p> @enderror
+        </div>
+
         <div class="flex items-center justify-between">
             <button type="submit" class="btn-primary">
                 {{ $isEditing ? 'Update Page' : 'Create Page' }}

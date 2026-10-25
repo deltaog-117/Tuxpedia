@@ -338,6 +338,23 @@
         @apply cursor-pointer select-none hover:text-tux-text;
     }
 
+    /* Revision diff */
+    .diff {
+        @apply overflow-x-auto rounded-2xl border border-tux-border bg-tux-surface font-mono text-sm leading-6;
+    }
+    .diff__line {
+        @apply flex whitespace-pre-wrap break-words px-4;
+    }
+    .diff__line--added {
+        @apply bg-tux-green/10;
+    }
+    .diff__line--removed {
+        @apply bg-tux-red/10;
+    }
+    .diff__sign {
+        @apply w-5 shrink-0 select-none text-tux-muted;
+    }
+
     /* Rendered markdown */
     .article {
         @apply max-w-prose text-base leading-8 text-tux-text;

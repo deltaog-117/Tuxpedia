@@ -15,9 +15,10 @@ final class UpdatePage
 {
     public function __construct(
         private GitService $git,
+        private RecordRevision $recordRevision,
     ) {}
 
-    public function execute(Page $page, Slug $newSlug, Title $newTitle, Content $newContent, ?string $newAuthor = null, ?int $distributionId = null): Page
+    public function execute(Page $page, Slug $newSlug, Title $newTitle, Content $newContent, ?string $newAuthor = null, ?int $distributionId = null, ?string $summary = null): Page
     {
         if ($newSlug->toString() !== $page->slug->toString()) {
             if (Page::where('slug', $newSlug->toString())->where('id', '!=', $page->id)->exists()) {
@@ -41,11 +42,16 @@ final class UpdatePage
             );
         }
 
-        $this->git->commitFile(
+        $sha = $this->git->commitFile(
             $page->getMarkdownFilePath(),
             $newContent->toString(),
             "docs(wiki): update page {$page->slug}"
         );
+
+        // No commit means the text did not change (for example only the distribution link).
+        if ($sha !== null) {
+            $this->recordRevision->execute($page, $sha, $page->author, $summary);
+        }
 
         Log::info('Wiki page updated', [
             'old_slug' => $oldSlug,

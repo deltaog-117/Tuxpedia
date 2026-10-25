@@ -7,6 +7,7 @@ namespace App\Features\Wiki\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
+use App\Features\Wiki\Console\BackfillRevisions;
 use App\Features\Wiki\Http\Livewire\WikiEditor;
 
 class WikiServiceProvider extends ServiceProvider
@@ -24,6 +25,10 @@ class WikiServiceProvider extends ServiceProvider
     {
         // Register Livewire components
         Livewire::component('wiki-editor', WikiEditor::class);
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([BackfillRevisions::class]);
+        }
 
         // Load routes
         Route::group([], base_path('app/Features/Wiki/routes.php'));

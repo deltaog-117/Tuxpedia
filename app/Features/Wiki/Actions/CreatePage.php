@@ -15,9 +15,10 @@ final class CreatePage
 {
     public function __construct(
         private GitService $git,
+        private RecordRevision $recordRevision,
     ) {}
 
-    public function execute(Slug $slug, Title $title, Content $content, ?string $author = null, ?int $distributionId = null): Page
+    public function execute(Slug $slug, Title $title, Content $content, ?string $author = null, ?int $distributionId = null, ?string $summary = null): Page
     {
         if (Page::where('slug', $slug->toString())->exists()) {
             throw new \RuntimeException("Page with slug '{$slug}' already exists.");
@@ -31,11 +32,15 @@ final class CreatePage
         $page->distribution_id = $distributionId;
         $page->save();
 
-        $this->git->commitFile(
+        $sha = $this->git->commitFile(
             $page->getMarkdownFilePath(),
             $content->toString(),
             "docs(wiki): create page {$page->slug}"
         );
+
+        if ($sha !== null) {
+            $this->recordRevision->execute($page, $sha, $author, trim((string) $summary) !== '' ? $summary : 'Created the page');
+        }
 
         Log::info('Wiki page created', [
             'slug' => $slug->toString(),

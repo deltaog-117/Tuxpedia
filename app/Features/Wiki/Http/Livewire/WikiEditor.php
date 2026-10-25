@@ -25,6 +25,7 @@ class WikiEditor extends Component
     public string $title = '';
     public string $content = '';
     public string $author = '';
+    public string $summary = '';
     // String, not ?int: the <select> posts '' for "no distribution".
     public string $distributionId = '';
 
@@ -36,6 +37,7 @@ class WikiEditor extends Component
         'title' => 'required|string|max:255',
         'content' => 'nullable|string',
         'author' => 'nullable|string|max:255',
+        'summary' => 'nullable|string|max:255',
         'distributionId' => 'nullable|integer|exists:distributions,id',
     ];
 
@@ -72,12 +74,12 @@ class WikiEditor extends Component
 
             if ($this->isEditing) {
                 $updatePage = app(UpdatePage::class);
-                $this->page = $updatePage->execute($this->page, $slugObj, $titleObj, $contentObj, $author, $distributionId);
+                $this->page = $updatePage->execute($this->page, $slugObj, $titleObj, $contentObj, $author, $distributionId, $this->summary);
                 session()->flash('message', 'Page updated successfully.');
                 Log::info('Wiki page edited via Livewire', ['slug' => $slugObj->toString()]);
             } else {
                 $createPage = app(CreatePage::class);
-                $this->page = $createPage->execute($slugObj, $titleObj, $contentObj, $author, $distributionId);
+                $this->page = $createPage->execute($slugObj, $titleObj, $contentObj, $author, $distributionId, $this->summary);
                 session()->flash('message', 'Page created successfully.');
                 Log::info('Wiki page created via Livewire', ['slug' => $slugObj->toString()]);
             }

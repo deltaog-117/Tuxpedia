@@ -11,6 +11,7 @@ use App\Features\Wiki\ValueObjects\Slug;
 use App\Features\Wiki\ValueObjects\Title;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Page extends Model
 {
@@ -32,6 +33,11 @@ class Page extends Model
     public function distribution(): BelongsTo
     {
         return $this->belongsTo(Distribution::class);
+    }
+
+    public function revisions(): HasMany
+    {
+        return $this->hasMany(Revision::class)->orderByDesc('created_at')->orderByDesc('id');
     }
 
     public function getSlugAttribute(string $value): Slug
