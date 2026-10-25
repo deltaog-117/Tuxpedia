@@ -21,6 +21,7 @@
 | 2026-10-25 | Command palette | Livewire modal reusing the search stack (COA A) | ✅ Confirmed |
 | 2026-10-25 | Revision history | Git holds content, slim `wiki_revisions` rows point at commits (COA C) | ✅ Confirmed |
 | 2026-10-25 | Discovery pages | Single-purpose Actions + `DiscoveryController`, plain Blade views (COA A) | ✅ Confirmed |
+| 2026-10-25 | Wiki links | CommonMark inline parser + `wiki_links` table synced by a `Page` observer (COA C) | ✅ Confirmed |
 
 ---
 
@@ -393,3 +394,27 @@ Three options were weighed: Actions with a controller and Blade views (A), one t
 - Only the pure Actions have unit tests; the controller and views are not covered, because the feature migrations are MySQL-only.
 - The list of palette commands grew by three, so the palette test's expected list changed with it.
 - Random chooses among all pages with equal weight and can return the page you are already reading.
+
+---
+
+### Wiki Links
+
+**Date:** 2026-10-25
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+`[[Target]]` and `[[Target|label]]` are parsed by a CommonMark inline parser (`WikiLinkParser`), so code spans and fenced code are never rewritten. The target is turned into a slug with `Str::slug` and checked through the `Slug` value object. A `wiki_links` table (`page_id`, `target_slug`) records each page's outgoing links and is kept in sync by a `PageObserver` on `Page::saved`. `RenderContent` looks up which linked slugs exist and passes them to `Content::toHtml()`, so a link to a missing page renders as a red link to `/wiki/create?slug=...`. "What links here" is one indexed query (`ListBacklinks`).
+
+#### Reasoning
+
+Three options were weighed: a link table synced by each save action (A), a render-time parse with a `LIKE` search for backlinks (B), and a link table synced by an observer (C). B needs a full scan for every backlink lookup and cannot serve later features such as categories. A needs every write path (create, update, revert, seeder) to remember the sync. C covers all of them because each saves through the model, and `Content` stays free of database access: the known slugs are passed in.
+
+#### Consequences
+
+- The table stores a target slug, not a page id, so renaming or deleting a page needs no fix-up: links to it turn red, and links to a new page with that slug turn blue. The text of other pages is not rewritten on a rename.
+- Existing pages are not indexed until `php artisan migrate` and `php artisan wiki:sync-links` are run once.
+- Without a list of known slugs, `toHtml()` treats every link as existing (used for excerpts, where only the label text matters).
+- Only the parsing and rendering have unit tests; the observer, the backlinks page and the editor prefill need the MySQL test database and were not run automatically.
+- None of the 21 shipped articles use `[[links]]` yet; the roadmap lists that as a follow-up.

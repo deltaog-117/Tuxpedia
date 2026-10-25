@@ -36,7 +36,7 @@
 
     <article class="card p-6 sm:p-10">
         <div class="article">
-            {!! $content->toHtml() !!}
+            {!! $html !!}
         </div>
     </article>
 </div>

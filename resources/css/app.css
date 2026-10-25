@@ -390,6 +390,9 @@
     .article a {
         @apply font-medium underline decoration-tux-accent/40 underline-offset-2 hover:decoration-tux-accent;
     }
+    .article a.wikilink--missing {
+        @apply text-tux-red decoration-tux-red/50 hover:decoration-tux-red;
+    }
     .article blockquote {
         @apply border-l-4 border-tux-accent/50 pl-4 italic text-tux-muted;
     }

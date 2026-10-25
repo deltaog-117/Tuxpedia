@@ -6,6 +6,7 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## ✅ Completed (Milestones Achieved)
+- Wiki links: `[[Page]]` and `[[Page|label]]` render as article links, red links (to the editor with the slug filled in) for missing pages, and a "What links here" page backed by a `wiki_links` table kept in sync by a model observer; `wiki:sync-links` rebuilds it
 - Discovery pages: Random article, Recent changes (from `wiki_revisions`) and All pages A–Z, linked from the home page and the command palette
 - Revision history: history page, read-only old revisions, line diff and restore, backed by a slim `wiki_revisions` table that points at Git commits; edit summaries; `wiki:backfill-revisions` for older commits
 - Family-tree map shows a logo on parent nodes that have no distribution row (Red Hat); SVG mask ids are sanitised
@@ -27,7 +28,6 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## 🔥 High Priority (Critical)
-- Wiki links `[[Debian]]` – render to article links, red links for missing pages, and a "What links here" list (needs a link table)
 - Citations and references – `[^1]` footnotes rendered with a References section
 - Categories and tags – attach categories to articles; category pages (init system, package manager, desktop)
 - Talk page per article – discussion separated from the article, used to flag stale or disputed content
@@ -51,6 +51,7 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## 🟢 Low Priority (Nice‑to‑Have)
+- Use `[[links]]` in the shipped articles *(proposed)* – the 21 seeded articles do not link to each other yet
 - Syntax highlighting for code blocks in articles
 
 ---

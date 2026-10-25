@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Features\Wiki\ValueObjects;
 
+use App\Features\Wiki\Markdown\WikiLinkExtension;
+use App\Features\Wiki\Markdown\WikiLinkParser;
 use Illuminate\Support\Str;
 
 final class Content
@@ -32,12 +34,30 @@ final class Content
      * Wiki pages are user-authored, so raw HTML is stripped and unsafe link
      * schemes (javascript:, data:, vbscript:) are dropped.
      */
-    public function toHtml(): string
+    public function toHtml(?array $knownSlugs = null): string
+    {
+        return $this->render(new WikiLinkParser($knownSlugs));
+    }
+
+    /**
+     * Slugs of the pages this content links to with [[...]], existing or not.
+     *
+     * @return list<string>
+     */
+    public function linkedSlugs(): array
+    {
+        $parser = new WikiLinkParser;
+        $this->render($parser);
+
+        return $parser->foundSlugs();
+    }
+
+    private function render(WikiLinkParser $parser): string
     {
         return Str::markdown($this->value, [
             'html_input' => 'strip',
             'allow_unsafe_links' => false,
-        ]);
+        ], [new WikiLinkExtension($parser)]);
     }
 
     /**

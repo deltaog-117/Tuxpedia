@@ -38,6 +38,7 @@
             </div>
         </div>
         <div class="flex gap-2">
+            <a href="{{ route('wiki.backlinks', $page->slug) }}" class="btn-ghost">What links here</a>
             <a href="{{ route('wiki.history', $page->slug) }}" class="btn-ghost">History</a>
             <a href="{{ route('wiki.edit', $page->slug) }}" class="btn-secondary">Edit</a>
         </div>
@@ -52,7 +53,7 @@
     <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_16rem]">
         <article class="card p-6 sm:p-10">
             <div id="article-body" class="article">
-                {!! $page->content->toHtml() !!}
+                {!! $html !!}
             </div>
         </article>
         <aside class="hidden lg:block">

@@ -14,6 +14,7 @@ use App\Features\Wiki\Models\Page;
 use App\Features\Wiki\ValueObjects\Content;
 use App\Features\Wiki\ValueObjects\Slug;
 use App\Features\Wiki\ValueObjects\Title;
+use Illuminate\Support\Str;
 use Livewire\Component;
 use Illuminate\Support\Facades\Log;
 
@@ -41,7 +42,7 @@ class WikiEditor extends Component
         'distributionId' => 'nullable|integer|exists:distributions,id',
     ];
 
-    public function mount(?string $slug = null): void
+    public function mount(?string $slug = null, ?string $prefill = null): void
     {
         if ($slug) {
             try {
@@ -58,7 +59,23 @@ class WikiEditor extends Component
             }
         } else {
             $this->isEditing = false;
+            $this->prefillFrom($prefill);
         }
+    }
+
+    /**
+     * A red link opens the editor with its slug filled in; anything that is not a valid slug is ignored.
+     */
+    private function prefillFrom(?string $prefill): void
+    {
+        try {
+            $slug = Slug::fromString((string) $prefill);
+        } catch (InvalidSlugException) {
+            return;
+        }
+
+        $this->slug = $slug->toString();
+        $this->title = Str::headline($slug->toString());
     }
 
     public function save()

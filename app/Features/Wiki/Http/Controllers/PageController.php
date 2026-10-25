@@ -9,7 +9,9 @@ use App\Features\Wiki\Actions\GetFeaturedPage;
 use App\Features\Wiki\Actions\CompareRevisions;
 use App\Features\Wiki\Actions\GetPage;
 use App\Features\Wiki\Actions\GroupPagesByFamily;
+use App\Features\Wiki\Actions\ListBacklinks;
 use App\Features\Wiki\Actions\ReadRevision;
+use App\Features\Wiki\Actions\RenderContent;
 use App\Features\Wiki\Actions\RevertPage;
 use App\Features\Wiki\Exceptions\PageNotFoundException;
 use App\Features\Wiki\Models\Page;
@@ -20,12 +22,12 @@ use Illuminate\View\View;
 
 class PageController
 {
-    public function show(Request $request, string $slug, GetPage $getPage): View
+    public function show(Request $request, string $slug, GetPage $getPage, RenderContent $render): View
     {
         try {
             $page = $getPage->execute($slug);
 
-            return view('features.wiki.show', ['page' => $page]);
+            return view('features.wiki.show', ['page' => $page, 'html' => $render->execute($page->content)]);
         } catch (PageNotFoundException $e) {
             abort(404, $e->getMessage());
         }
@@ -43,6 +45,16 @@ class PageController
         ]);
     }
 
+    public function backlinks(string $slug, GetPage $getPage, ListBacklinks $listBacklinks): View
+    {
+        $page = $this->findPage($slug, $getPage);
+
+        return view('features.wiki.backlinks', [
+            'page' => $page,
+            'pages' => $listBacklinks->execute($page),
+        ]);
+    }
+
     public function history(string $slug, GetPage $getPage): View
     {
         $page = $this->findPage($slug, $getPage);
@@ -53,7 +65,7 @@ class PageController
         ]);
     }
 
-    public function revision(string $slug, string $sha, GetPage $getPage, ReadRevision $read): View
+    public function revision(string $slug, string $sha, GetPage $getPage, ReadRevision $read, RenderContent $render): View
     {
         $page = $this->findPage($slug, $getPage);
         $revision = $page->revisions()->where('sha', $sha)->firstOrFail();
@@ -61,7 +73,7 @@ class PageController
         return view('features.wiki.revision', [
             'page' => $page,
             'revision' => $revision,
-            'content' => $read->execute($revision),
+            'html' => $render->execute($read->execute($revision)),
             'isCurrent' => $page->revisions()->first()?->is($revision) ?? false,
         ]);
     }

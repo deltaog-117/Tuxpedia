@@ -19,7 +19,7 @@ class ContentTest extends TestCase
 
     public function test_it_strips_raw_html_and_scripts(): void
     {
-        $html = Content::fromString("Hello <script>alert(1)</script> <img src=x onerror=alert(1)>")->toHtml();
+        $html = Content::fromString('Hello <script>alert(1)</script> <img src=x onerror=alert(1)>')->toHtml();
 
         $this->assertStringNotContainsString('<script', $html);
         $this->assertStringNotContainsString('<img', $html);
@@ -59,5 +59,44 @@ class ContentTest extends TestCase
         $this->assertLessThanOrEqual(31, mb_strlen($long));
         $this->assertStringEndsWith('…', $long);
         $this->assertSame('', Content::fromString('### Heading only')->toExcerpt());
+    }
+
+    public function test_wiki_links_render_as_links_to_existing_pages(): void
+    {
+        $html = Content::fromString('See [[Linux Mint]] and [[Debian|the universal OS]].')
+            ->toHtml(['linux-mint' => true, 'debian' => true]);
+
+        $this->assertStringContainsString('<a class="wikilink" href="'.route('wiki.show', 'linux-mint').'">Linux Mint</a>', $html);
+        $this->assertStringContainsString('>the universal OS</a>', $html);
+        $this->assertStringNotContainsString('[[', $html);
+    }
+
+    public function test_wiki_links_to_missing_pages_are_red_links_to_the_editor(): void
+    {
+        $html = Content::fromString('See [[Void Linux]].')->toHtml([]);
+
+        $this->assertStringContainsString('wikilink wikilink--missing', $html);
+        $this->assertStringContainsString(route('wiki.create', ['slug' => 'void-linux']), str_replace('&amp;', '&', $html));
+    }
+
+    public function test_linked_slugs_are_unique_and_ignore_code(): void
+    {
+        $content = Content::fromString("[[Debian]] [[debian|again]] [[Arch Linux]]\n\n`[[Inline]]`\n\n```\n[[Fenced]]\n```");
+
+        $this->assertSame(['debian', 'arch-linux'], $content->linkedSlugs());
+    }
+
+    public function test_malformed_wiki_links_stay_as_text(): void
+    {
+        $html = Content::fromString('[[]] [[ ]] [[!!!]] [[open')->toHtml([]);
+
+        $this->assertStringNotContainsString('<a ', $html);
+    }
+
+    public function test_wiki_link_text_cannot_inject_html(): void
+    {
+        $html = Content::fromString('[[<script>alert(1)</script>]]')->toHtml([]);
+
+        $this->assertStringNotContainsString('<script', $html);
     }
 }
