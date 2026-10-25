@@ -31,7 +31,7 @@ class FindPalettePages
 
         $items = [];
         foreach ($pages->get() as $page) {
-            $items[] = PaletteItem::link($page->title, 'Pages', route('wiki.show', (string) $page->slug));
+            $items[] = PaletteItem::link((string) $page->title, 'Pages', route('wiki.show', (string) $page->slug));
         }
 
         return $items;
