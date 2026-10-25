@@ -417,6 +417,29 @@
     .article img {
         @apply rounded-xl;
     }
+    /* Footnotes: [^1] markers and the References list at the end */
+    .article .footnote-ref a {
+        @apply px-0.5 text-sm no-underline;
+    }
+    .article .footnotes {
+        @apply mt-12 text-sm leading-6 text-tux-muted;
+    }
+    .article .footnotes::before {
+        content: 'References';
+        @apply mb-3 block text-xl font-bold text-tux-text;
+    }
+    .article .footnotes > hr {
+        @apply hidden;
+    }
+    .article .footnote > p {
+        @apply m-0;
+    }
+    .article .footnote-backref {
+        @apply ml-1 no-underline;
+    }
+    .article li.footnote:target {
+        @apply rounded bg-tux-accent/10;
+    }
 
     /* Table of contents (built client-side from the article headings) */
     .toc {

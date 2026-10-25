@@ -7,6 +7,7 @@ namespace App\Features\Wiki\ValueObjects;
 use App\Features\Wiki\Markdown\WikiLinkExtension;
 use App\Features\Wiki\Markdown\WikiLinkParser;
 use Illuminate\Support\Str;
+use League\CommonMark\Extension\Footnote\FootnoteExtension;
 
 final class Content
 {
@@ -57,7 +58,7 @@ final class Content
         return Str::markdown($this->value, [
             'html_input' => 'strip',
             'allow_unsafe_links' => false,
-        ], [new WikiLinkExtension($parser)]);
+        ], [new WikiLinkExtension($parser), new FootnoteExtension]);
     }
 
     /**

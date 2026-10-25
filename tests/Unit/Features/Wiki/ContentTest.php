@@ -40,6 +40,32 @@ class ContentTest extends TestCase
         $this->assertStringContainsString('href="https://example.com"', $html);
     }
 
+    public function test_it_renders_footnotes_with_a_references_list(): void
+    {
+        $html = Content::fromString("Arch is rolling.[^1]\n\n[^1]: Arch Wiki, https://wiki.archlinux.org")->toHtml();
+
+        $this->assertStringContainsString('href="#fn:1"', $html);
+        $this->assertStringContainsString('class="footnotes"', $html);
+        $this->assertStringContainsString('id="fn:1"', $html);
+        $this->assertStringContainsString('footnote-backref', $html);
+    }
+
+    public function test_footnote_text_is_still_sanitised(): void
+    {
+        $html = Content::fromString("Text.[^1]\n\n[^1]: <script>alert(1)</script> [x](javascript:alert(1))")->toHtml();
+
+        $this->assertStringNotContainsString('<script', $html);
+        $this->assertStringNotContainsString('javascript:', $html);
+    }
+
+    public function test_footnotes_and_wiki_links_work_together(): void
+    {
+        $content = Content::fromString("See [[Arch Linux]].[^1]\n\n[^1]: Also [[Artix]].");
+
+        $this->assertSame(['arch-linux', 'artix'], $content->linkedSlugs());
+        $this->assertStringContainsString('href="#fn:1"', $content->toHtml());
+    }
+
     public function test_empty_content_renders_empty_html(): void
     {
         $this->assertSame('', trim(Content::fromString('')->toHtml()));

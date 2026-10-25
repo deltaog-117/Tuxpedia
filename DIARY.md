@@ -22,6 +22,7 @@
 | 2026-10-25 | Revision history | Git holds content, slim `wiki_revisions` rows point at commits (COA C) | ✅ Confirmed |
 | 2026-10-25 | Discovery pages | Single-purpose Actions + `DiscoveryController`, plain Blade views (COA A) | ✅ Confirmed |
 | 2026-10-25 | Wiki links | CommonMark inline parser + `wiki_links` table synced by a `Page` observer (COA C) | ✅ Confirmed |
+| 2026-10-25 | Citations | CommonMark `FootnoteExtension`; References heading drawn in CSS | ✅ Confirmed |
 
 ---
 
@@ -418,3 +419,27 @@ Three options were weighed: a link table synced by each save action (A), a rende
 - Without a list of known slugs, `toHtml()` treats every link as existing (used for excerpts, where only the label text matters).
 - Only the parsing and rendering have unit tests; the observer, the backlinks page and the editor prefill need the MySQL test database and were not run automatically.
 - None of the 21 shipped articles use `[[links]]` yet; the roadmap lists that as a follow-up.
+
+---
+
+### Citations and References
+
+**Date:** 2026-10-25
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+`Content::render()` registers the CommonMark `FootnoteExtension` next to `WikiLinkExtension`. `[^1]` becomes a superscript link and each `[^1]: text` definition becomes an entry in a `footnotes` list at the end of the article, with a back-link. The "References" heading is drawn by CSS (`.footnotes::before`) and the default `<hr>` is hidden.
+
+#### Reasoning
+
+The library already ships a footnote parser and renderer, so no custom code was needed and the one-option approach was taken without a COA table. Rendering the heading in CSS avoids a post-processing step on the HTML and keeps `toHtml()` output free of extra markup; the cost is that the word "References" is not in the HTML, so it is not selectable text.
+
+#### Consequences
+
+- Footnote text goes through the same sanitising as the body: raw HTML is stripped and unsafe link schemes are dropped (covered by a test).
+- `[^1]` does not clash with `[[wiki links]]`: that parser only matches a double bracket. Links inside a footnote still count for "What links here".
+- The table of contents only lists `h2`/`h3`, so References is not in it.
+- The excerpt on cards is the first `<p>`, so footnote markers appear as plain digits glued to the text ("rolling1"). Not handled yet.
+- `npm run build` fails in this checkout (`laravel-vite-plugin/fonts` is missing from `node_modules`, with or without this change), so the new CSS was not compiled or looked at in a browser.
