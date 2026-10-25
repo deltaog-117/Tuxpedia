@@ -37,6 +37,13 @@
         </div>
 
         <div>
+            <label class="field-label" for="categories">Categories (optional)</label>
+            <input wire:model="categories" id="categories" type="text" class="input-field @error('categories') input-field--invalid @enderror" placeholder="e.g. Init system, Package manager">
+            <p class="mt-1 text-xs text-tux-muted">Separate with commas. New categories are created automatically.</p>
+            @error('categories') <p class="field-error">{{ $message }}</p> @enderror
+        </div>
+
+        <div>
             <label class="field-label" for="author">Author (optional)</label>
             <input wire:model="author" id="author" type="text" class="input-field" placeholder="Your name">
         </div>

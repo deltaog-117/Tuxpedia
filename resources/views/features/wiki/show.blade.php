@@ -36,6 +36,13 @@
                     Updated <time datetime="{{ $page->updated_at->toIso8601String() }}">{{ $page->updated_at->format('Y-m-d H:i') }}</time>
                 </span>
             </div>
+            @if($page->categories->isNotEmpty())
+                <div class="mt-2 flex flex-wrap items-center gap-2" aria-label="Categories">
+                    @foreach($page->categories as $category)
+                        <a href="{{ route('wiki.category', $category->slug) }}" class="chip">{{ $category->name }}</a>
+                    @endforeach
+                </div>
+            @endif
         </div>
         <div class="flex gap-2">
             <a href="{{ route('wiki.backlinks', $page->slug) }}" class="btn-ghost">What links here</a>

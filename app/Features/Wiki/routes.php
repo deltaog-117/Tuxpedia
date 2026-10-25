@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Features\Wiki\Http\Controllers\CategoryController;
 use App\Features\Wiki\Http\Controllers\DiscoveryController;
 use App\Features\Wiki\Http\Controllers\PageController;
 
@@ -24,3 +25,5 @@ Route::get('/wiki/{slug}/diff', [PageController::class, 'diff'])->name('wiki.dif
 Route::post('/wiki/{slug}/revert/{sha}', [PageController::class, 'revert'])
     ->where('sha', '[0-9a-f]{40}')
     ->name('wiki.revert');
+Route::get('/categories', [CategoryController::class, 'index'])->name('wiki.categories');
+Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('wiki.category');

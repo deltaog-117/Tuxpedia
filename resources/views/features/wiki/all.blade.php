@@ -12,7 +12,10 @@
 
     <header class="page-header">
         <h1 class="page-title">All pages</h1>
-        <a href="{{ route('wiki.recent') }}" class="btn-secondary">Recent changes</a>
+        <div class="flex gap-2">
+            <a href="{{ route('wiki.categories') }}" class="btn-ghost">Categories</a>
+            <a href="{{ route('wiki.recent') }}" class="btn-secondary">Recent changes</a>
+        </div>
     </header>
 
     @if($total === 0)

@@ -8,6 +8,7 @@ use App\Features\DistroComparison\Models\Distribution;
 use App\Features\Wiki\Actions\CreatePage;
 use App\Features\Wiki\Actions\UpdatePage;
 use App\Features\Wiki\Actions\GetPage;
+use App\Features\Wiki\Actions\SyncPageCategories;
 use App\Features\Wiki\Exceptions\InvalidSlugException;
 use App\Features\Wiki\Exceptions\PageNotFoundException;
 use App\Features\Wiki\Models\Page;
@@ -29,6 +30,8 @@ class WikiEditor extends Component
     public string $summary = '';
     // String, not ?int: the <select> posts '' for "no distribution".
     public string $distributionId = '';
+    // Comma-separated names; categories are created on first use.
+    public string $categories = '';
 
     public bool $isEditing = false;
     public string $errorMessage = '';
@@ -40,6 +43,7 @@ class WikiEditor extends Component
         'author' => 'nullable|string|max:255',
         'summary' => 'nullable|string|max:255',
         'distributionId' => 'nullable|integer|exists:distributions,id',
+        'categories' => 'nullable|string|max:1000',
     ];
 
     public function mount(?string $slug = null, ?string $prefill = null): void
@@ -53,6 +57,7 @@ class WikiEditor extends Component
                 $this->content = $this->page->content->toString();
                 $this->author = $this->page->author ?? '';
                 $this->distributionId = (string) ($this->page->distribution_id ?? '');
+                $this->categories = $this->page->categories->pluck('name')->implode(', ');
                 $this->isEditing = true;
             } catch (PageNotFoundException $e) {
                 abort(404, $e->getMessage());
@@ -100,6 +105,8 @@ class WikiEditor extends Component
                 session()->flash('message', 'Page created successfully.');
                 Log::info('Wiki page created via Livewire', ['slug' => $slugObj->toString()]);
             }
+
+            app(SyncPageCategories::class)->execute($this->page, $this->categories);
 
             return redirect()->route('wiki.show', $this->page->slug->toString());
         } catch (InvalidSlugException $e) {

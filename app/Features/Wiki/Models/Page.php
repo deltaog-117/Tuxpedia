@@ -11,6 +11,7 @@ use App\Features\Wiki\ValueObjects\Slug;
 use App\Features\Wiki\ValueObjects\Title;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Page extends Model
@@ -33,6 +34,11 @@ class Page extends Model
     public function distribution(): BelongsTo
     {
         return $this->belongsTo(Distribution::class);
+    }
+
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'wiki_category_page', 'page_id', 'category_id')->orderBy('name');
     }
 
     public function revisions(): HasMany

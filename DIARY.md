@@ -23,6 +23,7 @@
 | 2026-10-25 | Discovery pages | Single-purpose Actions + `DiscoveryController`, plain Blade views (COA A) | ✅ Confirmed |
 | 2026-10-25 | Wiki links | CommonMark inline parser + `wiki_links` table synced by a `Page` observer (COA C) | ✅ Confirmed |
 | 2026-10-25 | Citations | CommonMark `FootnoteExtension`; References heading drawn in CSS | ✅ Confirmed |
+| 2026-10-25 | Categories | Relational `wiki_categories` + pivot, comma-separated editor field (COA A) | ✅ Confirmed |
 
 ---
 
@@ -443,3 +444,28 @@ The library already ships a footnote parser and renderer, so no custom code was 
 - The table of contents only lists `h2`/`h3`, so References is not in it.
 - The excerpt on cards is the first `<p>`, so footnote markers appear as plain digits glued to the text ("rolling1"). Not handled yet.
 - `npm run build` fails in this checkout (`laravel-vite-plugin/fonts` is missing from `node_modules`, with or without this change), so the new CSS was not compiled or looked at in a browser.
+
+---
+
+### Categories and Tags
+
+**Date:** 2026-10-25
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+Relational storage (COA A): a `wiki_categories` table (slug, name, optional description) and a `wiki_category_page` pivot. The editor has one comma-separated "Categories" field; `ParseCategoryNames` turns it into names keyed by slug and `SyncPageCategories` creates missing categories and syncs the pivot. `/categories` lists categories that have pages, `/categories/{slug}` lists their articles, and the article header shows the categories as chips.
+
+#### Reasoning
+
+COA B (a `[[Category:X]]` tag in the body) would version membership in Git, and COA C (a JSON column) is the cheapest, but only a table gives category pages with a description and room for parent categories. Categories are synced by the editor, not by the `Page` observer, because membership is not part of the Markdown body.
+
+#### Consequences
+
+- Category membership is not in Git, so it does not show in history or diffs and is not restored by "Restore".
+- Two spellings with the same slug ("Init System", "init-system") are one category; the first name wins. At most 20 categories per page.
+- A category left without pages is hidden from `/categories` but not deleted; its page still opens.
+- Descriptions have no editing UI yet; set them in the database for now.
+- Only `ParseCategoryNames` has unit tests (including a randomised one). The sync, controller and views need the MySQL test database, so they were checked by compiling the views and running the migration against SQLite with `--pretend`, not end to end.
+- Run `php artisan migrate` to create the tables.
