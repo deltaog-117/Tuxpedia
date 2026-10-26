@@ -53,12 +53,14 @@
                                     @if($previous)
                                         <a href="{{ route('wiki.diff', [$page->slug, 'from' => $previous->sha, 'to' => $revision->sha]) }}" class="btn-ghost">Changes</a>
                                     @endif
-                                    @unless($loop->first)
+                                    @if(! $loop->first)
+                                        @can('revert', $page)
                                         <form method="POST" action="{{ route('wiki.revert', [$page->slug, $revision->sha]) }}">
                                             @csrf
                                             <button type="submit" class="btn-secondary">Restore</button>
                                         </form>
-                                    @endunless
+                                        @endcan
+                                    @endif
                                 </div>
                             </td>
                         </tr>

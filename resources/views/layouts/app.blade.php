@@ -26,11 +26,12 @@
     @php
         $navLinks = [
             ['label' => 'Wiki', 'route' => 'wiki.index', 'match' => ['wiki.index', 'wiki.show', 'wiki.edit']],
-            ['label' => 'New Page', 'route' => 'wiki.create', 'match' => ['wiki.create']],
+            ['label' => 'New Page', 'route' => 'wiki.create', 'match' => ['wiki.create'], 'can' => ['create', \App\Features\Wiki\Models\Page::class]],
             ['label' => 'Distros', 'route' => 'distro-comparison.index', 'match' => ['distro-comparison.*']],
             ['label' => 'Family Tree', 'route' => 'family-tree.index', 'match' => ['family-tree.*']],
             ['label' => 'Terminal', 'route' => 'terminal.index', 'match' => ['terminal.*']],
         ];
+        $navLinks = array_filter($navLinks, fn ($link) => ! isset($link['can']) || \Illuminate\Support\Facades\Gate::allows(...$link['can']));
     @endphp
 
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-tux-surface focus:px-3 focus:py-2">Skip to content</a>

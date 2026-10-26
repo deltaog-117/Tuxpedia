@@ -88,13 +88,17 @@
             <h2 id="pages-heading" class="page-title text-2xl sm:text-3xl">All articles</h2>
             <p class="page-lead">{{ $pages->count() }} {{ Str::plural('page', $pages->count()) }}</p>
         </div>
-        <a href="{{ route('wiki.create') }}" class="btn-primary">+ New Page</a>
+        @can('create', \App\Features\Wiki\Models\Page::class)
+            <a href="{{ route('wiki.create') }}" class="btn-primary">+ New Page</a>
+        @endcan
     </div>
 
     @if($pages->isEmpty())
         <div class="card border-dashed p-12 text-center">
             <p class="text-tux-muted">No pages yet. Be the first to create one!</p>
-            <a href="{{ route('wiki.create') }}" class="btn-primary mt-4">Create the first page</a>
+            @can('create', \App\Features\Wiki\Models\Page::class)
+                <a href="{{ route('wiki.create') }}" class="btn-primary mt-4">Create the first page</a>
+            @endcan
         </div>
     @else
         <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

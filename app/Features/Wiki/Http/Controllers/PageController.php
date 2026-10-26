@@ -13,11 +13,13 @@ use App\Features\Wiki\Actions\ListBacklinks;
 use App\Features\Wiki\Actions\ReadRevision;
 use App\Features\Wiki\Actions\RenderContent;
 use App\Features\Wiki\Actions\RevertPage;
+use App\Features\Wiki\Actions\SetPageProtection;
 use App\Features\Wiki\Exceptions\PageNotFoundException;
 use App\Features\Wiki\Models\Page;
 use App\Features\Wiki\Models\Revision;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class PageController
@@ -101,6 +103,7 @@ class PageController
     public function revert(Request $request, string $slug, string $sha, GetPage $getPage, RevertPage $revert): RedirectResponse
     {
         $page = $this->findPage($slug, $getPage);
+        Gate::authorize('revert', $page);
         $revision = $page->revisions()->where('sha', $sha)->firstOrFail();
 
         $changed = $revert->execute($page, $revision, $request->user()?->name);
@@ -110,6 +113,20 @@ class PageController
             ->with('message', $changed
                 ? "Page restored to revision {$revision->shortSha()}."
                 : 'The page already has that content.');
+    }
+
+    public function protect(Request $request, string $slug, GetPage $getPage, SetPageProtection $setProtection): RedirectResponse
+    {
+        $page = $this->findPage($slug, $getPage);
+        Gate::authorize('protect', $page);
+
+        // Toggles: the form only says "flip", so a stale page cannot set the wrong state.
+        $protect = ! $page->isProtected();
+        $setProtection->execute($page, $protect, $request->user()->name);
+
+        return redirect()
+            ->route('wiki.show', $page->slug->toString())
+            ->with('message', $protect ? 'Page protected: only admins can edit it.' : 'Page protection removed.');
     }
 
     private function findPage(string $slug, GetPage $getPage): Page

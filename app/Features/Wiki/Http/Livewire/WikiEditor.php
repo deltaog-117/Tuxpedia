@@ -15,6 +15,7 @@ use App\Features\Wiki\Models\Page;
 use App\Features\Wiki\ValueObjects\Content;
 use App\Features\Wiki\ValueObjects\Slug;
 use App\Features\Wiki\ValueObjects\Title;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Livewire\Component;
 use Illuminate\Support\Facades\Log;
@@ -48,10 +49,13 @@ class WikiEditor extends Component
 
     public function mount(?string $slug = null, ?string $prefill = null): void
     {
+        Gate::authorize('create', Page::class);
+
         if ($slug) {
             try {
                 $getPage = app(GetPage::class);
                 $this->page = $getPage->execute($slug);
+                Gate::authorize('update', $this->page);
                 $this->slug = $this->page->slug->toString();
                 $this->title = $this->page->title->toString();
                 $this->content = $this->page->content->toString();
@@ -85,6 +89,9 @@ class WikiEditor extends Component
 
     public function save()
     {
+        // Livewire calls skip the route middleware, so the rule is checked again on every save.
+        Gate::authorize($this->isEditing ? 'update' : 'create', $this->isEditing ? $this->page : Page::class);
+
         $this->validate();
 
         try {

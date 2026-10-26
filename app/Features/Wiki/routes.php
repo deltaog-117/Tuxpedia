@@ -11,11 +11,11 @@ Route::get('/recent-changes', [DiscoveryController::class, 'recent'])->name('wik
 Route::get('/all-pages', [DiscoveryController::class, 'all'])->name('wiki.all');
 Route::get('/wiki/create', function () {
     return view('features.wiki.create', ['prefill' => request()->query('slug')]);
-})->name('wiki.create');
+})->middleware('auth')->name('wiki.create');
 Route::get('/wiki/{slug}', [PageController::class, 'show'])->name('wiki.show');
 Route::get('/wiki/{slug}/edit', function ($slug) {
     return view('features.wiki.edit', ['slug' => $slug]);
-})->name('wiki.edit');
+})->middleware('auth')->name('wiki.edit');
 Route::get('/wiki/{slug}/backlinks', [PageController::class, 'backlinks'])->name('wiki.backlinks');
 Route::get('/wiki/{slug}/history', [PageController::class, 'history'])->name('wiki.history');
 Route::get('/wiki/{slug}/revision/{sha}', [PageController::class, 'revision'])
@@ -24,6 +24,8 @@ Route::get('/wiki/{slug}/revision/{sha}', [PageController::class, 'revision'])
 Route::get('/wiki/{slug}/diff', [PageController::class, 'diff'])->name('wiki.diff');
 Route::post('/wiki/{slug}/revert/{sha}', [PageController::class, 'revert'])
     ->where('sha', '[0-9a-f]{40}')
+    ->middleware('auth')
     ->name('wiki.revert');
+Route::post('/wiki/{slug}/protection', [PageController::class, 'protect'])->middleware('auth')->name('wiki.protect');
 Route::get('/categories', [CategoryController::class, 'index'])->name('wiki.categories');
 Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('wiki.category');

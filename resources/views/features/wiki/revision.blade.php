@@ -26,12 +26,14 @@
 
     <header class="page-header">
         <h1 class="page-title">{{ $page->title }}</h1>
-        @unless($isCurrent)
+        @if(! $isCurrent)
+            @can('revert', $page)
             <form method="POST" action="{{ route('wiki.revert', [$page->slug, $revision->sha]) }}">
                 @csrf
                 <button type="submit" class="btn-secondary">Restore this revision</button>
             </form>
-        @endunless
+            @endcan
+        @endif
     </header>
 
     <article class="card p-6 sm:p-10">

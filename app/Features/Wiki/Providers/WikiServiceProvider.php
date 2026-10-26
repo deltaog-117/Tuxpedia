@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Features\Wiki\Providers;
 
+use App\Features\Wiki\Policies\PagePolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
@@ -34,6 +36,7 @@ class WikiServiceProvider extends ServiceProvider
         }
 
         Page::observe(PageObserver::class);
+        Gate::policy(Page::class, PagePolicy::class);
 
         // Load routes
         Route::group([], base_path('app/Features/Wiki/routes.php'));

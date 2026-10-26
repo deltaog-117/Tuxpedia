@@ -7,6 +7,7 @@ namespace App\Features\Auth\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
+use App\Features\Auth\Console\PromoteUser;
 use App\Features\Auth\Http\Livewire\Login;
 use App\Features\Auth\Http\Livewire\Register;
 
@@ -21,6 +22,10 @@ class AuthServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        if ($this->app->runningInConsole()) {
+            $this->commands([PromoteUser::class]);
+        }
+
         Livewire::component('auth-login', Login::class);
         Livewire::component('auth-register', Register::class);
 

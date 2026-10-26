@@ -26,6 +26,7 @@
 | 2026-10-25 | Categories | Relational `wiki_categories` + pivot, comma-separated editor field (COA A) | ✅ Confirmed |
 | 2026-10-26 | Article cross-links | Hand-placed `[[slug\|label]]` at first prose mention, guarded by a test | ✅ Confirmed |
 | 2026-10-26 | Per-distro landing pages | Dedicated `/distro/{slug}` page with text lineage, siblings and derivatives (COA B) | ✅ Confirmed |
+| 2026-10-26 | Roles and edit permissions | One `role` enum column plus `PagePolicy` (COA A), editing requires an editor | ✅ Confirmed |
 
 ---
 
@@ -517,3 +518,29 @@ The page works without JavaScript and for a distribution that has no article, wh
 - A distribution with several pages uses the first one as its article.
 - `BuildDistroProfile` has unit tests, including a seeded random-data test of its invariants. `ListRelatedPages`, the controller and the views need the MySQL test database, so they were checked by compiling the views and listing the route, not by loading the page.
 - The family tree nodes still open the article; linking them to the landing page is not done.
+
+---
+
+### Roles and Edit Permissions
+
+**Date:** 2026-10-26
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+Each account holds exactly one of three roles, stored in `users.role` and cast to the `Role` enum (COA A). `PagePolicy` holds the rules: create and edit need an editor, restoring a revision and protecting a page need an admin, and a protected page can only be edited by an admin. Editing is no longer open to guests. Roles are set with `php artisan user:promote`; there is no admin screen yet.
+
+#### Reasoning
+
+An enum column cannot hold a fourth value, and the policy is the single place later features (talk pages, moderation) will ask "may this user do X". A permissions package (COA B) would add a dependency and tables for roles nobody has asked for. Two boolean flags (COA C) allow an admin who is not an editor. The role is left out of the mass-assignable fields, so a form cannot set it; only the command and the seeder can.
+
+#### Consequences
+
+- The Livewire editor checks the policy in `mount()` and again in `save()`, because Livewire requests do not pass through the route middleware.
+- Registration creates readers, so a new visitor can read but not write until an admin promotes them. The first admin comes from `MainEditorSeeder` (local only, throwaway password) or the command.
+- The main account was made an admin, not just an editor, because restoring and protecting are admin-only; `user:promote` lowers it.
+- Red links in articles and the "Write one" link on a distro page still point at the editor; a reader who follows one gets a 403.
+- Existing accounts became readers when the migration ran. Nobody else can edit until an account is promoted.
+- The policy and role are unit-tested. The routes, the Livewire component and the views need the MySQL test database; they were checked by hand: guests are redirected from create and edit, and the policy answers were read for every account.
+- The development database still lacks the categories and links tables from earlier features (their migrations are pending, and the duplicate `create_users_table` stub would fail), so article pages return 500 there until that is sorted out.

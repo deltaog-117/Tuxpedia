@@ -6,6 +6,7 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## ✅ Completed (Milestones Achieved)
+- Roles and edit permissions: accounts are readers, editors or admins (`users.role`); creating and editing need an editor, restoring a revision and protecting a page need an admin, and a protected page can only be edited by an admin. Guests are sent to the login page. `php artisan user:promote {email} {role}` sets a role. Registration still gives the reader role, and no screen lists users yet
 - Per-distro landing pages: `/distro/{slug}` combines the infobox, the family position (ancestry, siblings, derivatives) and related articles, and is linked from the infobox, the comparison table and the article header; family-tree nodes still open the article
 - Cross-links in the shipped articles: 23 `[[links]]` join related distributions (Ubuntu to Debian, postmarketOS to Alpine and so on) at the first prose mention, and a unit test fails on any link to a missing article; the seeder does not overwrite existing pages, so older databases need the text edited or re-imported
 - Categories: articles carry categories set in the editor, with chips in the article header, a category index and a page per category; membership is stored in `wiki_category_page`, not in Git (descriptions and parent categories are still to do)
@@ -33,7 +34,6 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 
 ## 🔥 High Priority (Critical)
 - Talk page per article – discussion separated from the article, used to flag stale or disputed content
-- Roles and edit permissions – reader, editor and admin roles; page protection; rollback for moderators
 - Glossary and disambiguation pages – ambiguous terms (Arch/Artix, "Mint") and concept entries (kernel, init)
 - Print, export and permalinks – print stylesheet, Markdown/PDF export, stable per-revision URLs
 - Visual verification pass *(proposed)* – screenshot every page in light and dark and refresh `screenshots/` and the README

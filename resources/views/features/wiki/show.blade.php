@@ -29,6 +29,9 @@
                     </a>
                 @endif
                 <span class="chip font-mono">/{{ $page->slug }}</span>
+                @if($page->isProtected())
+                    <span class="chip">Protected</span>
+                @endif
                 @if($page->author)
                     <span class="chip">By {{ $page->author }}</span>
                 @endif
@@ -47,7 +50,15 @@
         <div class="flex gap-2">
             <a href="{{ route('wiki.backlinks', $page->slug) }}" class="btn-ghost">What links here</a>
             <a href="{{ route('wiki.history', $page->slug) }}" class="btn-ghost">History</a>
-            <a href="{{ route('wiki.edit', $page->slug) }}" class="btn-secondary">Edit</a>
+            @can('protect', $page)
+                <form method="POST" action="{{ route('wiki.protect', $page->slug) }}">
+                    @csrf
+                    <button type="submit" class="btn-ghost">{{ $page->isProtected() ? 'Unprotect' : 'Protect' }}</button>
+                </form>
+            @endcan
+            @can('update', $page)
+                <a href="{{ route('wiki.edit', $page->slug) }}" class="btn-secondary">Edit</a>
+            @endcan
         </div>
     </header>
 

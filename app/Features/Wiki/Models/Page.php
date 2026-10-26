@@ -29,6 +29,7 @@ class Page extends Model
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'protected_at' => 'datetime',
     ];
 
     public function distribution(): BelongsTo
@@ -74,6 +75,11 @@ class Page extends Model
     public function setContentAttribute(Content|string $value): void
     {
         $this->attributes['content'] = (string) ($value instanceof Content ? $value : Content::fromString($value));
+    }
+
+    public function isProtected(): bool
+    {
+        return $this->protected_at !== null;
     }
 
     public function toMarkdownFileName(): string
