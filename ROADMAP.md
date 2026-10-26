@@ -6,6 +6,7 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## ✅ Completed (Milestones Achieved)
+- Per-distro landing pages: `/distro/{slug}` combines the infobox, the family position (ancestry, siblings, derivatives) and related articles, and is linked from the infobox, the comparison table and the article header; family-tree nodes still open the article
 - Cross-links in the shipped articles: 23 `[[links]]` join related distributions (Ubuntu to Debian, postmarketOS to Alpine and so on) at the first prose mention, and a unit test fails on any link to a missing article; the seeder does not overwrite existing pages, so older databases need the text edited or re-imported
 - Categories: articles carry categories set in the editor, with chips in the article header, a category index and a page per category; membership is stored in `wiki_category_page`, not in Git (descriptions and parent categories are still to do)
 - Citations and references: `[^1]` footnotes render as superscript links with a References list and back-links at the end of the article; footnote text is sanitised
@@ -34,7 +35,6 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 - Talk page per article – discussion separated from the article, used to flag stale or disputed content
 - Roles and edit permissions – reader, editor and admin roles; page protection; rollback for moderators
 - Glossary and disambiguation pages – ambiguous terms (Arch/Artix, "Mint") and concept entries (kernel, init)
-- Per-distro landing pages – infobox, family-tree position and related wiki pages on one page
 - Print, export and permalinks – print stylesheet, Markdown/PDF export, stable per-revision URLs
 - Visual verification pass *(proposed)* – screenshot every page in light and dark and refresh `screenshots/` and the README
 

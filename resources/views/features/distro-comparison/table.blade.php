@@ -46,7 +46,7 @@
                 @forelse($distributions as $distro)
                     <tr>
                         <td class="font-semibold" style="{{ $distro->accentStyle() }}">
-                            <span class="distro-dot" aria-hidden="true"></span>{{ $distro->name }}
+                            <span class="distro-dot" aria-hidden="true"></span><a href="{{ route('distro.show', $distro->slug) }}">{{ $distro->name }}</a>
                         </td>
                         <td>
                             @if($distro->based_on)

@@ -1,4 +1,4 @@
-@props(['distribution'])
+@props(['distribution', 'link' => true])
 
 @php
     $rows = [
@@ -17,7 +17,11 @@
         @elseif($logo)
             <span class="logo-glyph logo-glyph--accent" style="--logo: url('{{ $logo }}')" aria-hidden="true"></span>
         @endif
-        {{ $distribution->name }}
+        @if($link)
+            <a href="{{ route('distro.show', $distribution->slug) }}">{{ $distribution->name }}</a>
+        @else
+            {{ $distribution->name }}
+        @endif
     </p>
     @foreach($rows as $label => $value)
         @if($value)

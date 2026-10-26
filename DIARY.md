@@ -25,6 +25,7 @@
 | 2026-10-25 | Citations | CommonMark `FootnoteExtension`; References heading drawn in CSS | ✅ Confirmed |
 | 2026-10-25 | Categories | Relational `wiki_categories` + pivot, comma-separated editor field (COA A) | ✅ Confirmed |
 | 2026-10-26 | Article cross-links | Hand-placed `[[slug\|label]]` at first prose mention, guarded by a test | ✅ Confirmed |
+| 2026-10-26 | Per-distro landing pages | Dedicated `/distro/{slug}` page with text lineage, siblings and derivatives (COA B) | ✅ Confirmed |
 
 ---
 
@@ -493,3 +494,26 @@ A script that links every distro name would also hit headings, bold lead-ins, ta
 - `WikiContentSeeder` never overwrites an existing page, so a database that was seeded earlier keeps the unlinked text until the pages are edited. A fresh install gets the links, and the `Page` observer fills `wiki_links` as it seeds.
 - Fedora, Gentoo, Slackware, Void Linux and Tiny Core Linux have no outgoing links, because they only name other distributions in tables. Other articles link to them.
 - Not checked in a browser; the test covers the link targets only.
+
+---
+
+### Per-distro Landing Pages
+
+**Date:** 2026-10-26
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+Each distribution has its own page at `/distro/{slug}`. It shows the infobox, an ancestry trail (root to parent), the derivatives and siblings, and related articles, with a button to the full article. The infobox title, the comparison-table name and the article header chip link to it. The family position is plain linked lists (COA B), not a mini tree (COA C).
+
+#### Reasoning
+
+The page works without JavaScript and for a distribution that has no article, which a panel on the article (COA A) could not do. `BuildDistroProfile` resolves `based_on` the same way `BuildFamilyTree` does (qualifiers folded, "Arch" equals "Arch Linux", a parent without a row kept as a bare name, loops ended), and returns a `DistroProfile` value object so the view cannot receive a half-built result. Related articles come from `ListRelatedPages` in the Wiki feature: pages that link to the article, pages it links to, and pages sharing a category.
+
+#### Consequences
+
+- The name-normalising rules now exist in three places (`BuildFamilyTree`, `GroupPagesByFamily`, `BuildDistroProfile`). They agree today; sharing them is a later cleanup.
+- A distribution with several pages uses the first one as its article.
+- `BuildDistroProfile` has unit tests, including a seeded random-data test of its invariants. `ListRelatedPages`, the controller and the views need the MySQL test database, so they were checked by compiling the views and listing the route, not by loading the page.
+- The family tree nodes still open the article; linking them to the landing page is not done.

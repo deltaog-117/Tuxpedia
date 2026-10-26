@@ -24,9 +24,9 @@
             </div>
             <div class="mt-3 flex flex-wrap items-center gap-2">
                 @if($page->distribution)
-                    <span class="chip chip--distro">
+                    <a href="{{ route('distro.show', $page->distribution->slug) }}" class="chip chip--distro">
                         <span class="distro-dot" aria-hidden="true"></span>{{ $page->distribution->name }}
-                    </span>
+                    </a>
                 @endif
                 <span class="chip font-mono">/{{ $page->slug }}</span>
                 @if($page->author)
