@@ -29,7 +29,7 @@ Services and boot are handled by **dinit**, a lightweight, dependency-based serv
 
 #### apk package manager
 
-Chimera uses **apk-tools**, the package manager also used by Alpine Linux. Packages are built with a dedicated tool, **cbuild**, in a clean, sandboxed environment, and a hardening policy such as position-independent code and stack protection applies to everything.
+Chimera uses **apk-tools**, the package manager also used by [[alpine-linux|Alpine Linux]]. Packages are built with a dedicated tool, **cbuild**, in a clean, sandboxed environment, and a hardening policy such as position-independent code and stack protection applies to everything.
 
 ### Platform and Releases
 

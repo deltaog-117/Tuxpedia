@@ -44,7 +44,7 @@ It is a poor match for people who want an unattended, install-and-forget machine
 - **2002**: Judd Vinet starts Arch Linux, inspired by the simplicity of CRUX.
 - **2007**: Aaron Griffin takes over as project leader.
 - **2012**: Arch moves to **systemd** as its init system.
-- **2020s**: A second generation of leadership and funding arrangements formalises how the project is run, and the distribution becomes the base of many derivatives, among them Manjaro, EndeavourOS and Artix.
+- **2020s**: A second generation of leadership and funding arrangements formalises how the project is run, and the distribution becomes the base of many derivatives, among them Manjaro, EndeavourOS and [[artix|Artix]].
 
 ### Comparison
 

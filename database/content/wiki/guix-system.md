@@ -5,7 +5,7 @@ distribution: guix
 ---
 ### Overview
 
-**Guix System** (formerly Guix System Distribution, or GuixSD) is an advanced Linux distribution built on **GNU Guix**, a functional package manager from the GNU Project. Like NixOS, it manages the entire operating system declaratively and transactionally. Unlike NixOS, everything is written in **GNU Guile**, a Scheme language, from the package definitions down to the init system.
+**Guix System** (formerly Guix System Distribution, or GuixSD) is an advanced Linux distribution built on **GNU Guix**, a functional package manager from the GNU Project. Like [[nix-os|NixOS]], it manages the entire operating system declaratively and transactionally. Unlike NixOS, everything is written in **GNU Guile**, a Scheme language, from the package definitions down to the init system.
 
 It is also one of the few distributions that follows the GNU Free System Distribution Guidelines. The default kernel is **Linux-libre**, and non-free software and firmware are not included in the official channels.
 

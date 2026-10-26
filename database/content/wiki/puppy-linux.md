@@ -25,12 +25,12 @@ The default desktop is minimal, typically the **JWM** window manager, plus a set
 
 #### Many flavours from many sources
 
-Woof-CE can build puppies from the binary packages of other distributions. Past and present builds have used Ubuntu, Debian and Slackware, among others, and some of the best known are:
+Woof-CE can build puppies from the binary packages of other distributions. Past and present builds have used [[ubuntu|Ubuntu]], [[debian|Debian]] and [[slackware|Slackware]], among others, and some of the best known are:
 
 - **BookwormPup** and **TrixiePup**, built from Debian 12 and 13 packages.
 - **Ubuntu-based puppies** following recent Ubuntu LTS releases.
 - **S15Pup**, built from Slackware 15 packages.
-- **VoidPup**, built from Void Linux packages.
+- **VoidPup**, built from [[void-linux|Void Linux]] packages.
 
 Reports on the project's recent builds list TrixiePup and an Ubuntu-based "ResolutePup" with mid-2026 dates, but check the project's download page for current versions.
 

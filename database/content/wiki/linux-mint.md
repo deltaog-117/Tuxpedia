@@ -5,7 +5,7 @@ distribution: linux-mint
 ---
 ### Overview
 
-**Linux Mint** is a desktop-focused distribution whose motto is to be a modern, elegant and comfortable operating system that is both powerful and easy to use. It is built on **Ubuntu LTS** and is one of the most popular choices for people moving from Windows, partly because its default desktop feels familiar.
+**Linux Mint** is a desktop-focused distribution whose motto is to be a modern, elegant and comfortable operating system that is both powerful and easy to use. It is built on **[[ubuntu|Ubuntu]] LTS** and is one of the most popular choices for people moving from Windows, partly because its default desktop feels familiar.
 
 The project is run by a small team led by **Clement Lefebvre**, and it is funded by donations and sponsorships. It prefers conservative, tested changes to chasing new technology.
 
@@ -34,7 +34,7 @@ Mint blocks the Ubuntu **Snap** store by default, and ships its own Chromium and
 
 #### Linux Mint Debian Edition (LMDE)
 
-**LMDE** is a second flavour built directly on Debian instead of Ubuntu. It exists as insurance in case Ubuntu goes in a direction Mint does not want to follow, and it is a good choice for people who prefer Debian's base.
+**LMDE** is a second flavour built directly on [[debian|Debian]] instead of Ubuntu. It exists as insurance in case Ubuntu goes in a direction Mint does not want to follow, and it is a good choice for people who prefer Debian's base.
 
 ### Release Cycle
 

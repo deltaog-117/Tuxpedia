@@ -5,7 +5,7 @@ distribution: debian
 ---
 ### Overview
 
-**Debian** is a community-built, non-commercial Linux distribution and one of the oldest still in active development. It is the ancestor of a huge family tree, including Ubuntu, Linux Mint, Tails and Raspberry Pi OS, so a large share of the Linux world runs on Debian packages without knowing it.
+**Debian** is a community-built, non-commercial Linux distribution and one of the oldest still in active development. It is the ancestor of a huge family tree, including [[ubuntu|Ubuntu]], [[linux-mint|Linux Mint]], [[tails|Tails]] and Raspberry Pi OS, so a large share of the Linux world runs on Debian packages without knowing it.
 
 The project is governed by the **Debian Social Contract** and the **Debian Free Software Guidelines (DFSG)**, a written promise to keep the system free software and to give priority to users. Decisions are made by volunteer developers under a published constitution, and the **Debian Project Leader** is elected every year.
 

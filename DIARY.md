@@ -24,6 +24,7 @@
 | 2026-10-25 | Wiki links | CommonMark inline parser + `wiki_links` table synced by a `Page` observer (COA C) | ✅ Confirmed |
 | 2026-10-25 | Citations | CommonMark `FootnoteExtension`; References heading drawn in CSS | ✅ Confirmed |
 | 2026-10-25 | Categories | Relational `wiki_categories` + pivot, comma-separated editor field (COA A) | ✅ Confirmed |
+| 2026-10-26 | Article cross-links | Hand-placed `[[slug\|label]]` at first prose mention, guarded by a test | ✅ Confirmed |
 
 ---
 
@@ -469,3 +470,26 @@ COA B (a `[[Category:X]]` tag in the body) would version membership in Git, and 
 - Descriptions have no editing UI yet; set them in the database for now.
 - Only `ParseCategoryNames` has unit tests (including a randomised one). The sync, controller and views need the MySQL test database, so they were checked by compiling the views and running the migration against SQLite with `--pretend`, not end to end.
 - Run `php artisan migrate` to create the tables.
+
+---
+
+### Cross-links in the Shipped Articles
+
+**Date:** 2026-10-26
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+The 21 seeded articles now use `[[slug|label]]` to link related distributions. Each target is linked once per article, at its first mention in prose, by hand rather than by a find-and-replace script. `ShippedArticleLinksTest` checks that every link target is a file in `database/content/wiki/`.
+
+#### Reasoning
+
+A script that links every distro name would also hit headings, bold lead-ins, tables and unrelated uses of a word ("Mint"). Linking only the first prose mention matches how encyclopedias read and keeps the pages calm. The slug form is used because titles and slugs differ (NixOS is `nix-os`, Gentoo Linux is `gentoo`).
+
+#### Consequences
+
+- Tables are not linked: `|` inside a cell would split the cell. The comparison tables stay plain.
+- `WikiContentSeeder` never overwrites an existing page, so a database that was seeded earlier keeps the unlinked text until the pages are edited. A fresh install gets the links, and the `Page` observer fills `wiki_links` as it seeds.
+- Fedora, Gentoo, Slackware, Void Linux and Tiny Core Linux have no outgoing links, because they only name other distributions in tables. Other articles link to them.
+- Not checked in a browser; the test covers the link targets only.

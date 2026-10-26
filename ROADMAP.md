@@ -6,6 +6,7 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## ✅ Completed (Milestones Achieved)
+- Cross-links in the shipped articles: 23 `[[links]]` join related distributions (Ubuntu to Debian, postmarketOS to Alpine and so on) at the first prose mention, and a unit test fails on any link to a missing article; the seeder does not overwrite existing pages, so older databases need the text edited or re-imported
 - Categories: articles carry categories set in the editor, with chips in the article header, a category index and a page per category; membership is stored in `wiki_category_page`, not in Git (descriptions and parent categories are still to do)
 - Citations and references: `[^1]` footnotes render as superscript links with a References list and back-links at the end of the article; footnote text is sanitised
 - Wiki links: `[[Page]]` and `[[Page|label]]` render as article links, red links (to the editor with the slug filled in) for missing pages, and a "What links here" page backed by a `wiki_links` table kept in sync by a model observer; `wiki:sync-links` rebuilds it
@@ -51,7 +52,6 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## 🟢 Low Priority (Nice‑to‑Have)
-- Use `[[links]]` in the shipped articles *(proposed)* – the 21 seeded articles do not link to each other yet
 - Syntax highlighting for code blocks in articles
 
 ---

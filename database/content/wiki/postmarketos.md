@@ -5,7 +5,7 @@ distribution: postmarketos
 ---
 ### Overview
 
-**postmarketOS** (often written pmOS) is a Linux distribution for phones, tablets and other devices that normally run Android or iOS. It is built on **Alpine Linux** and aims to give devices a long life by running a real, upstream-maintained Linux system long after the manufacturer stops providing updates. The project describes this as a "ten-year life cycle" for a phone.
+**postmarketOS** (often written pmOS) is a Linux distribution for phones, tablets and other devices that normally run Android or iOS. It is built on **[[alpine-linux|Alpine Linux]]** and aims to give devices a long life by running a real, upstream-maintained Linux system long after the manufacturer stops providing updates. The project describes this as a "ten-year life cycle" for a phone.
 
 Instead of Android, a pmOS device boots a familiar GNU/Linux-style environment, with a touch-friendly user interface, a normal shell and a package manager.
 

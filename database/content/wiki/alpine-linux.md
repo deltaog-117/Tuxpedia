@@ -47,7 +47,7 @@ It is less suited to desktop use for people who want everything to work without 
 
 - **2005**: Natanael Copa begins Alpine Linux as a fork of LEAF, a router-oriented distribution.
 - **2010s**: Alpine becomes popular in containers as its images prove far smaller than those of mainstream distributions.
-- **Today**: Alpine is the base for **postmarketOS**, a Linux for phones and tablets.
+- **Today**: Alpine is the base for **[[postmarketos|postmarketOS]]**, a Linux for phones and tablets.
 
 ### Comparison
 

@@ -5,7 +5,7 @@ distribution: solus
 ---
 ### Overview
 
-**Solus** is an independent Linux distribution for the desktop, built from scratch rather than derived from Debian, Fedora or Arch. Its goal is a cohesive, polished and fuss-free experience: install it, and have a usable computer with a sensible set of applications.
+**Solus** is an independent Linux distribution for the desktop, built from scratch rather than derived from [[debian|Debian]], [[fedora|Fedora]] or [[arch-linux|Arch]]. Its goal is a cohesive, polished and fuss-free experience: install it, and have a usable computer with a sensible set of applications.
 
 It is known as the original home of the **Budgie** desktop, and it offers Budgie, GNOME, Xfce and KDE Plasma editions. Solus uses a **curated rolling release** model, where packages are updated continuously, but only after the team has chosen and tested them.
 

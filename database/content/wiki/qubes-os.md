@@ -32,7 +32,7 @@ Qubes integrates with **Whonix**, which routes traffic through Tor, so anonymity
 
 #### Fedora and Debian inside
 
-Qubes ships templates based on Fedora and Debian, and the community adds many more, so you work with familiar tools inside the qubes.
+Qubes ships templates based on [[fedora|Fedora]] and [[debian|Debian]], and the community adds many more, so you work with familiar tools inside the qubes.
 
 ### Release 4.3
 

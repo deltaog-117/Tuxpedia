@@ -5,7 +5,7 @@ distribution: artix
 ---
 ### Overview
 
-**Artix Linux** (usually just **Artix**) is a rolling-release Linux distribution based on Arch Linux. It shares Arch's philosophy but makes one deliberate break: **it does not use systemd** as its init system.
+**Artix Linux** (usually just **Artix**) is a rolling-release Linux distribution based on [[arch-linux|Arch Linux]]. It shares Arch's philosophy but makes one deliberate break: **it does not use systemd** as its init system.
 
 The name is said to come from "the art of Linux", which reflects its focus on simplicity, modularity and user choice. Artix lets you pick your init system, **OpenRC**, **runit**, **s6** or **dinit**, rather than accepting a single default.
 

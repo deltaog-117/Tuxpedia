@@ -62,7 +62,7 @@ In December 2025 the Asterinas project released **Asterinas NixOS**, a distribut
 - **2003**: Eelco Dolstra starts Nix as a **research project** on reliable software deployment.
 - **2006**: NixOS is first described in Armijn Hemel's **master's thesis**, which applies Nix's principles to a complete Linux distribution.
 - **2015**: The **NixOS Foundation** is established in the Netherlands to support the project.
-- **Today**: A large, active community maintains NixOS and Nixpkgs, and the approach has influenced other projects, including Guix System.
+- **Today**: A large, active community maintains NixOS and Nixpkgs, and the approach has influenced other projects, including [[guix-system|Guix System]].
 
 ### Comparison with Other Distributions
 
@@ -75,7 +75,7 @@ In December 2025 the Asterinas project released **Asterinas NixOS**, a distribut
 | **Learning curve** | **Steep**: you need the Nix language and a new mindset | **Gentle**: concepts are more familiar |
 | **Disk use** | **Higher**, since old generations are kept until garbage-collected | **Lower**, usually one version of each package |
 
-> Some commentators call NixOS a "lifelong Linux distro that rewards the willing": not as esoteric as Gentoo, but not as beginner-friendly as Ubuntu.
+> Some commentators call NixOS a "lifelong Linux distro that rewards the willing": not as esoteric as [[gentoo|Gentoo]], but not as beginner-friendly as [[ubuntu|Ubuntu]].
 
 ### Getting Started
 

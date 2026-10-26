@@ -5,7 +5,7 @@ distribution: ubuntu
 ---
 ### Overview
 
-**Ubuntu** is a Debian-based Linux distribution published by **Canonical Ltd.** and one of the most widely used Linux systems on desktops, servers and in the cloud. Its name comes from a Southern African philosophy often summed up as "I am what I am because of who we all are".
+**Ubuntu** is a [[debian|Debian]]-based Linux distribution published by **Canonical Ltd.** and one of the most widely used Linux systems on desktops, servers and in the cloud. Its name comes from a Southern African philosophy often summed up as "I am what I am because of who we all are".
 
 Ubuntu takes Debian's package base, tests and polishes it on a fixed schedule, and adds a friendly installer, sensible defaults and commercial support options. That combination made it the default "first Linux" for many people and a common image on cloud platforms.
 
@@ -38,7 +38,7 @@ Official community flavours reuse the same base with a different desktop: **Kubu
 - **Developers and teams** who want a long-lived, widely supported platform for workstations and deployments.
 - **Cloud and container users**, since Ubuntu images are available on most providers.
 
-Some users dislike Snap's role or Canonical's decisions about defaults; Debian, Linux Mint and the flavours exist partly as alternatives.
+Some users dislike Snap's role or Canonical's decisions about defaults; [[debian|Debian]], [[linux-mint|Linux Mint]] and the flavours exist partly as alternatives.
 
 ### History
 

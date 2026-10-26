@@ -5,7 +5,7 @@ distribution: bedrock
 ---
 ### Overview
 
-**Bedrock Linux** is a **meta-distribution**: instead of being its own set of packages, it lets you combine the software of several other Linux distributions in a single, running system. You can install an Arch package, a Debian package and a Fedora package side by side, and they all work as if they belonged on the same machine.
+**Bedrock Linux** is a **meta-distribution**: instead of being its own set of packages, it lets you combine the software of several other Linux distributions in a single, running system. You can install an Arch package, a [[debian|Debian]] package and a [[fedora|Fedora]] package side by side, and they all work as if they belonged on the same machine.
 
 The project's pitch is that you should not have to choose between the stability of Debian, the freshness of Arch and the tools only another distribution provides. Bedrock sits underneath them and glues them together. It is a niche project, aimed at advanced users.
 

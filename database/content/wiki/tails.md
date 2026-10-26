@@ -7,7 +7,7 @@ distribution: tails
 
 **Tails** (The Amnesic Incognito Live System) is a portable operating system that you start from a USB stick on almost any computer. It sends all Internet traffic through the **Tor** network and leaves no trace on the computer it ran on once you shut it down. It exists to protect privacy and to circumvent censorship, and is used by journalists, activists and anyone who needs to work safely on a machine they do not trust.
 
-Tails is based on **Debian** and uses the GNOME desktop. It is run by the Tails project, with funding from donations and grants, and it works with the Tor Project.
+Tails is based on **[[debian|Debian]]** and uses the GNOME desktop. It is run by the Tails project, with funding from donations and grants, and it works with the Tor Project.
 
 ### Key Features
 
@@ -43,7 +43,7 @@ Tails publishes frequent updates, usually every four weeks to follow Tor Browser
 
 ### History
 
-- **2009**: The first public release of Tails merges the Amnesia project with Incognito, a Gentoo-based live system.
+- **2009**: The first public release of Tails merges the Amnesia project with Incognito, a [[gentoo|Gentoo]]-based live system.
 - **2013-2014**: Public attention grows after Tails features in coverage of the Snowden disclosures.
 - **Today**: Tails 7.x is current, with a new release roughly every four weeks.
 

@@ -42,7 +42,7 @@ The project builds its software with the **Open Build Service (OBS)**, a public 
 
 ### History
 
-- **1992**: SUSE is founded in Germany; its Linux distribution begins as a German adaptation of Slackware.
+- **1992**: SUSE is founded in Germany; its Linux distribution begins as a German adaptation of [[slackware|Slackware]].
 - **2005**: SUSE Linux is opened to the community as the **openSUSE Project** after Novell's acquisition.
 - **2015**: Leap is introduced, built on SUSE Linux Enterprise sources.
 - **2025**: Leap 16.0 and the Agama installer arrive.
