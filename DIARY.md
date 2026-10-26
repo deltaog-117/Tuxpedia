@@ -26,6 +26,7 @@
 | 2026-10-25 | Categories | Relational `wiki_categories` + pivot, comma-separated editor field (COA A) | ✅ Confirmed |
 | 2026-10-26 | Article cross-links | Hand-placed `[[slug\|label]]` at first prose mention, guarded by a test | ✅ Confirmed |
 | 2026-10-26 | Per-distro landing pages | Dedicated `/distro/{slug}` page with text lineage, siblings and derivatives (COA B) | ✅ Confirmed |
+| 2026-10-26 | Talk pages | Topics with replies in two tables, plain text, any logged-in user posts (COA B) | ✅ Confirmed |
 | 2026-10-26 | Roles and edit permissions | One `role` enum column plus `PagePolicy` (COA A), editing requires an editor | ✅ Confirmed |
 
 ---
@@ -544,3 +545,26 @@ An enum column cannot hold a fourth value, and the policy is the single place la
 - Existing accounts became readers when the migration ran. Nobody else can edit until an account is promoted.
 - The policy and role are unit-tested. The routes, the Livewire component and the views need the MySQL test database; they were checked by hand: guests are redirected from create and edit, and the policy answers were read for every account.
 - The development database still lacks the categories and links tables from earlier features (their migrations are pending, and the duplicate `create_users_table` stub would fail), so article pages return 500 there until that is sorted out.
+
+### Talk Pages
+
+**Date:** 2026-10-26
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+Each article gets a talk page made of topics. A topic has a title, an opening message and a line of replies under it (`wiki_talk_topics`, `wiki_talk_replies`; COA B). Any logged-in account can open a topic or reply, including readers and including on protected articles; admins can delete a topic or a reply. Messages are plain text, never Markdown, and are printed escaped.
+
+#### Reasoning
+
+COAs were a flat comment list (A), topics with replies (B) and a talk page that is itself a wiki page (C). C would have limited discussion to editors, left authorship to a typed signature that anyone could forge, and mixed talk pages into search and the A–Z list. A is a subset of B, and B costs one extra table. B first carried an Open/Resolved status so it could flag stale content; the author wanted talk pages for any comment, such as "try NixOS" on Arch, so the status and the resolve button were dropped. The topic's first message lives in the topic row rather than as a special first reply, so deleting a reply never has to ask whether it is the opening one.
+
+#### Consequences
+
+- The author is stored as a name on each post, like revisions do, so a renamed account keeps its old name on old posts. The profile page on the roadmap is the place to link posts to accounts.
+- `PagePolicy` gained `discuss` (always true for a signed-in user) and `moderate` (admin). Guests are sent to the login page by the `auth` middleware on the write routes.
+- Anonymous posting was not added: it needs spam protection (captcha or moderation) first.
+- No editing of one's own posts, no notifications and no watch list yet.
+- The value objects and the policy are unit-tested. The controller, actions and views need the MySQL test database, so they were checked by hand: a topic and a reply were posted in the browser. Views were also compiled with `view:cache`.
+- `php artisan migrate` was blocked by a duplicate `users` migration from August (`2026_08_25_192632_create_users_table`), which also kept the links and categories migrations pending on the development database. The stray file was removed; it duplicated the table Laravel creates itself.

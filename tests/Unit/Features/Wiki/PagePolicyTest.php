@@ -59,6 +59,19 @@ class PagePolicyTest extends TestCase
         $this->assertTrue($this->policy->protect($admin, $page));
     }
 
+    public function test_any_signed_in_role_may_discuss_but_only_admins_moderate(): void
+    {
+        $page = $this->page(protected: true);
+
+        foreach ([Role::Reader, Role::Editor, Role::Admin] as $role) {
+            $this->assertTrue($this->policy->discuss($this->userWith($role), $page), $role->value);
+        }
+
+        $this->assertFalse($this->policy->moderate($this->userWith(Role::Reader), $page));
+        $this->assertFalse($this->policy->moderate($this->userWith(Role::Editor), $page));
+        $this->assertTrue($this->policy->moderate($this->userWith(Role::Admin), $page));
+    }
+
     private function userWith(Role $role): User
     {
         return (new User())->forceFill(['role' => $role]);

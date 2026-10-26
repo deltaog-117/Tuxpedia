@@ -36,4 +36,16 @@ final class PagePolicy
     {
         return $user->hasRole(Role::Admin);
     }
+
+    /** Any signed-in account may open a topic or reply on a talk page, even on a protected page. */
+    public function discuss(User $user, Page $page): bool
+    {
+        return true;
+    }
+
+    /** Deleting a topic or a reply. */
+    public function moderate(User $user, Page $page): bool
+    {
+        return $user->hasRole(Role::Admin);
+    }
 }

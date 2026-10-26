@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Features\Wiki\Http\Controllers\CategoryController;
 use App\Features\Wiki\Http\Controllers\DiscoveryController;
 use App\Features\Wiki\Http\Controllers\PageController;
+use App\Features\Wiki\Http\Controllers\TalkController;
 
 Route::get('/wiki', [PageController::class, 'index'])->name('wiki.index');
 Route::get('/random', [DiscoveryController::class, 'random'])->name('wiki.random');
@@ -27,5 +28,24 @@ Route::post('/wiki/{slug}/revert/{sha}', [PageController::class, 'revert'])
     ->middleware('auth')
     ->name('wiki.revert');
 Route::post('/wiki/{slug}/protection', [PageController::class, 'protect'])->middleware('auth')->name('wiki.protect');
+Route::get('/wiki/{slug}/talk', [TalkController::class, 'index'])->name('wiki.talk');
+Route::get('/wiki/{slug}/talk/{topic}', [TalkController::class, 'show'])
+    ->whereNumber('topic')
+    ->name('wiki.talk.topic');
+Route::post('/wiki/{slug}/talk', [TalkController::class, 'store'])
+    ->middleware(['auth', 'throttle:10,1'])
+    ->name('wiki.talk.store');
+Route::post('/wiki/{slug}/talk/{topic}/replies', [TalkController::class, 'reply'])
+    ->whereNumber('topic')
+    ->middleware(['auth', 'throttle:10,1'])
+    ->name('wiki.talk.reply');
+Route::delete('/wiki/{slug}/talk/{topic}', [TalkController::class, 'destroyTopic'])
+    ->whereNumber('topic')
+    ->middleware('auth')
+    ->name('wiki.talk.destroy');
+Route::delete('/wiki/{slug}/talk/{topic}/replies/{reply}', [TalkController::class, 'destroyReply'])
+    ->whereNumber(['topic', 'reply'])
+    ->middleware('auth')
+    ->name('wiki.talk.reply.destroy');
 Route::get('/categories', [CategoryController::class, 'index'])->name('wiki.categories');
 Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('wiki.category');

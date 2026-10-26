@@ -49,6 +49,7 @@
         </div>
         <div class="flex gap-2">
             <a href="{{ route('wiki.backlinks', $page->slug) }}" class="btn-ghost">What links here</a>
+            <a href="{{ route('wiki.talk', $page->slug) }}" class="btn-ghost">Talk ({{ $page->talkTopics()->count() }})</a>
             <a href="{{ route('wiki.history', $page->slug) }}" class="btn-ghost">History</a>
             @can('protect', $page)
                 <form method="POST" action="{{ route('wiki.protect', $page->slug) }}">

@@ -47,6 +47,11 @@ class Page extends Model
         return $this->hasMany(Revision::class)->orderByDesc('created_at')->orderByDesc('id');
     }
 
+    public function talkTopics(): HasMany
+    {
+        return $this->hasMany(TalkTopic::class)->orderByDesc('updated_at')->orderByDesc('id');
+    }
+
     public function getSlugAttribute(string $value): Slug
     {
         return Slug::fromString($value);

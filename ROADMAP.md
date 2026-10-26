@@ -6,6 +6,7 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## ✅ Completed (Milestones Achieved)
+- Talk pages: each article has a Talk page (`/wiki/{slug}/talk`) with topics and replies for any discussion, such as suggestions, questions or corrections. Any logged-in account can post, admins can delete topics and replies, posts are plain text and rate limited. Topics have no open/resolved status, and posts are not editable or watchable yet
 - Roles and edit permissions: accounts are readers, editors or admins (`users.role`); creating and editing need an editor, restoring a revision and protecting a page need an admin, and a protected page can only be edited by an admin. Guests are sent to the login page. `php artisan user:promote {email} {role}` sets a role. Registration still gives the reader role, and no screen lists users yet
 - Per-distro landing pages: `/distro/{slug}` combines the infobox, the family position (ancestry, siblings, derivatives) and related articles, and is linked from the infobox, the comparison table and the article header; family-tree nodes still open the article
 - Cross-links in the shipped articles: 23 `[[links]]` join related distributions (Ubuntu to Debian, postmarketOS to Alpine and so on) at the first prose mention, and a unit test fails on any link to a missing article; the seeder does not overwrite existing pages, so older databases need the text edited or re-imported
@@ -33,7 +34,7 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## 🔥 High Priority (Critical)
-- Talk page per article – discussion separated from the article, used to flag stale or disputed content
+- User profile page – `/user/{name}` shows a public profile (picture, display name, short bio, join date and role) with the articles the person edited and the talk posts they wrote, and an edit form for the owner; replaces the plain author names on revisions and talk posts with links to it
 - Glossary and disambiguation pages – ambiguous terms (Arch/Artix, "Mint") and concept entries (kernel, init)
 - Print, export and permalinks – print stylesheet, Markdown/PDF export, stable per-revision URLs
 - Visual verification pass *(proposed)* – screenshot every page in light and dark and refresh `screenshots/` and the README
