@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Unit tests for Markdown rendering** – `tests/Unit/Features/Wiki/ContentTest.php` covers rendering, script stripping and link handling
 
 ### Changed
+- **Code style gate** – `pint.json` selects Pint's Laravel preset and `scripts/check` now runs `vendor/bin/pint --test` before PHPUnit, so unformatted code fails the check. The existing code was formatted once (imports sorted, `!` and `.` spacing, brace positions); no behaviour changed and the 93 tests still pass
 - Terminal: the screen is padded inside the window and uses a monospace stack with a block cursor; the scrollbar is dark to match the emulator; the prompt shows the working directory
 - Terminal: paths such as `a/../b` and `~` resolve correctly, and multi-line output no longer staircases
 - **Family tree map** – the D3 chart (a made-up "Linux" root with 17 curves, labels over links, double scrollbars) is now an interactive map: each family is a cluster anchored around a central ring of independent distros, nodes show each distro's official logo on its accent colour (initial when there is no logo, raster Tiny Core logo on white) and are sized by number of derivatives, hovering highlights a lineage, and selecting a node opens a side panel with its summary, parent, derivatives and a link to its article. Zoom, pan and drag; the layout settles before the first paint and fits the view (`BuildFamilyGraph`, with unit tests)

@@ -6,6 +6,7 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## ✅ Completed (Milestones Achieved)
+- Code style gate: `pint.json` uses the Laravel preset, the existing code was formatted once, and `scripts/check` runs `pint --test` before PHPUnit, so unformatted code fails the check
 - Talk pages: each article has a Talk page (`/wiki/{slug}/talk`) with topics and replies for any discussion, such as suggestions, questions or corrections. Any logged-in account can post, admins can delete topics and replies, posts are plain text and rate limited. Topics have no open/resolved status, and posts are not editable or watchable yet
 - Roles and edit permissions: accounts are readers, editors or admins (`users.role`); creating and editing need an editor, restoring a revision and protecting a page need an admin, and a protected page can only be edited by an admin. Guests are sent to the login page. `php artisan user:promote {email} {role}` sets a role. Registration still gives the reader role, and no screen lists users yet
 - Per-distro landing pages: `/distro/{slug}` combines the infobox, the family position (ancestry, siblings, derivatives) and related articles, and is linked from the infobox, the comparison table and the article header; family-tree nodes still open the article
@@ -44,7 +45,6 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ## 🟡 Medium Priority (Important)
 - Make page saves atomic *(proposed)* – `CreatePage` and `UpdatePage` save to the database before committing to the wiki repository, so a failed commit leaves a database row with no history
 - Keep articles current *(proposed)* – several articles quote release status (Fedora, Ubuntu, Alpine, Tails, Solus, Slackware 16); review them each quarter
-- Code style gate *(proposed)* – add a `pint.json` and format the existing code so `pint --test` can join `scripts/check` (34 files fail the default preset today)
 - Feature tests for the page-to-distribution link *(proposed)* – the feature migrations are MySQL-only (FULLTEXT), so these need a MySQL test database
 - Feature tests for the wiki, search and auth flows *(proposed)* – the `tests/Feature` and `tests/Unit/Features` folders are almost empty
 - Server-side table of contents *(proposed)* – move heading extraction out of the client script if pages need SEO or no-JS support

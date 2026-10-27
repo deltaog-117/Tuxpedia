@@ -28,6 +28,7 @@
 | 2026-10-26 | Per-distro landing pages | Dedicated `/distro/{slug}` page with text lineage, siblings and derivatives (COA B) | ✅ Confirmed |
 | 2026-10-26 | Talk pages | Topics with replies in two tables, plain text, any logged-in user posts (COA B) | ✅ Confirmed |
 | 2026-10-26 | Roles and edit permissions | One `role` enum column plus `PagePolicy` (COA A), editing requires an editor | ✅ Confirmed |
+| 2026-10-27 | Code style gate | Pint Laravel preset, format everything once, enforce in `scripts/check` (COA A) | ✅ Confirmed |
 
 ---
 
@@ -568,3 +569,23 @@ COAs were a flat comment list (A), topics with replies (B) and a talk page that 
 - No editing of one's own posts, no notifications and no watch list yet.
 - The value objects and the policy are unit-tested. The controller, actions and views need the MySQL test database, so they were checked by hand: a topic and a reply were posted in the browser. Views were also compiled with `view:cache`.
 - `php artisan migrate` was blocked by a duplicate `users` migration from August (`2026_08_25_192632_create_users_table`), which also kept the links and categories migrations pending on the development database. The stray file was removed; it duplicated the table Laravel creates itself.
+
+### Code Style Gate
+
+**Date:** 2026-10-27
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+Pint, Laravel's code-style fixer, runs in `scripts/check` as `pint --test`, using the standard Laravel preset set in `pint.json`. The existing code was formatted once with `pint` (COA A).
+
+#### Reasoning
+
+COAs were the Laravel preset with a one-off reformat (A), the preset with overrides that keep the project's habits (B) and a gate on changed files only (C). B would leave a custom ruleset to maintain and a style that differs from what Laravel developers expect. C checks nothing on a clean tree, so old files would stay inconsistent. A costs one large diff but needs no configuration beyond the preset.
+
+#### Consequences
+
+- 51 files were reformatted, mostly import order, `!` and `.` spacing, brace positions and blank lines. The change is format-only and the 93 tests pass. It is best committed on its own, apart from `pint.json` and the `scripts/check` change, so blame noise is easy to revert.
+- The roadmap counted 34 failing files; it was over 50 by the time of the change, because the talk and auth work had added more.
+- New code that does not match the preset now fails `scripts/check`; `vendor/bin/pint` fixes it.
