@@ -5,14 +5,19 @@ declare(strict_types=1);
 namespace App\Features\Auth\Http\Livewire;
 
 use App\Features\Auth\Actions\RegisterUser;
+use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 
 class Register extends Component
 {
     public string $name = '';
+
     public string $email = '';
+
     public string $password = '';
+
     public string $password_confirmation = '';
+
     public string $error = '';
 
     protected $rules = [
@@ -29,11 +34,12 @@ class Register extends Component
         try {
             $user = $registerUser->execute($this->name, $this->email, $this->password);
             auth()->login($user);
+
             return redirect()->route('wiki.index')->with('success', 'Registration successful!');
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             $this->error = $e->errors()['email'][0] ?? $e->getMessage();
         } catch (\Exception $e) {
-            $this->error = 'An error occurred: ' . $e->getMessage();
+            $this->error = 'An error occurred: '.$e->getMessage();
         }
     }
 

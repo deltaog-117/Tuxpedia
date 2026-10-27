@@ -10,7 +10,7 @@ final class LogoAssetsTest extends TestCase
 {
     public function test_every_bundled_logo_is_a_single_svg_without_scripts(): void
     {
-        $files = glob(dirname(__DIR__, 4) . '/public/images/distros/*.svg');
+        $files = glob(dirname(__DIR__, 4).'/public/images/distros/*.svg');
 
         $this->assertNotEmpty($files);
 

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Features\Terminal\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Route;
-use Livewire\Livewire;
 use App\Features\Terminal\Http\Livewire\Terminal;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 
 class TerminalServiceProvider extends ServiceProvider
 {

@@ -37,8 +37,8 @@ final class UpdatePage
 
         if ($oldSlug !== $newSlug->toString()) {
             $this->git->moveFile(
-                'pages/' . $oldSlug . '.md',
-                'pages/' . $newSlug->toString() . '.md'
+                'pages/'.$oldSlug.'.md',
+                'pages/'.$newSlug->toString().'.md'
             );
         }
 

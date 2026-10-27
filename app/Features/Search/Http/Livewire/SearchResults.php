@@ -20,7 +20,7 @@ class SearchResults extends Component
     {
         $results = null;
 
-        if (!empty(trim($this->query))) {
+        if (! empty(trim($this->query))) {
             $search = app(SearchWiki::class);
             $results = $search->execute($this->query, 10);
         }

@@ -6,9 +6,9 @@ namespace App\Features\Wiki\Http\Livewire;
 
 use App\Features\DistroComparison\Models\Distribution;
 use App\Features\Wiki\Actions\CreatePage;
-use App\Features\Wiki\Actions\UpdatePage;
 use App\Features\Wiki\Actions\GetPage;
 use App\Features\Wiki\Actions\SyncPageCategories;
+use App\Features\Wiki\Actions\UpdatePage;
 use App\Features\Wiki\Exceptions\InvalidSlugException;
 use App\Features\Wiki\Exceptions\PageNotFoundException;
 use App\Features\Wiki\Models\Page;
@@ -16,25 +16,32 @@ use App\Features\Wiki\ValueObjects\Content;
 use App\Features\Wiki\ValueObjects\Slug;
 use App\Features\Wiki\ValueObjects\Title;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Livewire\Component;
-use Illuminate\Support\Facades\Log;
 
 class WikiEditor extends Component
 {
     public ?Page $page = null;
 
     public string $slug = '';
+
     public string $title = '';
+
     public string $content = '';
+
     public string $author = '';
+
     public string $summary = '';
+
     // String, not ?int: the <select> posts '' for "no distribution".
     public string $distributionId = '';
+
     // Comma-separated names; categories are created on first use.
     public string $categories = '';
 
     public bool $isEditing = false;
+
     public string $errorMessage = '';
 
     protected $rules = [

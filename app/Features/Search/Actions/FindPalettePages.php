@@ -24,7 +24,7 @@ class FindPalettePages
         $pages = Page::query()->select(['slug', 'title'])->orderByDesc('updated_at')->limit($limit);
         if ($needle !== '') {
             $pages->orderBy('title')->whereRaw(
-                'title LIKE ? ESCAPE \'' . self::ESCAPE . '\'',
+                'title LIKE ? ESCAPE \''.self::ESCAPE.'\'',
                 [self::likePattern($needle)]
             );
         }
@@ -46,10 +46,10 @@ class FindPalettePages
     {
         $escaped = str_replace(
             [self::ESCAPE, '%', '_'],
-            [self::ESCAPE . self::ESCAPE, self::ESCAPE . '%', self::ESCAPE . '_'],
+            [self::ESCAPE.self::ESCAPE, self::ESCAPE.'%', self::ESCAPE.'_'],
             $input
         );
 
-        return '%' . $escaped . '%';
+        return '%'.$escaped.'%';
     }
 }

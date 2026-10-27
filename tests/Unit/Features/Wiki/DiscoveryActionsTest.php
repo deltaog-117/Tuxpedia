@@ -20,9 +20,9 @@ class DiscoveryActionsTest extends TestCase
 
     public function test_random_page_is_null_for_an_empty_wiki_and_a_member_otherwise(): void
     {
-        $action = new GetRandomPage();
+        $action = new GetRandomPage;
 
-        $this->assertNull($action->execute(new Collection()));
+        $this->assertNull($action->execute(new Collection));
 
         $slugs = new Collection(['arch', 'debian', 'fedora']);
         for ($i = 0; $i < 20; $i++) {
@@ -33,7 +33,7 @@ class DiscoveryActionsTest extends TestCase
     public function test_random_page_can_reach_every_page(): void
     {
         $slugs = new Collection(['arch', 'debian', 'fedora']);
-        $seen = collect(range(1, 200))->map(fn (): ?string => (new GetRandomPage())->execute($slugs))->unique();
+        $seen = collect(range(1, 200))->map(fn (): ?string => (new GetRandomPage)->execute($slugs))->unique();
 
         $this->assertCount(3, $seen);
     }
@@ -48,7 +48,7 @@ class DiscoveryActionsTest extends TestCase
             $this->page('Éclair'),
         ]);
 
-        $groups = (new GroupPagesAlphabetically())->execute($pages);
+        $groups = (new GroupPagesAlphabetically)->execute($pages);
 
         $this->assertSame(['A', 'E', 'F', '#'], array_keys($groups));
         $this->assertSame(['Alpine', 'arch Linux'], array_map(fn (Page $p): string => (string) $p->title, $groups['A']));
@@ -57,6 +57,6 @@ class DiscoveryActionsTest extends TestCase
 
     public function test_grouping_an_empty_wiki_is_empty(): void
     {
-        $this->assertSame([], (new GroupPagesAlphabetically())->execute(new Collection()));
+        $this->assertSame([], (new GroupPagesAlphabetically)->execute(new Collection));
     }
 }

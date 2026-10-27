@@ -43,6 +43,7 @@ class WikiContentSeeder extends Seeder
                     $article->author,
                     $distributionId,
                 );
+
                 continue;
             }
 

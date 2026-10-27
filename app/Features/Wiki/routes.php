@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Features\Wiki\Http\Controllers\CategoryController;
 use App\Features\Wiki\Http\Controllers\DiscoveryController;
 use App\Features\Wiki\Http\Controllers\PageController;
 use App\Features\Wiki\Http\Controllers\TalkController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/wiki', [PageController::class, 'index'])->name('wiki.index');
 Route::get('/random', [DiscoveryController::class, 'random'])->name('wiki.random');

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Features\Wiki\Actions;
 
 use App\Features\Wiki\Models\Revision;
+use App\Features\Wiki\ValueObjects\DiffLine;
 use App\Features\Wiki\ValueObjects\LineDiff;
 
 final class CompareRevisions
@@ -14,7 +15,7 @@ final class CompareRevisions
     ) {}
 
     /**
-     * @return list<\App\Features\Wiki\ValueObjects\DiffLine>
+     * @return list<DiffLine>
      */
     public function execute(Revision $from, Revision $to): array
     {

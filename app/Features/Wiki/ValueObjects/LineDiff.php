@@ -59,8 +59,8 @@ final class LineDiff
     }
 
     /**
-     * @param list<string> $a
-     * @param list<string> $b
+     * @param  list<string>  $a
+     * @param  list<string>  $b
      * @return list<DiffLine>
      */
     private static function middle(array $a, array $b): array

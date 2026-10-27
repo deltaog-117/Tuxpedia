@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Tests\Unit\Features\Wiki;
 
 use App\Features\Wiki\ValueObjects\DiffKind;
+use App\Features\Wiki\ValueObjects\DiffLine;
 use App\Features\Wiki\ValueObjects\LineDiff;
 use PHPUnit\Framework\TestCase;
 
 class LineDiffTest extends TestCase
 {
     /**
-     * @param list<\App\Features\Wiki\ValueObjects\DiffLine> $lines
+     * @param  list<DiffLine>  $lines
      */
     private function rebuild(array $lines, DiffKind $skip): string
     {

@@ -5,14 +5,17 @@ declare(strict_types=1);
 namespace App\Features\Auth\Http\Livewire;
 
 use App\Features\Auth\Actions\LoginUser;
-use Livewire\Component;
 use Illuminate\Validation\ValidationException;
+use Livewire\Component;
 
 class Login extends Component
 {
     public string $email = '';
+
     public string $password = '';
+
     public bool $remember = false;
+
     public string $error = '';
 
     protected $rules = [
@@ -27,6 +30,7 @@ class Login extends Component
 
         try {
             $user = $loginUser->execute($this->email, $this->password, $this->remember);
+
             return redirect()->route('wiki.index')->with('success', 'Welcome back!');
         } catch (ValidationException $e) {
             $this->error = $e->errors()['email'][0] ?? 'Invalid credentials.';

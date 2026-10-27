@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Features\FamilyTree\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Route;
-use Livewire\Livewire;
 use App\Features\FamilyTree\Http\Livewire\FamilyTree;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 
 class FamilyTreeServiceProvider extends ServiceProvider
 {

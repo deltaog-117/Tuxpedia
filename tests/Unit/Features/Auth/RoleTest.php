@@ -37,7 +37,7 @@ class RoleTest extends TestCase
 
     public function test_a_stored_role_name_is_cast_to_the_enum(): void
     {
-        $user = new User();
+        $user = new User;
         $user->forceFill(['role' => 'editor']);
 
         $this->assertSame(Role::Editor, $user->role);

@@ -67,7 +67,7 @@ final class ArticleFileTest extends TestCase
     public function test_all_shipped_articles_are_valid(): void
     {
         $seeded = array_column(DistributionSeeder::catalogue(), 'slug');
-        $files = glob(__DIR__ . '/../../../../database/content/wiki/*.md');
+        $files = glob(__DIR__.'/../../../../database/content/wiki/*.md');
 
         $this->assertNotEmpty($files);
         $slugs = [];
@@ -78,7 +78,7 @@ final class ArticleFileTest extends TestCase
             $slugs[] = $article->slug->toString();
             $this->assertContains($article->distributionSlug, $seeded, basename($path));
             $this->assertDoesNotMatchRegularExpression('/<\/?[a-z][^>]*>/i', $article->content->toString(), basename($path));
-            $this->assertStringNotContainsString('deltaog', strtolower($article->author . $article->content->toString()), basename($path));
+            $this->assertStringNotContainsString('deltaog', strtolower($article->author.$article->content->toString()), basename($path));
             $this->assertGreaterThan(1500, strlen($article->content->toString()), basename($path));
         }
     }
@@ -87,7 +87,7 @@ final class ArticleFileTest extends TestCase
     {
         $withArticle = array_map(
             fn (string $path): ?string => ArticleFile::parse(basename($path), (string) file_get_contents($path))->distributionSlug,
-            glob(__DIR__ . '/../../../../database/content/wiki/*.md')
+            glob(__DIR__.'/../../../../database/content/wiki/*.md')
         );
 
         foreach (DistributionSeeder::catalogue() as $distro) {

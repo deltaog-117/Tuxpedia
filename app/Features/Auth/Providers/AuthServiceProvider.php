@@ -4,20 +4,23 @@ declare(strict_types=1);
 
 namespace App\Features\Auth\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Route;
-use Livewire\Livewire;
+use App\Features\Auth\Actions\LoginUser;
+use App\Features\Auth\Actions\LogoutUser;
+use App\Features\Auth\Actions\RegisterUser;
 use App\Features\Auth\Console\PromoteUser;
 use App\Features\Auth\Http\Livewire\Login;
 use App\Features\Auth\Http\Livewire\Register;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 
 class AuthServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->bind(\App\Features\Auth\Actions\LoginUser::class);
-        $this->app->bind(\App\Features\Auth\Actions\RegisterUser::class);
-        $this->app->bind(\App\Features\Auth\Actions\LogoutUser::class);
+        $this->app->bind(LoginUser::class);
+        $this->app->bind(RegisterUser::class);
+        $this->app->bind(LogoutUser::class);
     }
 
     public function boot(): void

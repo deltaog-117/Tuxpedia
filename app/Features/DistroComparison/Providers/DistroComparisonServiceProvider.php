@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Features\DistroComparison\Providers;
 
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Route;
-use Livewire\Livewire;
 use App\Features\DistroComparison\Http\Livewire\ComparisonTable;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 
 class DistroComparisonServiceProvider extends ServiceProvider
 {

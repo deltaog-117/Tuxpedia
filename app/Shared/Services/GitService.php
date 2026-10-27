@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Shared\Services;
 
-use Illuminate\Support\Facades\Storage;
-use Symfony\Component\Process\Process;
 use RuntimeException;
+use Symfony\Component\Process\Process;
 
 class GitService
 {
@@ -20,7 +19,7 @@ class GitService
 
     protected function ensureRepoExists(): void
     {
-        if (!is_dir($this->repoPath)) {
+        if (! is_dir($this->repoPath)) {
             mkdir($this->repoPath, 0755, true);
             $this->initRepo();
         }
@@ -30,7 +29,7 @@ class GitService
     {
         $process = new Process(['git', 'init', $this->repoPath]);
         $process->run();
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             throw new RuntimeException('Failed to initialize Git repository.');
         }
         $this->runGitCommand(['config', 'user.email', 'tuxpedia@example.com']);
@@ -42,11 +41,12 @@ class GitService
         $cmd = array_merge(['git', '-C', $this->repoPath], $args);
         $process = new Process($cmd);
         $process->run();
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             throw new RuntimeException(
-                'Git command failed: ' . $process->getErrorOutput()
+                'Git command failed: '.$process->getErrorOutput()
             );
         }
+
         return $process->getOutput();
     }
 
@@ -56,15 +56,15 @@ class GitService
      */
     public function commitFile(string $filePath, string $content, string $commitMessage): ?string
     {
-        $fullPath = $this->repoPath . '/' . $filePath;
+        $fullPath = $this->repoPath.'/'.$filePath;
         $dir = dirname($fullPath);
-        if (!is_dir($dir)) {
+        if (! is_dir($dir)) {
             mkdir($dir, 0755, true);
         }
         file_put_contents($fullPath, $content);
 
         $this->runGitCommand(['add', $filePath]);
-        if (!$this->hasStagedChanges()) {
+        if (! $this->hasStagedChanges()) {
             return null;
         }
         $this->runGitCommand(['commit', '-m', $commitMessage]);
@@ -79,7 +79,7 @@ class GitService
 
         // Exit code 1 means differences; anything above is a real failure.
         if ($process->getExitCode() > 1) {
-            throw new RuntimeException('Git command failed: ' . $process->getErrorOutput());
+            throw new RuntimeException('Git command failed: '.$process->getErrorOutput());
         }
 
         return $process->getExitCode() === 1;
@@ -90,7 +90,7 @@ class GitService
      */
     public function show(string $sha, string $filePath): string
     {
-        return $this->runGitCommand(['show', $sha . ':' . $filePath]);
+        return $this->runGitCommand(['show', $sha.':'.$filePath]);
     }
 
     /**
@@ -129,8 +129,9 @@ class GitService
     public function getHistory(string $filePath): array
     {
         $output = $this->runGitCommand([
-            'log', '--oneline', '--follow', '--', $filePath
+            'log', '--oneline', '--follow', '--', $filePath,
         ]);
+
         return array_filter(explode("\n", trim($output)));
     }
 }

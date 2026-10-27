@@ -14,9 +14,7 @@ use InvalidArgumentException;
  */
 final class Accent
 {
-    private function __construct(private readonly string $hex)
-    {
-    }
+    private function __construct(private readonly string $hex) {}
 
     public static function fromString(string $value): self
     {

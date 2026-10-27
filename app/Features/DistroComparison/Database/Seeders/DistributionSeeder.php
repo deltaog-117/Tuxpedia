@@ -2,8 +2,8 @@
 
 namespace App\Features\DistroComparison\Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Features\DistroComparison\Models\Distribution;
+use Illuminate\Database\Seeder;
 
 class DistributionSeeder extends Seeder
 {

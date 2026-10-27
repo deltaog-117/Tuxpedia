@@ -12,7 +12,7 @@ class LoginUser
 {
     public function execute(string $email, string $password, bool $remember = false): User
     {
-        if (!Auth::attempt(['email' => $email, 'password' => $password], $remember)) {
+        if (! Auth::attempt(['email' => $email, 'password' => $password], $remember)) {
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
             ]);

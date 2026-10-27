@@ -13,8 +13,11 @@ class ComparisonTable extends Component
     use WithPagination;
 
     public string $search = '';
+
     public string $sortField = 'name';
+
     public string $sortDirection = 'asc';
+
     public array $filters = [
         'based_on' => '',
         'release_model' => '',
@@ -52,21 +55,21 @@ class ComparisonTable extends Component
     {
         $query = Distribution::query();
 
-        if (!empty($this->search)) {
-            $search = '%' . $this->search . '%';
+        if (! empty($this->search)) {
+            $search = '%'.$this->search.'%';
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', $search)
-                  ->orWhere('description', 'like', $search)
-                  ->orWhere('based_on', 'like', $search)
-                  ->orWhere('package_manager', 'like', $search);
+                    ->orWhere('description', 'like', $search)
+                    ->orWhere('based_on', 'like', $search)
+                    ->orWhere('package_manager', 'like', $search);
             });
         }
 
-        if (!empty($this->filters['based_on'])) {
+        if (! empty($this->filters['based_on'])) {
             $query->where('based_on', $this->filters['based_on']);
         }
-        if (!empty($this->filters['release_model'])) {
-            $query->where('release_model', 'like', '%' . $this->filters['release_model'] . '%');
+        if (! empty($this->filters['release_model'])) {
+            $query->where('release_model', 'like', '%'.$this->filters['release_model'].'%');
         }
 
         $query->orderBy($this->sortField, $this->sortDirection);

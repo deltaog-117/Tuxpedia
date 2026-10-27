@@ -15,8 +15,7 @@ final readonly class PaletteItem
         public string $group,
         public ?string $url,
         public ?string $action,
-    ) {
-    }
+    ) {}
 
     public static function link(string $label, string $group, string $url): self
     {

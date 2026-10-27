@@ -51,7 +51,7 @@ class Distribution extends Model
      */
     public function accentStyle(): string
     {
-        return $this->accent === null ? '' : '--distro-accent: ' . $this->accent->toRgbChannels();
+        return $this->accent === null ? '' : '--distro-accent: '.$this->accent->toRgbChannels();
     }
 
     /**

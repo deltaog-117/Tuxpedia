@@ -13,9 +13,7 @@ final class TalkBody
 {
     public const MAX_LENGTH = 5000;
 
-    private function __construct(private readonly string $value)
-    {
-    }
+    private function __construct(private readonly string $value) {}
 
     public static function fromString(string $value): self
     {
@@ -24,8 +22,9 @@ final class TalkBody
             throw new InvalidArgumentException('A message cannot be empty.');
         }
         if (mb_strlen($value) > self::MAX_LENGTH) {
-            throw new InvalidArgumentException('A message cannot exceed ' . self::MAX_LENGTH . ' characters.');
+            throw new InvalidArgumentException('A message cannot exceed '.self::MAX_LENGTH.' characters.');
         }
+
         return new self($value);
     }
 

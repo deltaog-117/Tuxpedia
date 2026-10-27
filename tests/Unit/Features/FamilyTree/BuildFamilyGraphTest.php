@@ -16,7 +16,7 @@ final class BuildFamilyGraphTest extends TestCase
 
     public function test_flattens_families_into_clusters_with_links_and_counts(): void
     {
-        $graph = (new BuildFamilyGraph())->execute([
+        $graph = (new BuildFamilyGraph)->execute([
             $this->node('Debian', [$this->node('Ubuntu', [$this->node('Mint')])]),
             $this->node('Gentoo'),
             $this->node('Void'),
@@ -34,7 +34,7 @@ final class BuildFamilyGraphTest extends TestCase
 
     public function test_links_a_node_to_its_article_only_when_it_has_one(): void
     {
-        $graph = (new BuildFamilyGraph())->execute([$this->node('Debian', [$this->node('Ubuntu')], 'debian')], fn (string $slug): string => "/wiki/$slug");
+        $graph = (new BuildFamilyGraph)->execute([$this->node('Debian', [$this->node('Ubuntu')], 'debian')], fn (string $slug): string => "/wiki/$slug");
 
         $byId = array_column($graph['nodes'], null, 'id');
         $this->assertSame('/wiki/debian', $byId['debian']['url']);
@@ -43,14 +43,14 @@ final class BuildFamilyGraphTest extends TestCase
 
     public function test_has_no_independent_cluster_when_every_root_has_derivatives(): void
     {
-        $graph = (new BuildFamilyGraph())->execute([$this->node('Debian', [$this->node('Ubuntu')])], fn (string $slug): string => $slug);
+        $graph = (new BuildFamilyGraph)->execute([$this->node('Debian', [$this->node('Ubuntu')])], fn (string $slug): string => $slug);
 
         $this->assertCount(1, $graph['clusters']);
     }
 
     public function test_flags_raster_logos_so_they_are_not_recoloured(): void
     {
-        $graph = (new BuildFamilyGraph())->execute([
+        $graph = (new BuildFamilyGraph)->execute([
             $this->node('Debian', [$this->node('Ubuntu', [], null, '/images/distros/ubuntu.svg')], null, '/images/distros/tinycore.png'),
         ], fn (string $slug): string => $slug);
 

@@ -25,7 +25,7 @@ class HomepageActionsTest extends TestCase
     public function test_featured_page_is_stable_within_a_day_and_rotates_across_days(): void
     {
         $pages = new Collection([$this->page('arch', 'Independent'), $this->page('debian', 'Independent'), $this->page('fedora', 'Red Hat')]);
-        $action = new GetFeaturedPage();
+        $action = new GetFeaturedPage;
 
         $day = CarbonImmutable::parse('2026-03-01');
         $this->assertSame($action->execute($pages, $day), $action->execute($pages, $day->setTime(18, 0)));
@@ -38,10 +38,10 @@ class HomepageActionsTest extends TestCase
 
     public function test_featured_page_prefers_distribution_articles_and_handles_empty_library(): void
     {
-        $action = new GetFeaturedPage();
+        $action = new GetFeaturedPage;
         $day = CarbonImmutable::parse('2026-03-01');
 
-        $this->assertNull($action->execute(new Collection(), $day));
+        $this->assertNull($action->execute(new Collection, $day));
 
         $pages = new Collection([$this->page('notes', null), $this->page('arch', 'Independent')]);
         $this->assertSame('arch', (string) $action->execute($pages, $day)->slug);
@@ -62,7 +62,7 @@ class HomepageActionsTest extends TestCase
             $this->page('suse', 'Independent (SUSE)'),
         ]);
 
-        $families = (new GroupPagesByFamily())->execute($pages);
+        $families = (new GroupPagesByFamily)->execute($pages);
 
         $this->assertSame(['Arch', 'Debian', 'Red Hat', 'Independent', 'Other'], $families->keys()->all());
         $this->assertSame(
@@ -77,6 +77,6 @@ class HomepageActionsTest extends TestCase
     {
         $pages = new Collection([$this->page('a', 'B'), $this->page('b', 'A')]);
 
-        $this->assertSame(2, (new GroupPagesByFamily())->execute($pages)->flatten()->count());
+        $this->assertSame(2, (new GroupPagesByFamily)->execute($pages)->flatten()->count());
     }
 }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Features\Search\Actions;
 
 use App\Features\Wiki\Models\Page;
-use Illuminate\Support\Facades\DB;
 
 class SearchWiki
 {
@@ -19,10 +18,10 @@ class SearchWiki
             'wiki_pages.*, MATCH(title, content) AGAINST(?) AS relevance',
             [$query]
         )
-        ->whereRaw('MATCH(title, content) AGAINST(?)', [$query])
-        ->orderByDesc('relevance')
-        ->paginate($perPage)
-        ->appends(['q' => $query]);
+            ->whereRaw('MATCH(title, content) AGAINST(?)', [$query])
+            ->orderByDesc('relevance')
+            ->paginate($perPage)
+            ->appends(['q' => $query]);
 
         return $results;
     }

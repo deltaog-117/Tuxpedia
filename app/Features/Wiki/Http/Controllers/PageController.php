@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Features\Wiki\Http\Controllers;
 
 use App\Features\DistroComparison\Models\Distribution;
-use App\Features\Wiki\Actions\GetFeaturedPage;
 use App\Features\Wiki\Actions\CompareRevisions;
+use App\Features\Wiki\Actions\GetFeaturedPage;
 use App\Features\Wiki\Actions\GetPage;
 use App\Features\Wiki\Actions\GroupPagesByFamily;
 use App\Features\Wiki\Actions\ListBacklinks;
@@ -16,7 +16,6 @@ use App\Features\Wiki\Actions\RevertPage;
 use App\Features\Wiki\Actions\SetPageProtection;
 use App\Features\Wiki\Exceptions\PageNotFoundException;
 use App\Features\Wiki\Models\Page;
-use App\Features\Wiki\Models\Revision;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;

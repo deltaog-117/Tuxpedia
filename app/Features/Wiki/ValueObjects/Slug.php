@@ -24,11 +24,12 @@ final class Slug
         if (strlen($value) > 255) {
             throw new InvalidSlugException('Slug cannot exceed 255 characters.');
         }
-        if (!preg_match('/^[a-z0-9\-_]+$/', $value)) {
+        if (! preg_match('/^[a-z0-9\-_]+$/', $value)) {
             throw new InvalidSlugException(
                 'Slug must contain only lowercase letters, digits, hyphens, and underscores.'
             );
         }
+
         return new self($value);
     }
 

@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Features\Auth\Actions\LogoutUser;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/login', function () {
     return view('features.auth.login-wrapper');
@@ -13,5 +13,6 @@ Route::get('/register', function () {
 
 Route::post('/logout', function (LogoutUser $logout) {
     $logout->execute();
+
     return redirect()->route('auth.login');
 })->name('auth.logout');

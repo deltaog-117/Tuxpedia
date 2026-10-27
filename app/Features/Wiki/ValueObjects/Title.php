@@ -24,6 +24,7 @@ final class Title
         if (strlen($value) > 255) {
             throw new InvalidArgumentException('Title cannot exceed 255 characters.');
         }
+
         return new self($value);
     }
 

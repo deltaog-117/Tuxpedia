@@ -18,7 +18,7 @@ final class BuildFamilyTreeTest extends TestCase
             'based_on' => $row[1],
         ]));
 
-        return (new BuildFamilyTree())->execute($distros);
+        return (new BuildFamilyTree)->execute($distros);
     }
 
     private function names(array $nodes): array

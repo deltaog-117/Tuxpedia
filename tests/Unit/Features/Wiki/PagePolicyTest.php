@@ -17,7 +17,7 @@ class PagePolicyTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->policy = new PagePolicy();
+        $this->policy = new PagePolicy;
     }
 
     public function test_only_editors_and_admins_may_create(): void
@@ -74,12 +74,12 @@ class PagePolicyTest extends TestCase
 
     private function userWith(Role $role): User
     {
-        return (new User())->forceFill(['role' => $role]);
+        return (new User)->forceFill(['role' => $role]);
     }
 
     private function page(bool $protected): Page
     {
-        $page = new Page();
+        $page = new Page;
         $page->protected_at = $protected ? now() : null;
 
         return $page;

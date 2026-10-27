@@ -24,7 +24,7 @@ final class CreatePage
             throw new \RuntimeException("Page with slug '{$slug}' already exists.");
         }
 
-        $page = new Page();
+        $page = new Page;
         $page->slug = $slug;
         $page->title = $title;
         $page->content = $content;

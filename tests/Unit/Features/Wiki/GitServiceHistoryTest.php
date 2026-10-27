@@ -13,19 +13,19 @@ class GitServiceHistoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->dir = sys_get_temp_dir() . '/tuxpedia-git-' . bin2hex(random_bytes(4));
+        $this->dir = sys_get_temp_dir().'/tuxpedia-git-'.bin2hex(random_bytes(4));
     }
 
     protected function tearDown(): void
     {
-        exec('rm -rf ' . escapeshellarg($this->dir));
+        exec('rm -rf '.escapeshellarg($this->dir));
     }
 
     // A user-level commit hook (commitlint) would reject commits in this throwaway repo.
     private function service(): GitService
     {
         $git = new GitService($this->dir);
-        exec('git -C ' . escapeshellarg($this->dir) . ' config core.hooksPath /dev/null');
+        exec('git -C '.escapeshellarg($this->dir).' config core.hooksPath /dev/null');
 
         return $git;
     }

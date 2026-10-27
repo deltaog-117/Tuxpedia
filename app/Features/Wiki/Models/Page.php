@@ -89,19 +89,20 @@ class Page extends Model
 
     public function toMarkdownFileName(): string
     {
-        return $this->slug . '.md';
+        return $this->slug.'.md';
     }
 
     public function getMarkdownFilePath(): string
     {
-        return 'pages/' . $this->toMarkdownFileName();
+        return 'pages/'.$this->toMarkdownFileName();
     }
 
     public function wasUpdatedSinceLastVisit(?User $user): bool
     {
-        if (!$user || !$user->last_visited_at) {
+        if (! $user || ! $user->last_visited_at) {
             return false;
         }
+
         return $this->updated_at->gt($user->last_visited_at);
     }
 }

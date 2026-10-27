@@ -30,8 +30,7 @@ final class ArticleFile
         public readonly string $author,
         public readonly ?string $distributionSlug,
         public readonly Content $content,
-    ) {
-    }
+    ) {}
 
     public static function parse(string $fileName, string $raw): self
     {
@@ -44,7 +43,7 @@ final class ArticleFile
         $meta = self::parseMeta($fileName, $parts[1]);
 
         foreach (self::REQUIRED_KEYS as $key) {
-            if (!isset($meta[$key])) {
+            if (! isset($meta[$key])) {
                 throw new InvalidArgumentException("{$fileName}: front matter is missing '{$key}'.");
             }
         }
@@ -54,7 +53,7 @@ final class ArticleFile
             Title::fromString($meta['title']),
             $meta['author'],
             $meta['distribution'] ?? null,
-            Content::fromString(trim($parts[2]) . "\n"),
+            Content::fromString(trim($parts[2])."\n"),
         );
     }
 
@@ -70,7 +69,7 @@ final class ArticleFile
             if (preg_match('/^([a-z_]+):\s*(.+)$/', $line, $pair) !== 1) {
                 throw new InvalidArgumentException("{$fileName}: bad front matter line '{$line}'.");
             }
-            if (!in_array($pair[1], $allowed, true)) {
+            if (! in_array($pair[1], $allowed, true)) {
                 throw new InvalidArgumentException("{$fileName}: unknown front matter key '{$pair[1]}'.");
             }
             $meta[$pair[1]] = trim($pair[2]);

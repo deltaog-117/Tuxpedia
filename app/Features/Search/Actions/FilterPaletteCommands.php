@@ -17,7 +17,7 @@ class FilterPaletteCommands
 
         $matches = [];
         foreach ($this->commands($authenticated) as [$keywords, $item]) {
-            if ($needle === '' || str_contains(mb_strtolower($item->label . ' ' . $keywords), $needle)) {
+            if ($needle === '' || str_contains(mb_strtolower($item->label.' '.$keywords), $needle)) {
                 $matches[] = $item;
             }
         }
