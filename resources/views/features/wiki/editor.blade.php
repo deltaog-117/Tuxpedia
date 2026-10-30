@@ -44,11 +44,6 @@
         </div>
 
         <div>
-            <label class="field-label" for="author">Author (optional)</label>
-            <input wire:model="author" id="author" type="text" class="input-field" placeholder="Your name">
-        </div>
-
-        <div>
             <label class="field-label" for="content">Content (Markdown)</label>
             <textarea wire:model="content" id="content" rows="15" class="input-field font-mono" placeholder="Write your content in Markdown..."></textarea>
         </div>

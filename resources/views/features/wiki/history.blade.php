@@ -46,7 +46,7 @@
                                 @if($loop->first)<span class="badge-new ml-2">Current</span>@endif
                             </td>
                             <td><time datetime="{{ $revision->created_at->toIso8601String() }}">{{ $revision->created_at->format('Y-m-d H:i') }}</time></td>
-                            <td>{{ $revision->author ?? '—' }}</td>
+                            <td><x-author :name="$revision->author" :user="$revision->user" /></td>
                             <td>{{ $revision->summary ?? '—' }}</td>
                             <td>
                                 <div class="flex items-center justify-end gap-2">

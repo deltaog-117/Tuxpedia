@@ -36,7 +36,7 @@
                         <tr>
                             <td><time datetime="{{ $revision->created_at->toIso8601String() }}">{{ $revision->created_at->format('Y-m-d H:i') }}</time></td>
                             <td><a href="{{ route('wiki.show', $revision->page->slug) }}">{{ $revision->page->title }}</a></td>
-                            <td>{{ $revision->author ?? '—' }}</td>
+                            <td><x-author :name="$revision->author" :user="$revision->user" /></td>
                             <td>{{ $revision->summary ?? '—' }}</td>
                             <td>
                                 <div class="flex items-center justify-end gap-2">

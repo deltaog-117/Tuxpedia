@@ -28,6 +28,8 @@ class PageController
         try {
             $page = $getPage->execute($slug);
 
+            $page->load('user');
+
             return view('features.wiki.show', ['page' => $page, 'html' => $render->execute($page->content)]);
         } catch (PageNotFoundException $e) {
             abort(404, $e->getMessage());
@@ -62,7 +64,7 @@ class PageController
 
         return view('features.wiki.history', [
             'page' => $page,
-            'revisions' => $page->revisions()->get(),
+            'revisions' => $page->revisions()->with('user')->get(),
         ]);
     }
 
@@ -105,7 +107,7 @@ class PageController
         Gate::authorize('revert', $page);
         $revision = $page->revisions()->where('sha', $sha)->firstOrFail();
 
-        $changed = $revert->execute($page, $revision, $request->user()?->name);
+        $changed = $revert->execute($page, $revision, $request->user()?->name, $request->user()?->id);
 
         return redirect()
             ->route($changed ? 'wiki.show' : 'wiki.history', $page->slug->toString())

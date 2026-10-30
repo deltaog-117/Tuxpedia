@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Features\Wiki\Models;
 
+use App\Features\Auth\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -21,6 +22,7 @@ class Revision extends Model
         'sha',
         'path',
         'author',
+        'user_id',
         'summary',
         'created_at',
     ];
@@ -32,6 +34,11 @@ class Revision extends Model
     public function page(): BelongsTo
     {
         return $this->belongsTo(Page::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function shortSha(): string

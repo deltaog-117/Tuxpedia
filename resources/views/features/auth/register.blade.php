@@ -14,6 +14,13 @@
             </div>
 
             <div>
+                <label class="field-label" for="register-username">Username</label>
+                <input wire:model="username" id="register-username" type="text" class="input-field @error('username') input-field--invalid @enderror" autocomplete="username" required>
+                <p class="mt-1 text-xs text-tux-muted">Your profile address, <span class="font-mono">/user/username</span>. Lowercase letters, digits, - and _; it cannot be changed later.</p>
+                @error('username') <p class="field-error">{{ $message }}</p> @enderror
+            </div>
+
+            <div>
                 <label class="field-label" for="register-email">Email</label>
                 <input wire:model="email" id="register-email" type="email" class="input-field @error('email') input-field--invalid @enderror" required>
                 @error('email') <p class="field-error">{{ $message }}</p> @enderror

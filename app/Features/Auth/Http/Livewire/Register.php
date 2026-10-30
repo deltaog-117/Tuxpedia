@@ -5,12 +5,16 @@ declare(strict_types=1);
 namespace App\Features\Auth\Http\Livewire;
 
 use App\Features\Auth\Actions\RegisterUser;
+use App\Features\Auth\ValueObjects\Username;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 
 class Register extends Component
 {
     public string $name = '';
+
+    public string $username = '';
 
     public string $email = '';
 
@@ -22,17 +26,19 @@ class Register extends Component
 
     protected $rules = [
         'name' => 'required|string|max:255',
+        'username' => 'required|string|min:'.Username::MIN_LENGTH.'|max:'.Username::MAX_LENGTH.'|regex:'.Username::PATTERN.'|unique:users,username',
         'email' => 'required|email|unique:users,email',
         'password' => 'required|min:8|confirmed',
     ];
 
     public function register(RegisterUser $registerUser)
     {
+        $this->username = Str::lower(trim($this->username));
         $this->validate();
         $this->error = '';
 
         try {
-            $user = $registerUser->execute($this->name, $this->email, $this->password);
+            $user = $registerUser->execute($this->name, Username::fromString($this->username), $this->email, $this->password);
             auth()->login($user);
 
             return redirect()->route('wiki.index')->with('success', 'Registration successful!');

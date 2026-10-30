@@ -19,7 +19,7 @@ final class RevertPage
      *
      * @return bool false when the page already has that content
      */
-    public function execute(Page $page, Revision $revision, ?string $author = null): bool
+    public function execute(Page $page, Revision $revision, ?string $author = null, ?int $userId = null): bool
     {
         $content = $this->read->execute($revision);
 
@@ -35,6 +35,7 @@ final class RevertPage
             $author,
             $page->distribution_id,
             "Reverted to revision {$revision->shortSha()}",
+            $userId,
         );
 
         return true;

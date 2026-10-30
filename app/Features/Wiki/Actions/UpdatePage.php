@@ -18,7 +18,7 @@ final class UpdatePage
         private RecordRevision $recordRevision,
     ) {}
 
-    public function execute(Page $page, Slug $newSlug, Title $newTitle, Content $newContent, ?string $newAuthor = null, ?int $distributionId = null, ?string $summary = null): Page
+    public function execute(Page $page, Slug $newSlug, Title $newTitle, Content $newContent, ?string $newAuthor = null, ?int $distributionId = null, ?string $summary = null, ?int $userId = null): Page
     {
         if ($newSlug->toString() !== $page->slug->toString()) {
             if (Page::where('slug', $newSlug->toString())->where('id', '!=', $page->id)->exists()) {
@@ -31,7 +31,13 @@ final class UpdatePage
         $page->slug = $newSlug;
         $page->title = $newTitle;
         $page->content = $newContent;
-        $page->author = $newAuthor ?? $page->author;
+        // The page keeps its first author; each revision records whoever made that edit.
+        $editorName = $newAuthor ?? $page->author;
+        $editorId = $newAuthor !== null ? $userId : $page->user_id;
+        if ($page->author === null) {
+            $page->author = $newAuthor;
+            $page->user_id = $userId;
+        }
         $page->distribution_id = $distributionId;
         $page->save();
 
@@ -50,7 +56,7 @@ final class UpdatePage
 
         // No commit means the text did not change (for example only the distribution link).
         if ($sha !== null) {
-            $this->recordRevision->execute($page, $sha, $page->author, $summary);
+            $this->recordRevision->execute($page, $sha, $editorName, $summary, $editorId);
         }
 
         Log::info('Wiki page updated', [

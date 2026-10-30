@@ -29,6 +29,7 @@ class BackfillRevisions extends Command
                     [
                         'path' => $entry['path'],
                         'author' => $page->author,
+                        'user_id' => $page->user_id,
                         'summary' => $entry['subject'],
                         'created_at' => $entry['date'],
                     ],

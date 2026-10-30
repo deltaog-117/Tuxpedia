@@ -44,7 +44,7 @@
                     @foreach($topics as $topic)
                         <tr>
                             <td><a href="{{ route('wiki.talk.topic', [$page->slug, $topic->id]) }}">{{ $topic->title }}</a></td>
-                            <td>{{ $topic->author }}</td>
+                            <td><x-author :name="$topic->author" :user="$topic->user" /></td>
                             <td>{{ $topic->replies_count }}</td>
                             <td><time datetime="{{ $topic->updated_at->toIso8601String() }}">{{ $topic->updated_at->format('Y-m-d H:i') }}</time></td>
                         </tr>

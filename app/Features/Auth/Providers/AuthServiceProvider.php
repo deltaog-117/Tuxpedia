@@ -10,6 +10,9 @@ use App\Features\Auth\Actions\RegisterUser;
 use App\Features\Auth\Console\PromoteUser;
 use App\Features\Auth\Http\Livewire\Login;
 use App\Features\Auth\Http\Livewire\Register;
+use App\Features\Auth\Models\User;
+use App\Features\Auth\Policies\UserPolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
@@ -28,6 +31,8 @@ class AuthServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([PromoteUser::class]);
         }
+
+        Gate::policy(User::class, UserPolicy::class);
 
         Livewire::component('auth-login', Login::class);
         Livewire::component('auth-register', Register::class);

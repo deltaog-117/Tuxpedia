@@ -25,7 +25,7 @@ class TalkController
 
         return view('features.wiki.talk', [
             'page' => $page,
-            'topics' => $page->talkTopics()->withCount('replies')->get(),
+            'topics' => $page->talkTopics()->with('user')->withCount('replies')->get(),
         ]);
     }
 
@@ -35,7 +35,7 @@ class TalkController
 
         return view('features.wiki.talk-topic', [
             'page' => $page,
-            'topic' => $page->talkTopics()->with('replies')->findOrFail($topic),
+            'topic' => $page->talkTopics()->with(['user', 'replies.user'])->findOrFail($topic),
         ]);
     }
 
@@ -52,7 +52,7 @@ class TalkController
             $page,
             TalkTitle::fromString($data['title']),
             TalkBody::fromString($data['body']),
-            $request->user()->name,
+            $request->user(),
         );
 
         return redirect()->route('wiki.talk.topic', [$page->slug->toString(), $topic->id]);
@@ -67,7 +67,7 @@ class TalkController
             'body' => ['required', 'string', 'max:'.TalkBody::MAX_LENGTH],
         ]);
 
-        $replyTo->execute($talkTopic, TalkBody::fromString($data['body']), $request->user()->name);
+        $replyTo->execute($talkTopic, TalkBody::fromString($data['body']), $request->user());
 
         return redirect()->route('wiki.talk.topic', [$page->slug->toString(), $talkTopic->id]);
     }

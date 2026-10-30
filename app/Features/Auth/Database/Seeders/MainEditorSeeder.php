@@ -25,6 +25,7 @@ class MainEditorSeeder extends Seeder
         $user = User::firstOrNew(['email' => 'editor@tuxpedia.local']);
         $user->forceFill([
             'name' => 'editor',
+            'username' => 'editor',
             'password' => Hash::make('editor123'),
             'role' => Role::Admin,
         ])->save();

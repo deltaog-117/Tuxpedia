@@ -6,6 +6,7 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## ✅ Completed (Milestones Achieved)
+- User profile page: `/user/{username}` shows an initials avatar, display name, handle, role, join date, short bio, the articles the person edited (with edit counts) and their latest talk posts; the owner edits the display name and bio at `/user/{username}/edit`. Accounts get a permanent, unique `username` chosen at sign-up (existing accounts got one from their name), and pages, revisions and talk posts now store the author's `user_id`, so author names across the wiki link to the profile. Old rows are linked by name only when one account has that name, so duplicates stay plain text. The editor's free-text Author field is gone: edits are credited to the signed-in account, and a page keeps its first author while each revision records its editor
 - Code style gate: `pint.json` uses the Laravel preset, the existing code was formatted once, and `scripts/check` runs `pint --test` before PHPUnit, so unformatted code fails the check
 - Talk pages: each article has a Talk page (`/wiki/{slug}/talk`) with topics and replies for any discussion, such as suggestions, questions or corrections. Any logged-in account can post, admins can delete topics and replies, posts are plain text and rate limited. Topics have no open/resolved status, and posts are not editable or watchable yet
 - Roles and edit permissions: accounts are readers, editors or admins (`users.role`); creating and editing need an editor, restoring a revision and protecting a page need an admin, and a protected page can only be edited by an admin. Guests are sent to the login page. `php artisan user:promote {email} {role}` sets a role. Registration still gives the reader role, and no screen lists users yet
@@ -35,7 +36,7 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## 🔥 High Priority (Critical)
-- User profile page – `/user/{name}` shows a public profile (picture, display name, short bio, join date and role) with the articles the person edited and the talk posts they wrote, and an edit form for the owner; replaces the plain author names on revisions and talk posts with links to it
+- Profile pictures – let a person upload a picture for their profile, shown in place of the initials avatar; needs the GD or Imagick PHP extension to resize and re-encode uploads (neither is loaded in the current environment), a storage disk and size/type limits, and a way to remove the picture
 - Glossary and disambiguation pages – ambiguous terms (Arch/Artix, "Mint") and concept entries (kernel, init)
 - Print, export and permalinks – print stylesheet, Markdown/PDF export, stable per-revision URLs
 - Visual verification pass *(proposed)* – screenshot every page in light and dark and refresh `screenshots/` and the README

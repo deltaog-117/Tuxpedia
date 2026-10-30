@@ -34,7 +34,7 @@ class ListRecentChanges
             ->limit(1);
 
         return Revision::query()
-            ->with('page')
+            ->with(['page', 'user'])
             ->select('wiki_revisions.*')
             ->selectSub($previous, 'previous_sha')
             ->orderByDesc('created_at')

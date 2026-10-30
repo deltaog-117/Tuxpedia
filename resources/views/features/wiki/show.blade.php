@@ -33,7 +33,7 @@
                     <span class="chip">Protected</span>
                 @endif
                 @if($page->author)
-                    <span class="chip">By {{ $page->author }}</span>
+                    <span class="chip">By <x-author :name="$page->author" :user="$page->user" /></span>
                 @endif
                 <span class="chip">
                     Updated <time datetime="{{ $page->updated_at->toIso8601String() }}">{{ $page->updated_at->format('Y-m-d H:i') }}</time>

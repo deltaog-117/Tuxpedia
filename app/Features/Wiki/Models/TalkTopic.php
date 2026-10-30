@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Features\Wiki\Models;
 
+use App\Features\Auth\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -20,11 +21,17 @@ class TalkTopic extends Model
         'title',
         'body',
         'author',
+        'user_id',
     ];
 
     public function page(): BelongsTo
     {
         return $this->belongsTo(Page::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function replies(): HasMany

@@ -30,8 +30,6 @@ class WikiEditor extends Component
 
     public string $content = '';
 
-    public string $author = '';
-
     public string $summary = '';
 
     // String, not ?int: the <select> posts '' for "no distribution".
@@ -48,7 +46,6 @@ class WikiEditor extends Component
         'slug' => 'required|string|max:255|regex:/^[a-z0-9\-_]+$/',
         'title' => 'required|string|max:255',
         'content' => 'nullable|string',
-        'author' => 'nullable|string|max:255',
         'summary' => 'nullable|string|max:255',
         'distributionId' => 'nullable|integer|exists:distributions,id',
         'categories' => 'nullable|string|max:1000',
@@ -66,7 +63,6 @@ class WikiEditor extends Component
                 $this->slug = $this->page->slug->toString();
                 $this->title = $this->page->title->toString();
                 $this->content = $this->page->content->toString();
-                $this->author = $this->page->author ?? '';
                 $this->distributionId = (string) ($this->page->distribution_id ?? '');
                 $this->categories = $this->page->categories->pluck('name')->implode(', ');
                 $this->isEditing = true;
@@ -105,17 +101,17 @@ class WikiEditor extends Component
             $slugObj = Slug::fromString($this->slug);
             $titleObj = Title::fromString($this->title);
             $contentObj = Content::fromString($this->content);
-            $author = $this->author ?: null;
+            $user = auth()->user();
             $distributionId = $this->distributionId === '' ? null : (int) $this->distributionId;
 
             if ($this->isEditing) {
                 $updatePage = app(UpdatePage::class);
-                $this->page = $updatePage->execute($this->page, $slugObj, $titleObj, $contentObj, $author, $distributionId, $this->summary);
+                $this->page = $updatePage->execute($this->page, $slugObj, $titleObj, $contentObj, $user->name, $distributionId, $this->summary, $user->id);
                 session()->flash('message', 'Page updated successfully.');
                 Log::info('Wiki page edited via Livewire', ['slug' => $slugObj->toString()]);
             } else {
                 $createPage = app(CreatePage::class);
-                $this->page = $createPage->execute($slugObj, $titleObj, $contentObj, $author, $distributionId, $this->summary);
+                $this->page = $createPage->execute($slugObj, $titleObj, $contentObj, $user->name, $distributionId, $this->summary, $user->id);
                 session()->flash('message', 'Page created successfully.');
                 Log::info('Wiki page created via Livewire', ['slug' => $slugObj->toString()]);
             }

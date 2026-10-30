@@ -59,7 +59,10 @@
                     </div>
                     <div class="hidden items-center gap-1 lg:flex">
                         @auth
-                            <span class="hidden px-2 text-sm text-tux-muted xl:inline">{{ auth()->user()->name }}</span>
+                            <a href="{{ route('profile.show', auth()->user()->username) }}" class="site-nav__link inline-flex items-center gap-2" title="Your profile">
+                                <x-avatar :user="auth()->user()" size="sm" />
+                                <span class="hidden xl:inline">{{ auth()->user()->name }}</span>
+                            </a>
                             <form action="{{ route('auth.logout') }}" method="POST" class="inline">
                                 @csrf
                                 <button type="submit" class="btn-ghost">Logout</button>
@@ -101,6 +104,7 @@
                        @if($active) aria-current="page" @endif>{{ $link['label'] }}</a>
                 @endforeach
                 @auth
+                    <a href="{{ route('profile.show', auth()->user()->username) }}" class="site-nav__link block">Your profile</a>
                     <form action="{{ route('auth.logout') }}" method="POST">
                         @csrf
                         <button type="submit" class="site-nav__link block w-full text-left">Logout ({{ auth()->user()->name }})</button>

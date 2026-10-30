@@ -29,6 +29,7 @@
 | 2026-10-26 | Talk pages | Topics with replies in two tables, plain text, any logged-in user posts (COA B) | ✅ Confirmed |
 | 2026-10-26 | Roles and edit permissions | One `role` enum column plus `PagePolicy` (COA A), editing requires an editor | ✅ Confirmed |
 | 2026-10-27 | Code style gate | Pint Laravel preset, format everything once, enforce in `scripts/check` (COA A) | ✅ Confirmed |
+| 2026-10-30 | User profiles | `user_id` on author rows plus a permanent unique username (COA C); initials avatar, uploads deferred | ✅ Confirmed |
 
 ---
 
@@ -589,3 +590,27 @@ COAs were the Laravel preset with a one-off reformat (A), the preset with overri
 - 51 files were reformatted, mostly import order, `!` and `.` spacing, brace positions and blank lines. The change is format-only and the 93 tests pass. It is best committed on its own, apart from `pint.json` and the `scripts/check` change, so blame noise is easy to revert.
 - The roadmap counted 34 failing files; it was over 50 by the time of the change, because the talk and auth work had added more.
 - New code that does not match the preset now fails `scripts/check`; `vendor/bin/pint` fixes it.
+
+### User Profiles
+
+**Date:** 2026-10-30
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+Every account gets a permanent, unique `username` chosen at sign-up; the display name stays free text and can change. Pages, revisions, talk topics and talk replies gain a nullable `user_id`, and every author name on the site links to `/user/{username}` when the row has one (COA C). The profile shows an initials avatar, name, handle, role, join date, a 280-character bio, the articles the person edited and their latest talk posts. Only the owner can edit the name and bio.
+
+#### Reasoning
+
+Authors were stored only as name text, and names are not unique, so a profile cannot be found from them. COAs were unique display names as the URL (A), a `user_id` on author rows with an id-based URL (B) and `user_id` plus a separate username (C). A breaks on renames and on the duplicate names that already exist; B has the right data but an ugly URL. C costs one sign-up field and a backfill, and gives readable URLs that survive a rename. Profile pictures were deferred because GD and Imagick are not loaded here, so uploads could not be resized or re-encoded; an initials avatar needs no storage, and the picture is on the roadmap.
+
+#### Consequences
+
+- Existing accounts got a handle from their name (`Alex` and a second `Alex` became `alex` and `alex-8`; a name with no usable letters became `user-9`), checked on a copy of the development database. Users can not change it, so a wrong guess is permanent until someone edits the row.
+- Old author text is linked to an account only when exactly one account has that name. Both `Alex` accounts' old posts stay plain text: guessing would credit the wrong person.
+- The editor lost its free-text Author field, because a typed name could differ from the account that links to the profile. A page now keeps its first author in the header, and each revision records its editor. Before, the header author followed whatever was typed on the last edit.
+- The profile page lives in the Wiki feature, since most of it is wiki activity and Wiki already depends on Auth; the edit form is in Auth. Auth does not import Wiki.
+- The Auth feature does not load its own migrations folder, so the users-table migration is in `database/migrations/` like the role one. The old `Auth/Database/Migrations` file for `last_visited_at` is not loaded either.
+- On a fresh database, `2024_08_25_000001_add_fulltext_index_to_wiki_pages` runs before the 2026 migration that creates `wiki_pages` and fails. Existing databases are not affected. It is not fixed here.
+- `Username` and the avatar helpers are unit-tested. The controllers, migrations and views need the MySQL database, so they were run against a copy of it: migrate, rollback and migrate again, then a temporary feature test (owner-only editing, the form ignoring `username` and `role`, the bio printed escaped, talk posts linking to the account, registration refusing taken or invalid handles) that was not kept in the suite.

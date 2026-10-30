@@ -18,7 +18,7 @@ final class CreatePage
         private RecordRevision $recordRevision,
     ) {}
 
-    public function execute(Slug $slug, Title $title, Content $content, ?string $author = null, ?int $distributionId = null, ?string $summary = null): Page
+    public function execute(Slug $slug, Title $title, Content $content, ?string $author = null, ?int $distributionId = null, ?string $summary = null, ?int $userId = null): Page
     {
         if (Page::where('slug', $slug->toString())->exists()) {
             throw new \RuntimeException("Page with slug '{$slug}' already exists.");
@@ -29,6 +29,7 @@ final class CreatePage
         $page->title = $title;
         $page->content = $content;
         $page->author = $author;
+        $page->user_id = $userId;
         $page->distribution_id = $distributionId;
         $page->save();
 
@@ -39,7 +40,7 @@ final class CreatePage
         );
 
         if ($sha !== null) {
-            $this->recordRevision->execute($page, $sha, $author, trim((string) $summary) !== '' ? $summary : 'Created the page');
+            $this->recordRevision->execute($page, $sha, $author, trim((string) $summary) !== '' ? $summary : 'Created the page', $userId);
         }
 
         Log::info('Wiki page created', [

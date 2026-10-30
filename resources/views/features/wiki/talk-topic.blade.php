@@ -35,7 +35,7 @@
     <div class="grid gap-4">
         <article class="card p-6">
             <p class="mb-2 text-xs text-tux-muted">
-                <span class="font-medium text-tux-text">{{ $topic->author }}</span>
+                <span class="font-medium text-tux-text"><x-author :name="$topic->author" :user="$topic->user" /></span>
                 <time datetime="{{ $topic->created_at->toIso8601String() }}">{{ $topic->created_at->format('Y-m-d H:i') }}</time>
             </p>
             <div class="whitespace-pre-line break-words text-sm">{{ $topic->body }}</div>
@@ -45,7 +45,7 @@
             <article class="card ml-4 p-6 sm:ml-8">
                 <div class="mb-2 flex items-center justify-between gap-2">
                     <p class="text-xs text-tux-muted">
-                        <span class="font-medium text-tux-text">{{ $reply->author }}</span>
+                        <span class="font-medium text-tux-text"><x-author :name="$reply->author" :user="$reply->user" /></span>
                         <time datetime="{{ $reply->created_at->toIso8601String() }}">{{ $reply->created_at->format('Y-m-d H:i') }}</time>
                     </p>
                     @can('moderate', $page)

@@ -4,6 +4,7 @@ use App\Features\Wiki\Http\Controllers\CategoryController;
 use App\Features\Wiki\Http\Controllers\DiscoveryController;
 use App\Features\Wiki\Http\Controllers\PageController;
 use App\Features\Wiki\Http\Controllers\TalkController;
+use App\Features\Wiki\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/wiki', [PageController::class, 'index'])->name('wiki.index');
@@ -49,3 +50,6 @@ Route::delete('/wiki/{slug}/talk/{topic}/replies/{reply}', [TalkController::clas
     ->name('wiki.talk.reply.destroy');
 Route::get('/categories', [CategoryController::class, 'index'])->name('wiki.categories');
 Route::get('/categories/{slug}', [CategoryController::class, 'show'])->name('wiki.category');
+Route::get('/user/{username}', [UserProfileController::class, 'show'])
+    ->where('username', '[a-z0-9_-]+')
+    ->name('profile.show');

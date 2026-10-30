@@ -23,6 +23,7 @@ class Page extends Model
         'title',
         'content',
         'author',
+        'user_id',
         'distribution_id',
     ];
 
@@ -31,6 +32,11 @@ class Page extends Model
         'updated_at' => 'datetime',
         'protected_at' => 'datetime',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function distribution(): BelongsTo
     {
