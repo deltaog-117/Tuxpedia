@@ -12,11 +12,11 @@ use PHPUnit\Framework\TestCase;
  */
 final class ShippedArticleLinksTest extends TestCase
 {
-    private const CONTENT_GLOB = __DIR__.'/../../../../database/content/wiki/*.md';
+    private const CONTENT_GLOB = __DIR__.'/../../../../database/content/{wiki,glossary}/*.md';
 
     public function test_every_wiki_link_points_to_a_shipped_article(): void
     {
-        $files = glob(self::CONTENT_GLOB) ?: [];
+        $files = glob(self::CONTENT_GLOB, GLOB_BRACE) ?: [];
         $slugs = array_map(static fn (string $path): string => pathinfo($path, PATHINFO_FILENAME), $files);
 
         $broken = [];
@@ -36,7 +36,7 @@ final class ShippedArticleLinksTest extends TestCase
     public function test_articles_link_to_each_other(): void
     {
         $linked = array_filter(
-            glob(self::CONTENT_GLOB) ?: [],
+            glob(self::CONTENT_GLOB, GLOB_BRACE) ?: [],
             static fn (string $path): bool => str_contains((string) file_get_contents($path), '[['),
         );
 

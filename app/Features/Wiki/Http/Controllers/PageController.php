@@ -16,6 +16,7 @@ use App\Features\Wiki\Actions\RevertPage;
 use App\Features\Wiki\Actions\SetPageProtection;
 use App\Features\Wiki\Exceptions\PageNotFoundException;
 use App\Features\Wiki\Models\Page;
+use App\Features\Wiki\ValueObjects\PageKind;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -38,7 +39,8 @@ class PageController
 
     public function index(GetFeaturedPage $getFeaturedPage, GroupPagesByFamily $groupPagesByFamily): View
     {
-        $pages = Page::with('distribution')->orderBy('title')->get();
+        // Concepts and disambiguation pages live in the glossary, not among the articles.
+        $pages = Page::with('distribution')->where('kind', PageKind::Article->value)->orderBy('title')->get();
 
         return view('features.wiki.index', [
             'pages' => $pages,

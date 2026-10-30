@@ -13,6 +13,7 @@ use App\Features\Wiki\Exceptions\InvalidSlugException;
 use App\Features\Wiki\Exceptions\PageNotFoundException;
 use App\Features\Wiki\Models\Page;
 use App\Features\Wiki\ValueObjects\Content;
+use App\Features\Wiki\ValueObjects\PageKind;
 use App\Features\Wiki\ValueObjects\Slug;
 use App\Features\Wiki\ValueObjects\Title;
 use Illuminate\Support\Facades\Gate;
@@ -35,6 +36,9 @@ class WikiEditor extends Component
     // String, not ?int: the <select> posts '' for "no distribution".
     public string $distributionId = '';
 
+    // The PageKind value; the <select> posts it as a string.
+    public string $kind = 'article';
+
     // Comma-separated names; categories are created on first use.
     public string $categories = '';
 
@@ -48,6 +52,7 @@ class WikiEditor extends Component
         'content' => 'nullable|string',
         'summary' => 'nullable|string|max:255',
         'distributionId' => 'nullable|integer|exists:distributions,id',
+        'kind' => 'required|in:article,concept,disambiguation',
         'categories' => 'nullable|string|max:1000',
     ];
 
@@ -64,6 +69,7 @@ class WikiEditor extends Component
                 $this->title = $this->page->title->toString();
                 $this->content = $this->page->content->toString();
                 $this->distributionId = (string) ($this->page->distribution_id ?? '');
+                $this->kind = ($this->page->kind ?? PageKind::Article)->value;
                 $this->categories = $this->page->categories->pluck('name')->implode(', ');
                 $this->isEditing = true;
             } catch (PageNotFoundException $e) {
@@ -103,15 +109,16 @@ class WikiEditor extends Component
             $contentObj = Content::fromString($this->content);
             $user = auth()->user();
             $distributionId = $this->distributionId === '' ? null : (int) $this->distributionId;
+            $kind = PageKind::from($this->kind);
 
             if ($this->isEditing) {
                 $updatePage = app(UpdatePage::class);
-                $this->page = $updatePage->execute($this->page, $slugObj, $titleObj, $contentObj, $user->name, $distributionId, $this->summary, $user->id);
+                $this->page = $updatePage->execute($this->page, $slugObj, $titleObj, $contentObj, $user->name, $distributionId, $this->summary, $user->id, $kind);
                 session()->flash('message', 'Page updated successfully.');
                 Log::info('Wiki page edited via Livewire', ['slug' => $slugObj->toString()]);
             } else {
                 $createPage = app(CreatePage::class);
-                $this->page = $createPage->execute($slugObj, $titleObj, $contentObj, $user->name, $distributionId, $this->summary, $user->id);
+                $this->page = $createPage->execute($slugObj, $titleObj, $contentObj, $user->name, $distributionId, $this->summary, $user->id, $kind);
                 session()->flash('message', 'Page created successfully.');
                 Log::info('Wiki page created via Livewire', ['slug' => $slugObj->toString()]);
             }
@@ -132,6 +139,7 @@ class WikiEditor extends Component
     {
         return view('features.wiki.editor', [
             'distributions' => Distribution::orderBy('name')->get(['id', 'name']),
+            'kinds' => PageKind::cases(),
         ])->layout('layouts.app');
     }
 }

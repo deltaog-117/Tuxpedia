@@ -28,6 +28,9 @@
                         <span class="distro-dot" aria-hidden="true"></span>{{ $page->distribution->name }}
                     </a>
                 @endif
+                @if($page->kind && $page->kind !== \App\Features\Wiki\ValueObjects\PageKind::Article)
+                    <a href="{{ route('wiki.glossary') }}" class="chip">{{ $page->kind->label() }}</a>
+                @endif
                 <span class="chip font-mono">/{{ $page->slug }}</span>
                 @if($page->isProtected())
                     <span class="chip">Protected</span>
@@ -71,6 +74,11 @@
 
     <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_16rem]">
         <article class="card p-6 sm:p-10">
+            @if($page->kind === \App\Features\Wiki\ValueObjects\PageKind::Disambiguation)
+                <p class="mb-6 text-sm italic text-tux-muted">
+                    This page lists the articles that share the name “{{ $page->title }}”. If a link led you here, it may need to point straight at the page you meant.
+                </p>
+            @endif
             <div id="article-body" class="article">
                 {!! $html !!}
             </div>

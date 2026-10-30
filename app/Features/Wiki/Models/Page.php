@@ -7,6 +7,7 @@ namespace App\Features\Wiki\Models;
 use App\Features\Auth\Models\User;
 use App\Features\DistroComparison\Models\Distribution;
 use App\Features\Wiki\ValueObjects\Content;
+use App\Features\Wiki\ValueObjects\PageKind;
 use App\Features\Wiki\ValueObjects\Slug;
 use App\Features\Wiki\ValueObjects\Title;
 use Illuminate\Database\Eloquent\Model;
@@ -25,12 +26,14 @@ class Page extends Model
         'author',
         'user_id',
         'distribution_id',
+        'kind',
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'protected_at' => 'datetime',
+        'kind' => PageKind::class,
     ];
 
     public function user(): BelongsTo

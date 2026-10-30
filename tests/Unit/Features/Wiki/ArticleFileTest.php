@@ -7,6 +7,7 @@ namespace Tests\Unit\Features\Wiki;
 use App\Features\DistroComparison\Database\Seeders\DistributionSeeder;
 use App\Features\Wiki\Exceptions\InvalidSlugException;
 use App\Features\Wiki\ValueObjects\ArticleFile;
+use App\Features\Wiki\ValueObjects\PageKind;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -34,6 +35,20 @@ final class ArticleFileTest extends TestCase
         $this->assertNull($article->distributionSlug);
     }
 
+    public function test_kind_defaults_to_article(): void
+    {
+        $article = ArticleFile::parse('notes.md', "---\ntitle: Notes\nauthor: A. Writer\n---\nBody\n");
+
+        $this->assertSame(PageKind::Article, $article->kind);
+    }
+
+    public function test_reads_the_kind_from_front_matter(): void
+    {
+        $article = ArticleFile::parse('kernel.md', "---\ntitle: Kernel\nauthor: A. Writer\nkind: concept\n---\nBody\n");
+
+        $this->assertSame(PageKind::Concept, $article->kind);
+    }
+
     #[DataProvider('malformedProvider')]
     public function test_rejects_malformed_files(string $fileName, string $raw): void
     {
@@ -49,6 +64,7 @@ final class ArticleFileTest extends TestCase
             'missing title' => ['a.md', "---\nauthor: X\n---\nBody\n"],
             'missing author' => ['a.md', "---\ntitle: X\n---\nBody\n"],
             'unknown key' => ['a.md', "---\ntitle: X\nauthor: Y\nlayout: wide\n---\nBody\n"],
+            'unknown kind' => ['a.md', "---\ntitle: X\nauthor: Y\nkind: essay\n---\nBody\n"],
             'garbled line' => ['a.md', "---\ntitle X\nauthor: Y\n---\nBody\n"],
         ];
     }

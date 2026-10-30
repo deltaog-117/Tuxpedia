@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Log;
 use RuntimeException;
 
 /**
- * Imports the Markdown articles in database/content/wiki.
+ * Imports the Markdown pages in database/content/wiki (articles) and
+ * database/content/glossary (concept and disambiguation pages).
  *
  * Safe to re-run: an existing page is never overwritten, because readers may
  * have edited it. It only gets its distribution link filled in when unset.
@@ -26,7 +27,10 @@ class WikiContentSeeder extends Seeder
         // Articles reference distributions by slug, so they must exist first.
         $this->call(DistributionSeeder::class);
 
-        $files = glob(database_path('content/wiki/*.md')) ?: [];
+        $files = [
+            ...(glob(database_path('content/wiki/*.md')) ?: []),
+            ...(glob(database_path('content/glossary/*.md')) ?: []),
+        ];
         sort($files);
 
         foreach ($files as $path) {
@@ -42,6 +46,7 @@ class WikiContentSeeder extends Seeder
                     $article->content,
                     $article->author,
                     $distributionId,
+                    kind: $article->kind,
                 );
 
                 continue;

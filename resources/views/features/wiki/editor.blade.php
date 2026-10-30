@@ -25,6 +25,17 @@
         </div>
 
         <div>
+            <label class="field-label" for="kind">Page type</label>
+            <select wire:model="kind" id="kind" class="input-field @error('kind') input-field--invalid @enderror">
+                @foreach($kinds as $kind)
+                    <option value="{{ $kind->value }}">{{ $kind->label() }}</option>
+                @endforeach
+            </select>
+            <p class="mt-1 text-xs text-tux-muted">Concepts appear in the glossary. Disambiguation pages list the pages an ambiguous name could mean.</p>
+            @error('kind') <p class="field-error">{{ $message }}</p> @enderror
+        </div>
+
+        <div>
             <label class="field-label" for="distribution">Distribution (optional)</label>
             <select wire:model="distributionId" id="distribution" class="input-field @error('distributionId') input-field--invalid @enderror">
                 <option value="">None</option>

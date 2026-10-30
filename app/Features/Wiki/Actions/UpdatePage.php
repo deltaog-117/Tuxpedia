@@ -6,6 +6,7 @@ namespace App\Features\Wiki\Actions;
 
 use App\Features\Wiki\Models\Page;
 use App\Features\Wiki\ValueObjects\Content;
+use App\Features\Wiki\ValueObjects\PageKind;
 use App\Features\Wiki\ValueObjects\Slug;
 use App\Features\Wiki\ValueObjects\Title;
 use App\Shared\Services\GitService;
@@ -18,7 +19,7 @@ final class UpdatePage
         private RecordRevision $recordRevision,
     ) {}
 
-    public function execute(Page $page, Slug $newSlug, Title $newTitle, Content $newContent, ?string $newAuthor = null, ?int $distributionId = null, ?string $summary = null, ?int $userId = null): Page
+    public function execute(Page $page, Slug $newSlug, Title $newTitle, Content $newContent, ?string $newAuthor = null, ?int $distributionId = null, ?string $summary = null, ?int $userId = null, PageKind $kind = PageKind::Article): Page
     {
         if ($newSlug->toString() !== $page->slug->toString()) {
             if (Page::where('slug', $newSlug->toString())->where('id', '!=', $page->id)->exists()) {
@@ -39,6 +40,7 @@ final class UpdatePage
             $page->user_id = $userId;
         }
         $page->distribution_id = $distributionId;
+        $page->kind = $kind;
         $page->save();
 
         if ($oldSlug !== $newSlug->toString()) {

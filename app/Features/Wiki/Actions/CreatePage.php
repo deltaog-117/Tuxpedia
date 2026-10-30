@@ -6,6 +6,7 @@ namespace App\Features\Wiki\Actions;
 
 use App\Features\Wiki\Models\Page;
 use App\Features\Wiki\ValueObjects\Content;
+use App\Features\Wiki\ValueObjects\PageKind;
 use App\Features\Wiki\ValueObjects\Slug;
 use App\Features\Wiki\ValueObjects\Title;
 use App\Shared\Services\GitService;
@@ -18,7 +19,7 @@ final class CreatePage
         private RecordRevision $recordRevision,
     ) {}
 
-    public function execute(Slug $slug, Title $title, Content $content, ?string $author = null, ?int $distributionId = null, ?string $summary = null, ?int $userId = null): Page
+    public function execute(Slug $slug, Title $title, Content $content, ?string $author = null, ?int $distributionId = null, ?string $summary = null, ?int $userId = null, PageKind $kind = PageKind::Article): Page
     {
         if (Page::where('slug', $slug->toString())->exists()) {
             throw new \RuntimeException("Page with slug '{$slug}' already exists.");
@@ -31,6 +32,7 @@ final class CreatePage
         $page->author = $author;
         $page->user_id = $userId;
         $page->distribution_id = $distributionId;
+        $page->kind = $kind;
         $page->save();
 
         $sha = $this->git->commitFile(

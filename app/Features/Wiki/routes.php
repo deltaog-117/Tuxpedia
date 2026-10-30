@@ -2,6 +2,7 @@
 
 use App\Features\Wiki\Http\Controllers\CategoryController;
 use App\Features\Wiki\Http\Controllers\DiscoveryController;
+use App\Features\Wiki\Http\Controllers\GlossaryController;
 use App\Features\Wiki\Http\Controllers\PageController;
 use App\Features\Wiki\Http\Controllers\TalkController;
 use App\Features\Wiki\Http\Controllers\UserProfileController;
@@ -11,6 +12,7 @@ Route::get('/wiki', [PageController::class, 'index'])->name('wiki.index');
 Route::get('/random', [DiscoveryController::class, 'random'])->name('wiki.random');
 Route::get('/recent-changes', [DiscoveryController::class, 'recent'])->name('wiki.recent');
 Route::get('/all-pages', [DiscoveryController::class, 'all'])->name('wiki.all');
+Route::get('/glossary', [GlossaryController::class, 'index'])->name('wiki.glossary');
 Route::get('/wiki/create', function () {
     return view('features.wiki.create', ['prefill' => request()->query('slug')]);
 })->middleware('auth')->name('wiki.create');

@@ -13,6 +13,7 @@ use InvalidArgumentException;
  *     title: Debian
  *     author: Mara Voss
  *     distribution: debian
+ *     kind: article
  *     ---
  *     Markdown body...
  *
@@ -22,7 +23,7 @@ final class ArticleFile
 {
     private const REQUIRED_KEYS = ['title', 'author'];
 
-    private const OPTIONAL_KEYS = ['distribution'];
+    private const OPTIONAL_KEYS = ['distribution', 'kind'];
 
     private function __construct(
         public readonly Slug $slug,
@@ -30,6 +31,7 @@ final class ArticleFile
         public readonly string $author,
         public readonly ?string $distributionSlug,
         public readonly Content $content,
+        public readonly PageKind $kind,
     ) {}
 
     public static function parse(string $fileName, string $raw): self
@@ -54,7 +56,18 @@ final class ArticleFile
             $meta['author'],
             $meta['distribution'] ?? null,
             Content::fromString(trim($parts[2])."\n"),
+            self::parseKind($fileName, $meta['kind'] ?? null),
         );
+    }
+
+    private static function parseKind(string $fileName, ?string $value): PageKind
+    {
+        if ($value === null) {
+            return PageKind::Article;
+        }
+
+        return PageKind::tryFrom($value)
+            ?? throw new InvalidArgumentException("{$fileName}: unknown kind '{$value}'.");
     }
 
     /**

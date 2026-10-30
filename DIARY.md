@@ -30,6 +30,7 @@
 | 2026-10-26 | Roles and edit permissions | One `role` enum column plus `PagePolicy` (COA A), editing requires an editor | ✅ Confirmed |
 | 2026-10-27 | Code style gate | Pint Laravel preset, format everything once, enforce in `scripts/check` (COA A) | ✅ Confirmed |
 | 2026-10-30 | User profiles | `user_id` on author rows plus a permanent unique username (COA C); initials avatar, uploads deferred | ✅ Confirmed |
+| 2026-10-30 | Glossary and disambiguation | A `kind` column on wiki pages (article, concept, disambiguation) with hand-written lists (COA A) | ✅ Confirmed |
 
 ---
 
@@ -614,3 +615,26 @@ Authors were stored only as name text, and names are not unique, so a profile ca
 - The Auth feature does not load its own migrations folder, so the users-table migration is in `database/migrations/` like the role one. The old `Auth/Database/Migrations` file for `last_visited_at` is not loaded either.
 - On a fresh database, `2024_08_25_000001_add_fulltext_index_to_wiki_pages` runs before the 2026 migration that creates `wiki_pages` and fails. Existing databases are not affected. It is not fixed here.
 - `Username` and the avatar helpers are unit-tested. The controllers, migrations and views need the MySQL database, so they were run against a copy of it: migrate, rollback and migrate again, then a temporary feature test (owner-only editing, the form ignoring `username` and `role`, the bio printed escaped, talk posts linking to the account, registration refusing taken or invalid handles) that was not kept in the suite.
+
+### Glossary and Disambiguation Pages
+
+**Date:** 2026-10-30
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+Concept entries (kernel, init) and disambiguation pages (Arch, Mint) are ordinary wiki pages with a `kind` column: `article` (the default), `concept` or `disambiguation` (COA A). The editor has a "Page type" selector. A concept or disambiguation page shows its type as a chip in the header, and a disambiguation page adds a "may refer to" note above the text. `/glossary` lists the concept pages with their first sentence and the disambiguation pages by name. The home page's featured article, "Browse by family" and "All articles" show articles only.
+
+#### Reasoning
+
+COAs were a `kind` on pages with hand-written lists (A), the same plus generated lists and "for other uses" hatnotes on the target pages (B), and a separate glossary feature (C). C would have rebuilt history, talk pages, search and `[[links]]` and still left disambiguation unsolved. B keeps lists correct automatically but needs a new table and sync logic, which is too much for a handful of ambiguous names. A reuses everything and grows into B later, because `kind` is the foundation of both.
+
+#### Consequences
+
+- Hand-written lists can go stale. The existing red links and "What links here" show a missing target, and `GlossaryContentTest` checks that every shipped list names at least two pages.
+- Concept and disambiguation pages ship in `database/content/glossary/`, apart from the articles in `database/content/wiki/`. The articles keep their rules (a distribution, at least 1,500 characters), which do not fit short pages. `WikiContentSeeder` reads both folders, `ShippedArticleLinksTest` checks links across both, and the front matter takes an optional `kind`.
+- Run `php artisan migrate` (adds `wiki_pages.kind`, default `article`) and `php artisan db:seed --class='App\\Features\\Wiki\\Database\\Seeders\\WikiContentSeeder'` to add the five new pages. The seeder never overwrites a page, so an existing page keeps its kind.
+- `CreatePage` and `UpdatePage` take the kind as a last argument that defaults to article, so other callers are unchanged. Saving from the editor with the selector left on Article turns a concept back into an article.
+- Not done: the existing articles do not link to the glossary yet, and the command palette has no Glossary entry.
+- The pure parts (`PageKind`, front matter, shipped content) are unit-tested and `scripts/check` passes; the controller, editor and views need the MySQL database and were only compiled (`view:cache`), not rendered.
