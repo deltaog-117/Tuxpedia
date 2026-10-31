@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Features\Wiki\Http\Controllers;
 
 use App\Features\DistroComparison\Models\Distribution;
+use App\Features\Wiki\Actions\BuildMarkdownExport;
 use App\Features\Wiki\Actions\CompareRevisions;
 use App\Features\Wiki\Actions\GetFeaturedPage;
 use App\Features\Wiki\Actions\GetPage;
@@ -16,9 +17,11 @@ use App\Features\Wiki\Actions\RevertPage;
 use App\Features\Wiki\Actions\SetPageProtection;
 use App\Features\Wiki\Exceptions\PageNotFoundException;
 use App\Features\Wiki\Models\Page;
+use App\Features\Wiki\ValueObjects\MarkdownExport;
 use App\Features\Wiki\ValueObjects\PageKind;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
@@ -31,7 +34,11 @@ class PageController
 
             $page->load('user');
 
-            return view('features.wiki.show', ['page' => $page, 'html' => $render->execute($page->content)]);
+            return view('features.wiki.show', [
+                'page' => $page,
+                'html' => $render->execute($page->content),
+                'permalink' => $page->revisions()->first(),
+            ]);
         } catch (PageNotFoundException $e) {
             abort(404, $e->getMessage());
         }
@@ -83,6 +90,21 @@ class PageController
         ]);
     }
 
+    public function export(string $slug, GetPage $getPage, BuildMarkdownExport $build): Response
+    {
+        $page = $this->findPage($slug, $getPage);
+
+        return $this->markdownDownload($build->execute($page, $page->content));
+    }
+
+    public function exportRevision(string $slug, string $sha, GetPage $getPage, ReadRevision $read, BuildMarkdownExport $build): Response
+    {
+        $page = $this->findPage($slug, $getPage);
+        $revision = $page->revisions()->where('sha', $sha)->firstOrFail();
+
+        return $this->markdownDownload($build->execute($page, $read->execute($revision), $revision));
+    }
+
     public function diff(Request $request, string $slug, GetPage $getPage, CompareRevisions $compare): View
     {
         $page = $this->findPage($slug, $getPage);
@@ -130,6 +152,15 @@ class PageController
         return redirect()
             ->route('wiki.show', $page->slug->toString())
             ->with('message', $protect ? 'Page protected: only admins can edit it.' : 'Page protection removed.');
+    }
+
+    private function markdownDownload(MarkdownExport $export): Response
+    {
+        return response($export->body, 200, [
+            'Content-Type' => 'text/markdown; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="'.$export->filename.'"',
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
     }
 
     private function findPage(string $slug, GetPage $getPage): Page

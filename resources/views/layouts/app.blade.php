@@ -34,9 +34,9 @@
         $navLinks = array_filter($navLinks, fn ($link) => ! isset($link['can']) || \Illuminate\Support\Facades\Gate::allows(...$link['can']));
     @endphp
 
-    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-tux-surface focus:px-3 focus:py-2">Skip to content</a>
+    <a href="#main" class="print:hidden sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-tux-surface focus:px-3 focus:py-2">Skip to content</a>
 
-    <nav class="site-nav" x-data="{ open: false }">
+    <nav class="site-nav print:hidden" x-data="{ open: false }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex h-16 items-center justify-between gap-4">
                 <div class="flex items-center gap-6">
@@ -121,7 +121,7 @@
         @yield('content')
     </main>
 
-    <footer class="site-footer">
+    <footer class="site-footer print:hidden">
         <div class="max-w-7xl mx-auto px-4 py-6 text-sm text-tux-muted text-center">
             Tuxpedia – the Linux encyclopedia. Built with ❤️ and Laravel.
         </div>
@@ -133,6 +133,10 @@
     @stack('scripts')
     <script>
         (function () {
+            document.querySelectorAll('[data-print]').forEach(function (button) {
+                button.addEventListener('click', function () { window.print(); });
+            });
+
             document.querySelectorAll('[data-theme-toggle]').forEach(function (button) {
                 button.addEventListener('click', function () {
                     var dark = document.documentElement.classList.toggle('dark');

@@ -25,6 +25,10 @@ Route::get('/wiki/{slug}/history', [PageController::class, 'history'])->name('wi
 Route::get('/wiki/{slug}/revision/{sha}', [PageController::class, 'revision'])
     ->where('sha', '[0-9a-f]{40}')
     ->name('wiki.revision');
+Route::get('/wiki/{slug}/revision/{sha}/export', [PageController::class, 'exportRevision'])
+    ->where('sha', '[0-9a-f]{40}')
+    ->name('wiki.revision.export');
+Route::get('/wiki/{slug}/export', [PageController::class, 'export'])->name('wiki.export');
 Route::get('/wiki/{slug}/diff', [PageController::class, 'diff'])->name('wiki.diff');
 Route::post('/wiki/{slug}/revert/{sha}', [PageController::class, 'revert'])
     ->where('sha', '[0-9a-f]{40}')

@@ -4,14 +4,14 @@
 
 @section('content')
 <div class="animate-fade-up motion-reduce:animate-none" style="{{ $page->distribution?->accentStyle() }}">
-    <nav aria-label="Breadcrumb" class="mb-4 text-sm text-tux-muted">
+    <nav aria-label="Breadcrumb" class="mb-4 text-sm text-tux-muted print:hidden">
         <a href="{{ route('wiki.index') }}">Wiki</a>
         <span aria-hidden="true">/</span>
         <span class="text-tux-text">{{ $page->title }}</span>
     </nav>
 
     @if(session()->has('message'))
-        <div class="alert alert--success">{{ session('message') }}</div>
+        <div class="alert alert--success print:hidden">{{ session('message') }}</div>
     @endif
 
     <header class="page-header">
@@ -50,10 +50,12 @@
                 </div>
             @endif
         </div>
-        <div class="flex gap-2">
+        <div class="flex gap-2 print:hidden">
             <a href="{{ route('wiki.backlinks', $page->slug) }}" class="btn-ghost">What links here</a>
             <a href="{{ route('wiki.talk', $page->slug) }}" class="btn-ghost">Talk ({{ $page->talkTopics()->count() }})</a>
             <a href="{{ route('wiki.history', $page->slug) }}" class="btn-ghost">History</a>
+            <a href="{{ route('wiki.export', $page->slug) }}" class="btn-ghost">Markdown</a>
+            <button type="button" class="btn-ghost" data-print>Print</button>
             @can('protect', $page)
                 <form method="POST" action="{{ route('wiki.protect', $page->slug) }}">
                     @csrf
@@ -67,7 +69,7 @@
     </header>
 
     @if($page->distribution)
-        <div class="mb-6 lg:hidden">
+        <div class="mb-6 lg:hidden print:hidden">
             <x-distro-infobox :distribution="$page->distribution" />
         </div>
     @endif
@@ -82,8 +84,14 @@
             <div id="article-body" class="article">
                 {!! $html !!}
             </div>
+            @if($permalink)
+                <p class="mt-8 border-t border-tux-border pt-4 text-sm text-tux-muted">
+                    Permanent link to this version:
+                    <a href="{{ route('wiki.revision', [$page->slug, $permalink->sha]) }}" class="font-mono">{{ route('wiki.revision', [$page->slug, $permalink->sha]) }}</a>
+                </p>
+            @endif
         </article>
-        <aside class="hidden lg:block">
+        <aside class="hidden lg:block print:hidden">
             @if($page->distribution)
                 <div class="mb-6">
                     <x-distro-infobox :distribution="$page->distribution" />

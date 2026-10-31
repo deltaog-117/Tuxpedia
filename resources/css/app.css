@@ -614,3 +614,37 @@
         @apply ml-2 font-mono text-xs text-zinc-400;
     }
 }
+
+@media print {
+    /* Print on white with dark text, whichever theme the screen uses. */
+    :root,
+    :root.dark {
+        --tux-bg: 255 255 255;
+        --tux-surface: 255 255 255;
+        --tux-border: 212 212 216;
+        --tux-text: 0 0 0;
+        --tux-muted: 63 63 70;
+        --tux-accent: 0 0 0;
+        color-scheme: light;
+    }
+    main {
+        max-width: none;
+        padding: 0;
+    }
+    .card {
+        border: 0;
+        box-shadow: none;
+        padding: 0;
+    }
+    .article a[href^="http"]::after {
+        content: " (" attr(href) ")";
+        font-size: 0.85em;
+        word-break: break-all;
+    }
+    .article :is(h1, h2, h3, h4) {
+        break-after: avoid;
+    }
+    .article :is(pre, table, img, blockquote) {
+        break-inside: avoid;
+    }
+}

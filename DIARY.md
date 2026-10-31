@@ -31,6 +31,7 @@
 | 2026-10-27 | Code style gate | Pint Laravel preset, format everything once, enforce in `scripts/check` (COA A) | ✅ Confirmed |
 | 2026-10-30 | User profiles | `user_id` on author rows plus a permanent unique username (COA C); initials avatar, uploads deferred | ✅ Confirmed |
 | 2026-10-30 | Glossary and disambiguation | A `kind` column on wiki pages (article, concept, disambiguation) with hand-written lists (COA A) | ✅ Confirmed |
+| 2026-10-31 | Print, export and permalinks | Print stylesheet, Markdown download and visible permanent links; no PDF library (COA A) | ✅ Confirmed |
 
 ---
 
@@ -638,3 +639,25 @@ COAs were a `kind` on pages with hand-written lists (A), the same plus generated
 - `CreatePage` and `UpdatePage` take the kind as a last argument that defaults to article, so other callers are unchanged. Saving from the editor with the selector left on Article turns a concept back into an article.
 - Not done: the existing articles do not link to the glossary yet, and the command palette has no Glossary entry.
 - The pure parts (`PageKind`, front matter, shipped content) are unit-tested and `scripts/check` passes; the controller, editor and views need the MySQL database and were only compiled (`view:cache`), not rendered.
+
+### Print, Export and Permalinks
+
+**Date:** 2026-10-31
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+Printing, export and permalinks need no new dependency (COA A). A print stylesheet hides the navbar, footer, sidebar and buttons and prints dark text on white, whichever theme is on screen. Articles and old revisions have a Print button and a Markdown download. Both show a "Permanent link to this version" line.
+
+#### Reasoning
+
+COAs were the stylesheet plus a Markdown download (A), the same plus a PDF built in PHP with `dompdf` (B), and the same plus a PDF from headless Chromium (C). C needs Chromium and Node on every server, and B adds a library with weak CSS support and no images without GD. Browsers already offer "Save as PDF" from a good print stylesheet, so A covers the roadmap item with nothing new to maintain. B can be added later on top of A.
+
+#### Consequences
+
+- Revision URLs already existed (`/wiki/{slug}/revision/{sha}`), so permalinks are only made visible: the article links to its newest revision, and a revision page shows its own address. A page with no revision rows (older commits not yet backfilled) shows no permalink until `wiki:backfill-revisions` has run.
+- The Markdown file is the stored text with a `# Title` line added, because the stored text has no title. It is served as an attachment with `nosniff`. The file name comes from the validated slug, plus the short sha for a revision (`/wiki/{slug}/export`, `/wiki/{slug}/revision/{sha}/export`).
+- External links print with their address after the text, and headings, code blocks, tables and quotes avoid page breaks inside them.
+- Not done: a server-made PDF, and a print view for the history, diff and talk pages.
+- `BuildMarkdownExport` is unit-tested and `scripts/check` passes (129 tests). The controller routes and views need the MySQL database, so they were only compiled (`view:cache`) and listed with `route:list`, not rendered or printed. `public/css/app.css` was rebuilt with `npm run css:build`.
