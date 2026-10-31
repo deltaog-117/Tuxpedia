@@ -73,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - (None)
 
 ### Fixed
+- A failed Git commit no longer leaves a page with no history: `CreatePage` and `UpdatePage` now save the row and commit inside one database transaction, so the save is rolled back and the editor shows the error. If a rename's commit fails, the file is moved back to its old name. A commit that succeeds just before the database itself fails can still leave a Git commit with no row (`wiki:backfill-revisions` recovers it). Covered by `AtomicPageSaveTest`
 - `php artisan migrate` stopped with "table `users` already exists" and left every later migration pending: a stray `2026_08_25_192632_create_users_table` migration repeated the `users` table that Laravel's own `0001_01_01_000000_create_users_table` already creates. The duplicate is removed
 - Saving a page whose text did not change (for example only its distribution link) no longer fails with "nothing to commit": `GitService::commitFile()` skips the commit and returns null
 - Every page returned HTTP 500 because the command palette passed a `Title` object where `PaletteItem::link()` expects a string; the title is now cast to a string

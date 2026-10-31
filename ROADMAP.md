@@ -6,6 +6,7 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## ✅ Completed (Milestones Achieved)
+- Atomic page saves: `CreatePage` and `UpdatePage` run the row write and the Git commit inside one database transaction, so a failed commit rolls the page back instead of leaving a row with no history; a failed commit after a rename also moves the file back. If the process dies after Git commits but before the database does, Git keeps a commit with no row, which `wiki:backfill-revisions` can recover
 - Print, export and permalinks: a print stylesheet (no navbar, sidebar or buttons, dark text on white in either theme), a Markdown download of any article or revision, and a visible permanent link to the version being read. There is no server-made PDF; readers use the browser's "Save as PDF"
 - Glossary and disambiguation pages: each wiki page has a type (article, concept or disambiguation) set in the editor. `/glossary` lists concept pages and disambiguation pages; five shipped pages cover Kernel, Init, Package manager, Arch and Mint. Disambiguation lists are written by hand, not generated, and no existing article links to the glossary yet
 - User profile page: `/user/{username}` shows an initials avatar, display name, handle, role, join date, short bio, the articles the person edited (with edit counts) and their latest talk posts; the owner edits the display name and bio at `/user/{username}/edit`. Accounts get a permanent, unique `username` chosen at sign-up (existing accounts got one from their name), and pages, revisions and talk posts now store the author's `user_id`, so author names across the wiki link to the profile. Old rows are linked by name only when one account has that name, so duplicates stay plain text. The editor's free-text Author field is gone: edits are credited to the signed-in account, and a page keeps its first author while each revision records its editor
@@ -44,7 +45,6 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## 🟡 Medium Priority (Important)
-- Make page saves atomic *(proposed)* – `CreatePage` and `UpdatePage` save to the database before committing to the wiki repository, so a failed commit leaves a database row with no history
 - Keep articles current *(proposed)* – several articles quote release status (Fedora, Ubuntu, Alpine, Tails, Solus, Slackware 16); review them each quarter
 - Feature tests for the page-to-distribution link *(proposed)* – the feature migrations are MySQL-only (FULLTEXT), so these need a MySQL test database
 - Feature tests for the wiki, search and auth flows *(proposed)* – the `tests/Feature` and `tests/Unit/Features` folders are almost empty

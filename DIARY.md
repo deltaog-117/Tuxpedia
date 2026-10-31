@@ -32,6 +32,7 @@
 | 2026-10-30 | User profiles | `user_id` on author rows plus a permanent unique username (COA C); initials avatar, uploads deferred | ✅ Confirmed |
 | 2026-10-30 | Glossary and disambiguation | A `kind` column on wiki pages (article, concept, disambiguation) with hand-written lists (COA A) | ✅ Confirmed |
 | 2026-10-31 | Print, export and permalinks | Print stylesheet, Markdown download and visible permanent links; no PDF library (COA A) | ✅ Confirmed |
+| 2026-10-31 | Atomic page saves | Database transaction around the row write and the Git commit (COA A) | ✅ Confirmed |
 
 ---
 
@@ -661,3 +662,25 @@ COAs were the stylesheet plus a Markdown download (A), the same plus a PDF built
 - External links print with their address after the text, and headings, code blocks, tables and quotes avoid page breaks inside them.
 - Not done: a server-made PDF, and a print view for the history, diff and talk pages.
 - `BuildMarkdownExport` is unit-tested and `scripts/check` passes (129 tests). The controller routes and views need the MySQL database, so they were only compiled (`view:cache`) and listed with `route:list`, not rendered or printed. `public/css/app.css` was rebuilt with `npm run css:build`.
+
+
+### Atomic Page Saves
+
+**Date:** 2026-10-31
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+`CreatePage` and `UpdatePage` wrap the row write, the Git commit and the revision record in one `DB::transaction()` (COA A). A failed commit rolls the row back, so a page can no longer exist without history.
+
+#### Reasoning
+
+COAs were the transaction (A), Git first and the database second (B), and the transaction plus a Git undo (C). B reorders both actions and still leaves an orphan commit if the database step fails. C needs destructive `reset` or `revert` operations that are risky when two saves overlap, for a rare case. A fixes the reported failure with a small diff and keeps the two actions' shape.
+
+#### Consequences
+
+- The database and Git are separate systems, so this is not a true atomic write. If the process dies after Git commits and before the database commits, Git keeps a commit with no row. Readers never see it, and `wiki:backfill-revisions` can recover it.
+- A rename runs `git mv` and commits before the content commit. If the content commit fails, `UpdatePage` moves the file back with a second move commit, so history gains two small commits but Git matches the restored row. If that undo also fails, it is logged.
+- After a failure `UpdatePage` refreshes the in-memory page, so the editor does not hold unsaved values.
+- `AtomicPageSaveTest` uses a fake `GitService` and builds the wiki tables from the feature migrations without the MySQL-only FULLTEXT one, so it runs on SQLite. Against the old code 3 of its 4 tests fail. `scripts/check` passes (133 tests).

@@ -10,6 +10,7 @@ use App\Features\Wiki\ValueObjects\PageKind;
 use App\Features\Wiki\ValueObjects\Slug;
 use App\Features\Wiki\ValueObjects\Title;
 use App\Shared\Services\GitService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 final class UpdatePage
@@ -29,36 +30,55 @@ final class UpdatePage
 
         $oldSlug = $page->slug->toString();
 
-        $page->slug = $newSlug;
-        $page->title = $newTitle;
-        $page->content = $newContent;
-        // The page keeps its first author; each revision records whoever made that edit.
-        $editorName = $newAuthor ?? $page->author;
-        $editorId = $newAuthor !== null ? $userId : $page->user_id;
-        if ($page->author === null) {
-            $page->author = $newAuthor;
-            $page->user_id = $userId;
-        }
-        $page->distribution_id = $distributionId;
-        $page->kind = $kind;
-        $page->save();
+        $oldPath = 'pages/'.$oldSlug.'.md';
+        $newPath = 'pages/'.$newSlug->toString().'.md';
+        $moved = false;
 
-        if ($oldSlug !== $newSlug->toString()) {
-            $this->git->moveFile(
-                'pages/'.$oldSlug.'.md',
-                'pages/'.$newSlug->toString().'.md'
-            );
-        }
+        // The row and its commit stand or fall together: a failed commit rolls the row back.
+        try {
+            DB::transaction(function () use ($page, $newSlug, $newTitle, $newContent, $newAuthor, $distributionId, $summary, $userId, $kind, $oldPath, $newPath, &$moved): void {
+                $page->slug = $newSlug;
+                $page->title = $newTitle;
+                $page->content = $newContent;
+                // The page keeps its first author; each revision records whoever made that edit.
+                $editorName = $newAuthor ?? $page->author;
+                $editorId = $newAuthor !== null ? $userId : $page->user_id;
+                if ($page->author === null) {
+                    $page->author = $newAuthor;
+                    $page->user_id = $userId;
+                }
+                $page->distribution_id = $distributionId;
+                $page->kind = $kind;
+                $page->save();
 
-        $sha = $this->git->commitFile(
-            $page->getMarkdownFilePath(),
-            $newContent->toString(),
-            "docs(wiki): update page {$page->slug}"
-        );
+                if ($oldPath !== $newPath) {
+                    $this->git->moveFile($oldPath, $newPath);
+                    $moved = true;
+                }
 
-        // No commit means the text did not change (for example only the distribution link).
-        if ($sha !== null) {
-            $this->recordRevision->execute($page, $sha, $editorName, $summary, $editorId);
+                $sha = $this->git->commitFile(
+                    $page->getMarkdownFilePath(),
+                    $newContent->toString(),
+                    "docs(wiki): update page {$page->slug}"
+                );
+
+                // No commit means the text did not change (for example only the distribution link).
+                if ($sha !== null) {
+                    $this->recordRevision->execute($page, $sha, $editorName, $summary, $editorId);
+                }
+            });
+        } catch (\Throwable $e) {
+            // Put the file back under its old name so Git matches the restored row.
+            if ($moved) {
+                try {
+                    $this->git->moveFile($newPath, $oldPath);
+                } catch (\Throwable $undo) {
+                    Log::error('Wiki page move could not be undone', ['from' => $newPath, 'to' => $oldPath, 'error' => $undo->getMessage()]);
+                }
+            }
+            $page->refresh();
+
+            throw $e;
         }
 
         Log::info('Wiki page updated', [

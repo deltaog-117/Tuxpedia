@@ -10,6 +10,7 @@ use App\Features\Wiki\ValueObjects\PageKind;
 use App\Features\Wiki\ValueObjects\Slug;
 use App\Features\Wiki\ValueObjects\Title;
 use App\Shared\Services\GitService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 final class CreatePage
@@ -25,25 +26,30 @@ final class CreatePage
             throw new \RuntimeException("Page with slug '{$slug}' already exists.");
         }
 
-        $page = new Page;
-        $page->slug = $slug;
-        $page->title = $title;
-        $page->content = $content;
-        $page->author = $author;
-        $page->user_id = $userId;
-        $page->distribution_id = $distributionId;
-        $page->kind = $kind;
-        $page->save();
+        // The row and its first commit stand or fall together: a failed commit rolls the row back.
+        $page = DB::transaction(function () use ($slug, $title, $content, $author, $distributionId, $summary, $userId, $kind): Page {
+            $page = new Page;
+            $page->slug = $slug;
+            $page->title = $title;
+            $page->content = $content;
+            $page->author = $author;
+            $page->user_id = $userId;
+            $page->distribution_id = $distributionId;
+            $page->kind = $kind;
+            $page->save();
 
-        $sha = $this->git->commitFile(
-            $page->getMarkdownFilePath(),
-            $content->toString(),
-            "docs(wiki): create page {$page->slug}"
-        );
+            $sha = $this->git->commitFile(
+                $page->getMarkdownFilePath(),
+                $content->toString(),
+                "docs(wiki): create page {$page->slug}"
+            );
 
-        if ($sha !== null) {
-            $this->recordRevision->execute($page, $sha, $author, trim((string) $summary) !== '' ? $summary : 'Created the page', $userId);
-        }
+            if ($sha !== null) {
+                $this->recordRevision->execute($page, $sha, $author, trim((string) $summary) !== '' ? $summary : 'Created the page', $userId);
+            }
+
+            return $page;
+        });
 
         Log::info('Wiki page created', [
             'slug' => $slug->toString(),
