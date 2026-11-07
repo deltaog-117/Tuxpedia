@@ -60,6 +60,19 @@ class User extends Authenticatable
     }
 
     /**
+     * Where the profile picture is served from, or null when the account uses initials.
+     * The path's random name doubles as the cache-busting version.
+     */
+    public function avatarUrl(): ?string
+    {
+        if ($this->avatar_path === null) {
+            return null;
+        }
+
+        return route('profile.avatar', $this->username).'?v='.substr(md5($this->avatar_path), 0, 8);
+    }
+
+    /**
      * A stable colour angle (0-359) per handle, so the same person always gets the same avatar.
      */
     public function avatarHue(): int

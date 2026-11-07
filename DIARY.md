@@ -33,6 +33,10 @@
 | 2026-10-30 | Glossary and disambiguation | A `kind` column on wiki pages (article, concept, disambiguation) with hand-written lists (COA A) | ✅ Confirmed |
 | 2026-10-31 | Print, export and permalinks | Print stylesheet, Markdown download and visible permanent links; no PDF library (COA A) | ✅ Confirmed |
 | 2026-10-31 | Atomic page saves | Database transaction around the row write and the Git commit (COA A) | ✅ Confirmed |
+| 2026-11-07 | Profile pictures | Browser-side crop and re-encode, strict server re-check, private disk (COA B) | ✅ Confirmed |
+| 2026-11-07 | Syntax highlighting | Client-side highlight.js bundle, named languages only (COA A) | ✅ Confirmed |
+| 2026-11-07 | Table of contents | Built in PHP from CommonMark heading ids; no COA, one credible approach | ✅ Confirmed |
+| 2026-11-07 | Sort indicators | `aria-sort` plus CSS arrows; no COA, one credible approach | ✅ Confirmed |
 
 ---
 
@@ -684,3 +688,32 @@ COAs were the transaction (A), Git first and the database second (B), and the tr
 - A rename runs `git mv` and commits before the content commit. If the content commit fails, `UpdatePage` moves the file back with a second move commit, so history gains two small commits but Git matches the restored row. If that undo also fails, it is logged.
 - After a failure `UpdatePage` refreshes the in-memory page, so the editor does not hold unsaved values.
 - `AtomicPageSaveTest` uses a fake `GitService` and builds the wiki tables from the feature migrations without the MySQL-only FULLTEXT one, so it runs on SQLite. Against the old code 3 of its 4 tests fail. `scripts/check` passes (133 tests).
+
+
+### Profile Pictures, Highlighting, Server-side Contents and Sort Indicators
+
+**Date:** 2026-11-07
+**Author:** deltaog-117
+**Status:** Confirmed
+
+#### Decision
+
+Four roadmap items shipped in one cycle. Profile pictures use COA B: the browser crops, scales and re-encodes the image, and the server re-checks it strictly. Syntax highlighting uses COA A: a bundled highlight.js build runs in the browser. The table of contents is built in PHP, and the comparison table shows its sort direction with `aria-sort` and a CSS arrow.
+
+#### Reasoning
+
+Profile pictures: the server has no GD or Imagick, so it cannot re-encode. The options were to store the original after checks (A), re-encode in the browser and still check on the server (B), or install `php-gd` and do it all on the server (C). A keeps EXIF data and large files, and C blocked the cycle on a system install. B gives small, metadata-free pictures now. The server never trusts the browser step: `AvatarImage` reads the type from the bytes, caps the size, requires a square 32–512 px image and requires that nothing comes before or after the image data (JPEG ends in `FFD9`; a WebP's RIFF length equals the file size).
+
+Highlighting: the options were a browser script (A), a PHP highlighter (B) and styling only (C). A adds no Composer dependency and the site already needs JavaScript elsewhere. B would work without JavaScript but adds a dependency and render cost.
+
+Contents and sort indicators had one credible approach each, so no COAs were written. The contents list reads the rendered HTML, so its links and the article's anchors cannot disagree.
+
+#### Consequences
+
+- The bundle is about 69 KB minified, larger than the roughly 30 KB estimated when the COA was written; it carries 16 languages. Only fences that name a language are coloured, because guessing would mis-colour plain command output.
+- None of the 21 shipped articles has a fenced code block, so highlighting changes nothing on existing pages until content is added.
+- Heading ids now come from CommonMark. A repeated heading gets a `-1` suffix where the old script used `-2`, so an old `#anchor` for a repeated heading may move. Revision pages also get ids but show no contents list.
+- A picture uploaded without JavaScript is accepted only if it is already a clean square JPEG or WebP; anything else is refused with a message. A server-side resize is listed on the roadmap for when `php-gd` is available.
+- Pictures live on the private disk and are served through `/user/{username}/avatar` with a fixed content type, `nosniff` and a sandbox policy. The URL carries a version token, so a new upload is not hidden by the one-year cache. Run `php artisan migrate` for `users.avatar_path`.
+- `ComparisonTable::sortBy()` and the `sortField` query string still accept any column name. An unknown name in the URL would error. Not changed here.
+- Tests: `AvatarImageTest` (accepts clean files; rejects non-square, oversized, wrong-type, truncated and payload-appended files; random byte corruption), `TableOfContentsTest` (including a random-heading uniqueness test) and `CodeBlockTest`. `scripts/check` passes (156 tests). The upload route, the profile form and the highlighted page need the MySQL database and a browser, so they were only compiled (`view:cache`) and listed with `route:list`; the browser-side crop script and the highlighting have not been run in a browser. `public/css/app.css` was rebuilt with `npm run css:build` and `public/js/highlight.js` with `npm run js:build`.

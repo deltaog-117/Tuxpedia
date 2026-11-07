@@ -5,10 +5,12 @@
         "dev": "vite",
         "build": "vite build",
         "css:dev": "tailwindcss -i resources/css/app.css -o public/css/app.css --watch",
-        "css:build": "tailwindcss -i resources/css/app.css -o public/css/app.css --minify"
+        "css:build": "tailwindcss -i resources/css/app.css -o public/css/app.css --minify",
+        "js:build": "esbuild resources/js/highlight.js --bundle --minify --format=iife --outfile=public/js/highlight.js"
     },
     "devDependencies": {
         "autoprefixer": "^10.4.20",
+        "highlight.js": "^11.12.0",
         "laravel-vite-plugin": "^1.2.0",
         "postcss": "^8.4.49",
         "tailwindcss": "^3.4.17",

@@ -8,6 +8,7 @@ use App\Features\Wiki\Markdown\WikiLinkExtension;
 use App\Features\Wiki\Markdown\WikiLinkParser;
 use Illuminate\Support\Str;
 use League\CommonMark\Extension\Footnote\FootnoteExtension;
+use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
 
 final class Content
 {
@@ -58,7 +59,15 @@ final class Content
         return Str::markdown($this->value, [
             'html_input' => 'strip',
             'allow_unsafe_links' => false,
-        ], [new WikiLinkExtension($parser), new FootnoteExtension]);
+            // Ids on h2/h3 are what the table of contents links to; no visible anchor is added.
+            'heading_permalink' => [
+                'min_heading_level' => 2,
+                'max_heading_level' => 3,
+                'insert' => 'none',
+                'apply_id_to_heading' => true,
+                'id_prefix' => '',
+            ],
+        ], [new WikiLinkExtension($parser), new FootnoteExtension, new HeadingPermalinkExtension]);
     }
 
     /**

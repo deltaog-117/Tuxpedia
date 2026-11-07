@@ -6,6 +6,10 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## ✅ Completed (Milestones Achieved)
+- Profile pictures: the owner picks an image on `/user/{username}/edit`; the browser crops it to a centred square, scales it to 256 px and re-encodes it (WebP, else JPEG), which also drops EXIF data. The server does not trust that step: `AvatarImage` re-checks the type from the bytes (JPEG or WebP only), a 200 KB limit, square 32–512 px dimensions and a file with nothing before or after the image data. Pictures sit on the private disk under random names and are served by `/user/{username}/avatar` with a fixed content type, `nosniff` and a sandbox policy; the initials avatar remains the fallback and a "Remove" box restores it. With JavaScript off, only an already-clean square JPEG or WebP is accepted, since the server has no GD or Imagick to resize
+- Server-side table of contents: "On this page" is built in PHP from the rendered h2/h3 headings (`TableOfContents`), so it works without JavaScript and in the HTML itself; heading ids come from CommonMark and are unique per page. A small script only marks the heading being read
+- Sort direction indicators: the active column of the distro comparison table shows ▲ or ▼ and sets `aria-sort`; the sortable column list is one constant shared by the view
+- Syntax highlighting: fenced code that names a language (` ```bash `) is coloured in the browser by a bundled highlight.js build (`public/js/highlight.js`, about 69 KB, built with `npm run js:build`) covering bash, shell, ini/toml, json, yaml, diff, makefile, nginx, dockerfile, python, c, lua, php, javascript, xml/html and css. Bare fences stay plain on purpose (no language guessing), and none of the shipped articles has a fenced block yet
 - Atomic page saves: `CreatePage` and `UpdatePage` run the row write and the Git commit inside one database transaction, so a failed commit rolls the page back instead of leaving a row with no history; a failed commit after a rename also moves the file back. If the process dies after Git commits but before the database does, Git keeps a commit with no row, which `wiki:backfill-revisions` can recover
 - Print, export and permalinks: a print stylesheet (no navbar, sidebar or buttons, dark text on white in either theme), a Markdown download of any article or revision, and a visible permanent link to the version being read. There is no server-made PDF; readers use the browser's "Save as PDF"
 - Glossary and disambiguation pages: each wiki page has a type (article, concept or disambiguation) set in the editor. `/glossary` lists concept pages and disambiguation pages; five shipped pages cover Kernel, Init, Package manager, Arch and Mint. Disambiguation lists are written by hand, not generated, and no existing article links to the glossary yet
@@ -39,7 +43,6 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 ---
 
 ## 🔥 High Priority (Critical)
-- Profile pictures – let a person upload a picture for their profile, shown in place of the initials avatar; needs the GD or Imagick PHP extension to resize and re-encode uploads (neither is loaded in the current environment), a storage disk and size/type limits, and a way to remove the picture
 - Visual verification pass *(proposed)* – screenshot every page in light and dark and refresh `screenshots/` and the README
 
 ---
@@ -48,13 +51,12 @@ Items are organized by priority, not by timeline. Items marked *(proposed)* have
 - Keep articles current *(proposed)* – several articles quote release status (Fedora, Ubuntu, Alpine, Tails, Solus, Slackware 16); review them each quarter
 - Feature tests for the page-to-distribution link *(proposed)* – the feature migrations are MySQL-only (FULLTEXT), so these need a MySQL test database
 - Feature tests for the wiki, search and auth flows *(proposed)* – the `tests/Feature` and `tests/Unit/Features` folders are almost empty
-- Server-side table of contents *(proposed)* – move heading extraction out of the client script if pages need SEO or no-JS support
-- Sort direction indicators in the distro comparison table
 
 ---
 
 ## 🟢 Low Priority (Nice‑to‑Have)
-- Syntax highlighting for code blocks in articles
+- Add fenced, language-tagged code blocks to the terminal-heavy articles so highlighting has something to colour *(proposed)*
+- Server-side re-encoding of profile pictures if `php-gd` or Imagick is installed, so uploads without JavaScript are also resized *(proposed)*
 
 ---
 

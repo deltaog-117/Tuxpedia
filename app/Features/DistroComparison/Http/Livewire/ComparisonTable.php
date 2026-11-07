@@ -12,6 +12,16 @@ class ComparisonTable extends Component
 {
     use WithPagination;
 
+    /** Sortable column => header label; sortBy() only accepts these names. */
+    public const SORTABLE_COLUMNS = [
+        'name' => 'Name',
+        'based_on' => 'Based On',
+        'package_manager' => 'Package Manager',
+        'default_desktop' => 'Default Desktop',
+        'release_model' => 'Release Model',
+        'architecture' => 'Architecture',
+    ];
+
     public string $search = '';
 
     public string $sortField = 'name';
@@ -82,6 +92,7 @@ class ComparisonTable extends Component
             'distributions' => $distributions,
             'basedOnOptions' => $basedOnOptions,
             'releaseModelOptions' => $releaseModelOptions,
+            'columns' => self::SORTABLE_COLUMNS,
         ]);
     }
 }

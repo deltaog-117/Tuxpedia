@@ -1,6 +1,7 @@
 <?php
 
 use App\Features\Auth\Actions\LogoutUser;
+use App\Features\Auth\Http\Controllers\AvatarController;
 use App\Features\Auth\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,3 +27,6 @@ Route::put('/user/{username}', [ProfileController::class, 'update'])
     ->where('username', '[a-z0-9_-]+')
     ->middleware('auth')
     ->name('profile.update');
+Route::get('/user/{username}/avatar', [AvatarController::class, 'show'])
+    ->where('username', '[a-z0-9_-]+')
+    ->name('profile.avatar');

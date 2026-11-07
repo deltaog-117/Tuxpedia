@@ -97,55 +97,41 @@
                     <x-distro-infobox :distribution="$page->distribution" />
                 </div>
             @endif
-            <nav id="toc" class="toc" aria-label="On this page" hidden></nav>
+            @if($toc->isWorthShowing())
+                <nav id="toc" class="toc" aria-label="On this page">
+                    <p class="toc__title">On this page</p>
+                    @foreach($toc->entries() as $entry)
+                        <a href="#{{ $entry->id }}" class="toc__link{{ $entry->isSub() ? ' toc__link--sub' : '' }}">{{ $entry->text }}</a>
+                    @endforeach
+                </nav>
+            @endif
         </aside>
     </div>
 </div>
 @endsection
 
 @push('scripts')
+<script src="{{ asset('js/highlight.js') }}" defer></script>
 <script>
-    // Builds "On this page" from the rendered h2/h3 headings and highlights the current one.
+    // The contents list is rendered by the server; this only marks the heading being read.
     (function () {
-        var body = document.getElementById('article-body');
         var toc = document.getElementById('toc');
-        if (!body || !toc) { return; }
+        if (!toc || !window.IntersectionObserver) { return; }
 
-        var headings = Array.prototype.slice.call(body.querySelectorAll('h2, h3'));
-        if (headings.length < 2) { return; }
-
-        var title = document.createElement('p');
-        title.className = 'toc__title';
-        title.textContent = 'On this page';
-        toc.appendChild(title);
-
-        var used = {};
-        var links = headings.map(function (heading) {
-            var base = heading.textContent.trim().toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'section';
-            var id = base;
-            var n = 2;
-            while (used[id]) { id = base + '-' + n++; }
-            used[id] = true;
-            heading.id = id;
-
-            var link = document.createElement('a');
-            link.href = '#' + id;
-            link.textContent = heading.textContent;
-            link.className = 'toc__link' + (heading.tagName === 'H3' ? ' toc__link--sub' : '');
-            toc.appendChild(link);
-            return link;
+        var links = Array.prototype.slice.call(toc.querySelectorAll('a'));
+        var headings = links.map(function (link) {
+            return document.getElementById(decodeURIComponent(link.getAttribute('href').slice(1)));
         });
-        toc.hidden = false;
 
         var observer = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {
                 if (!entry.isIntersecting) { return; }
                 links.forEach(function (link) { link.classList.remove('toc__link--active'); });
-                links[headings.indexOf(entry.target)].classList.add('toc__link--active');
+                var index = headings.indexOf(entry.target);
+                if (index !== -1) { links[index].classList.add('toc__link--active'); }
             });
         }, { rootMargin: '0px 0px -70% 0px' });
-        headings.forEach(function (heading) { observer.observe(heading); });
+        headings.forEach(function (heading) { if (heading) { observer.observe(heading); } });
     })();
 </script>
 @endpush

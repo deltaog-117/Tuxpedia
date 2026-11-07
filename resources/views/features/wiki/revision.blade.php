@@ -51,3 +51,7 @@
     </article>
 </div>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/highlight.js') }}" defer></script>
+@endpush

@@ -222,6 +222,9 @@
         @apply inline-flex shrink-0 items-center justify-center rounded-full font-semibold text-white select-none;
         background-color: hsl(var(--avatar-hue) 45% 36%);
     }
+    .avatar--image {
+        @apply bg-tux-border object-cover;
+    }
     .avatar--sm {
         @apply h-6 w-6 text-[0.65rem];
     }
@@ -352,6 +355,15 @@
     .data-table__sortable {
         @apply cursor-pointer select-none hover:text-tux-text;
     }
+    /* The active sort column shows its direction; aria-sort is set by the table view. */
+    .data-table__sortable[aria-sort='ascending']::after {
+        content: ' \25B2';
+        @apply text-[0.65rem] text-tux-accent;
+    }
+    .data-table__sortable[aria-sort='descending']::after {
+        content: ' \25BC';
+        @apply text-[0.65rem] text-tux-accent;
+    }
 
     /* Revision diff */
     .diff {
@@ -417,6 +429,55 @@
     .article pre code {
         @apply bg-transparent p-0 text-inherit;
     }
+    /* Syntax colours for fenced code (highlight.js). The block is dark in both themes, so one palette serves both. */
+    .article pre code.hljs .hljs-comment,
+    .article pre code.hljs .hljs-quote {
+        color: #7f8c8d;
+        font-style: italic;
+    }
+    .article pre code.hljs .hljs-keyword,
+    .article pre code.hljs .hljs-selector-tag,
+    .article pre code.hljs .hljs-literal,
+    .article pre code.hljs .hljs-doctag {
+        color: #c586c0;
+    }
+    .article pre code.hljs .hljs-string,
+    .article pre code.hljs .hljs-regexp,
+    .article pre code.hljs .hljs-addition {
+        color: #ce9178;
+    }
+    .article pre code.hljs .hljs-number,
+    .article pre code.hljs .hljs-symbol,
+    .article pre code.hljs .hljs-bullet {
+        color: #b5cea8;
+    }
+    .article pre code.hljs .hljs-title,
+    .article pre code.hljs .hljs-section,
+    .article pre code.hljs .hljs-built_in,
+    .article pre code.hljs .hljs-name {
+        color: #dcdcaa;
+    }
+    .article pre code.hljs .hljs-attr,
+    .article pre code.hljs .hljs-attribute,
+    .article pre code.hljs .hljs-variable,
+    .article pre code.hljs .hljs-template-variable,
+    .article pre code.hljs .hljs-params,
+    .article pre code.hljs .hljs-meta {
+        color: #9cdcfe;
+    }
+    .article pre code.hljs .hljs-type,
+    .article pre code.hljs .hljs-class .hljs-title {
+        color: #4ec9b0;
+    }
+    .article pre code.hljs .hljs-deletion {
+        color: #f48771;
+    }
+    .article pre code.hljs .hljs-emphasis {
+        font-style: italic;
+    }
+    .article pre code.hljs .hljs-strong {
+        font-weight: 700;
+    }
     .article table {
         @apply w-full text-sm;
     }
@@ -456,7 +517,7 @@
         @apply rounded bg-tux-accent/10;
     }
 
-    /* Table of contents (built client-side from the article headings) */
+    /* Table of contents (built on the server; a small script only marks the current heading) */
     .toc {
         @apply sticky top-24 text-sm;
     }

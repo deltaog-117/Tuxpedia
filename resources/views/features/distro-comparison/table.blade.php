@@ -33,12 +33,9 @@
         <table class="data-table">
             <thead>
                 <tr>
-                    <th scope="col" wire:click="sortBy('name')" class="data-table__sortable">Name</th>
-                    <th scope="col" wire:click="sortBy('based_on')" class="data-table__sortable">Based On</th>
-                    <th scope="col" wire:click="sortBy('package_manager')" class="data-table__sortable">Package Manager</th>
-                    <th scope="col" wire:click="sortBy('default_desktop')" class="data-table__sortable">Default Desktop</th>
-                    <th scope="col" wire:click="sortBy('release_model')" class="data-table__sortable">Release Model</th>
-                    <th scope="col" wire:click="sortBy('architecture')" class="data-table__sortable">Architecture</th>
+                    @foreach($columns as $field => $label)
+                        <th scope="col" wire:click="sortBy('{{ $field }}')" class="data-table__sortable" aria-sort="{{ $sortField === $field ? ($sortDirection === 'asc' ? 'ascending' : 'descending') : 'none' }}">{{ $label }}</th>
+                    @endforeach
                     <th scope="col">Description</th>
                 </tr>
             </thead>

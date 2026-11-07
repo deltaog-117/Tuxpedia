@@ -19,6 +19,7 @@ use App\Features\Wiki\Exceptions\PageNotFoundException;
 use App\Features\Wiki\Models\Page;
 use App\Features\Wiki\ValueObjects\MarkdownExport;
 use App\Features\Wiki\ValueObjects\PageKind;
+use App\Features\Wiki\ValueObjects\TableOfContents;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -33,10 +34,12 @@ class PageController
             $page = $getPage->execute($slug);
 
             $page->load('user');
+            $html = $render->execute($page->content);
 
             return view('features.wiki.show', [
                 'page' => $page,
-                'html' => $render->execute($page->content),
+                'html' => $html,
+                'toc' => TableOfContents::fromHtml($html),
                 'permalink' => $page->revisions()->first(),
             ]);
         } catch (PageNotFoundException $e) {
